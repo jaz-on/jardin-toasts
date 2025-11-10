@@ -48,7 +48,7 @@ Complete checklist for submitting Beer Journal to WordPress.org plugin directory
 - [x] Changelog
 - [x] FAQ section
 
-**See**: [readme.txt](../readme.txt) in project root
+**See**: [readme.txt](../../readme.txt) in project root
 
 ---
 
@@ -60,7 +60,7 @@ Complete checklist for submitting Beer Journal to WordPress.org plugin directory
 - [x] Full GPL v2+ license text
 - [x] No modifications to license text
 
-**See**: [LICENSE](../LICENSE) in project root
+**See**: [LICENSE](../../LICENSE) in project root
 
 ---
 

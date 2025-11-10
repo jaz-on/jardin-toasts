@@ -250,7 +250,7 @@ _x('Brewery', 'taxonomy name', 'beer-journal')
 **Preferred**:
 ```php
 $posts = get_posts([
-    'post_type' => 'beer',
+    'post_type' => 'beer_checkin',
     'posts_per_page' => 10,
 ]);
 ```
@@ -347,6 +347,6 @@ composer phpstan
 
 ## Related Documentation
 
-- [Architecture Rules](../.cursor/rules/architecture.mdc)
+- [Architecture Rules](../../.cursor/rules/architecture.mdc)
 - [Testing](testing.md)
 
