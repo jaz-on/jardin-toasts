@@ -1,0 +1,304 @@
+---
+alwaysApply: true
+---
+# Beer Journal - Architecture Rules
+
+## Conventions WordPress
+
+### Coding Standards
+- **WPCS**: Follow WordPress Coding Standards (WPCS) strictly
+- **PHPStan**: Level 5 minimum for static analysis
+- **Indentation**: Tabs (not spaces) for PHP files
+- **Line endings**: Unix-style (LF)
+- **File headers**: All PHP files must include proper headers with license
+
+### Naming Conventions
+
+#### Functions
+- **Prefix**: `bj_` for public functions (e.g., `bj_display_rating()`)
+- **Private functions**: `_bj_` prefix (e.g., `_bj_parse_rss_item()`)
+- **Naming**: lowercase with underscores, descriptive names
+- **Examples**:
+  - `bj_get_checkin_data($post_id)`
+  - `bj_rating_stars($rating, $echo = true)`
+  - `bj_beer_image($post_id, $size = 'medium')`
+
+#### Classes
+- **Prefix**: `BJ_` for all classes (e.g., `BJ_Importer`, `BJ_Scraper`)
+- **Naming**: PascalCase
+- **File naming**: `class-{name-lowercase}.php` (e.g., `class-importer.php`)
+- **Examples**:
+  - `BJ_RSS_Parser` → `includes/class-rss-parser.php`
+  - `BJ_Scraper` → `includes/class-scraper.php`
+  - `BJ_Image_Handler` → `includes/class-image-handler.php`
+
+#### Constants
+- **Prefix**: `BJ_` (e.g., `BJ_VERSION`, `BJ_PLUGIN_DIR`)
+- **Naming**: UPPERCASE with underscores
+
+#### Options (WordPress)
+- **Prefix**: `bj_` (e.g., `bj_last_checkin_date`, `bj_rating_rules`)
+- **Naming**: lowercase with underscores
+
+#### Meta Keys
+- **Prefix**: `_bj_` (e.g., `_bj_checkin_id`, `_bj_rating_raw`)
+- **Naming**: lowercase with underscores
+- **Note**: Leading underscore makes meta keys "hidden" in WordPress admin
+
+#### Transients
+- **Prefix**: `bj_` (e.g., `bj_new_terms_notice`, `bj_global_stats`)
+
+### Text Domain
+- **Text domain**: `beer-journal` (with hyphen)
+- **Usage**: All user-facing strings must be translatable
+- **Examples**:
+  ```php
+  __('Beer Check-ins', 'beer-journal')
+  _e('Import Historical Check-ins', 'beer-journal')
+  _n('%s check-in', '%s check-ins', $count, 'beer-journal')
+  esc_html__('Rating System', 'beer-journal')
+  ```
+
+## Security Standards
+
+### Data Sanitization
+- **Text fields**: `sanitize_text_field()`
+- **Rich text**: `wp_kses_post()` or `wp_kses()` with allowed tags
+- **URLs**: `esc_url_raw()` for storage, `esc_url()` for output
+- **Numbers**: `absint()` for integers, `floatval()` for floats
+- **Emails**: `sanitize_email()`
+
+### Data Escaping
+- **HTML output**: `esc_html()`
+- **Attributes**: `esc_attr()`
+- **URLs**: `esc_url()`
+- **JavaScript**: `wp_json_encode()` or `esc_js()`
+
+### Nonces
+- **All forms**: Include nonces with `wp_nonce_field()` or `wp_create_nonce()`
+- **AJAX requests**: Verify with `check_ajax_referer()`
+- **Admin actions**: Verify with `check_admin_referer()`
+- **Naming**: `bj_{action}_nonce` (e.g., `bj_import_nonce`)
+
+### Capability Checks
+- **Admin pages**: `current_user_can('manage_options')`
+- **Edit posts**: `current_user_can('edit_post', $post_id)`
+- **Delete posts**: `current_user_can('delete_post', $post_id)`
+
+### Input Validation
+- **URLs**: Validate with `filter_var($url, FILTER_VALIDATE_URL)`
+- **Untappd URLs**: Verify domain contains `untappd.com`
+- **RSS feeds**: Validate RSS format
+- **File uploads**: Validate file types and sizes
+
+## Internationalization (i18n)
+
+### Requirements
+- **All user-facing strings**: Must be translatable
+- **Text domain**: Always use `'beer-journal'`
+- **Context**: Use `_x()` when context is needed
+- **Plurals**: Use `_n()` for plural forms
+
+### Examples
+```php
+// Simple string
+echo esc_html__('Beer Check-ins', 'beer-journal');
+
+// String with output
+_e('Import Historical Check-ins', 'beer-journal');
+
+// String with context
+_x('Brewery', 'taxonomy singular name', 'beer-journal');
+
+// Plural forms
+printf(
+    _n('%s check-in', '%s check-ins', $count, 'beer-journal'),
+    number_format_i18n($count)
+);
+
+// Escaped output
+echo esc_html__('Rating System', 'beer-journal');
+echo esc_attr__('Beer photo', 'beer-journal');
+```
+
+### Loading Text Domain
+```php
+add_action('plugins_loaded', 'bj_load_textdomain');
+
+function bj_load_textdomain() {
+    load_plugin_textdomain(
+        'beer-journal',
+        false,
+        dirname(plugin_basename(__FILE__)) . '/languages/'
+    );
+}
+```
+
+## File Structure
+
+### Main Plugin File
+- **Location**: `beer-journal.php` (root)
+- **Headers**: Must include WordPress plugin headers
+- **Activation/Deactivation**: Use separate classes
+
+### Includes Directory
+- **Location**: `includes/`
+- **Files**: `class-{name}.php`
+- **Purpose**: Core functionality classes
+
+### Admin Directory
+- **Location**: `admin/`
+- **Structure**:
+  - `class-admin.php` - Main admin class
+  - `views/` - Admin page templates
+  - `assets/` - CSS and JS for admin
+  - `partials/` - Reusable admin components
+
+### Public Directory
+- **Location**: `public/`
+- **Structure**:
+  - `class-public.php` - Frontend hooks
+  - `templates/` - Default templates (overridable)
+  - `assets/` - CSS and JS for frontend
+  - `partials/` - Reusable frontend components
+
+## WordPress Integration
+
+### Hooks Priority
+- **Actions**: Use appropriate priority (default 10)
+- **Filters**: Use appropriate priority (default 10)
+- **Late hooks**: Use priority 999+ for overrides
+
+### Database Queries
+- **Use WP_Query**: Never use direct SQL for posts
+- **Meta queries**: Use `meta_query` parameter
+- **Taxonomy queries**: Use `tax_query` parameter
+- **Performance**: Always set `no_found_rows => false` for pagination
+
+### Caching
+- **Transients**: For temporary data (stats, etc.)
+- **Object cache**: Use `wp_cache_get()` and `wp_cache_set()`
+- **Cache keys**: Prefix with `bj_` (e.g., `bj_global_stats`)
+
+## Error Handling
+
+### WordPress Errors
+- **Use WP_Error**: For function return values
+- **Logging**: Use `error_log()` with plugin prefix
+- **User feedback**: Use admin notices for user-facing errors
+
+### Example
+```php
+function bj_import_checkin($data) {
+    if (empty($data['beer_name'])) {
+        return new WP_Error(
+            'missing_beer_name',
+            __('Beer name is required', 'beer-journal')
+        );
+    }
+    
+    // Process...
+    
+    if ($error) {
+        error_log('Beer Journal: Import failed - ' . $error_message);
+        return new WP_Error('import_failed', $error_message);
+    }
+    
+    return $post_id;
+}
+```
+
+## Performance
+
+### Optimization Rules
+- **Lazy loading**: Images use `loading="lazy"` attribute
+- **Pagination**: Always implement pagination for lists
+- **Database indexes**: Document required indexes
+- **Query optimization**: Use `update_post_meta_cache` and `update_post_term_cache`
+- **Transients**: Cache expensive operations
+
+### Example Query
+```php
+$args = [
+    'post_type' => 'beer_checkin',
+    'posts_per_page' => 24,
+    'no_found_rows' => false, // Required for pagination
+    'update_post_meta_cache' => true,
+    'update_post_term_cache' => true,
+];
+```
+
+## Documentation
+
+### Code Comments
+- **PHPDoc**: All public functions and classes
+- **Inline comments**: Explain complex logic
+- **File headers**: Include purpose and author
+
+### PHPDoc Example
+```php
+/**
+ * Display rating with stars and optional label
+ * 
+ * @param int  $post_id    Post ID
+ * @param bool $show_label Show custom label
+ * @param bool $show_raw   Show original rating in tooltip
+ * @return string HTML output
+ */
+function bj_display_rating($post_id, $show_label = true, $show_raw = true) {
+    // Implementation...
+}
+```
+
+## Dependencies
+
+### Composer
+- **Guzzle**: HTTP client for requests
+- **Symfony DomCrawler**: HTML parsing
+- **Symfony CSS Selector**: CSS selector support
+
+### WordPress
+- **SimplePie**: RSS parsing (built-in)
+- **WP_HTTP**: For HTTP requests (preferred over curl)
+
+## Version Compatibility
+
+### WordPress
+- **Minimum**: 6.0
+- **Tested up to**: 6.7
+- **Future**: Keep compatibility with latest
+
+### PHP
+- **Minimum**: 8.2
+- **Recommended**: 8.3+
+- **Features**: Use modern PHP features (typed properties, etc.)
+
+## Git Workflow
+
+### Branches
+- **main**: Production-ready code
+- **develop**: Development branch
+- **feature/**: Feature branches
+- **docs/**: Documentation branch
+
+### Commits
+- **Format**: Conventional commits preferred
+- **Messages**: Clear and descriptive
+- **Scope**: One logical change per commit
+
+## Testing
+
+### Requirements
+- **PHPUnit**: For unit tests
+- **Coverage**: Aim for 80%+ for critical paths
+- **Integration tests**: For import/sync processes
+
+## Summary
+
+- **Prefixes**: `bj_` (functions), `BJ_` (classes), `_bj_` (meta keys)
+- **Text domain**: `beer-journal`
+- **Security**: Always sanitize input, escape output, use nonces
+- **i18n**: All user-facing strings translatable
+- **Standards**: WordPress Coding Standards (WPCS)
+- **Performance**: Cache, optimize queries, lazy loading
+- **Documentation**: PHPDoc for all public APIs

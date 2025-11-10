@@ -1,0 +1,233 @@
+# Logging Strategy
+
+## Overview
+
+Beer Journal logs important events, errors, and debugging information to help diagnose issues and track import progress.
+
+## Log Location
+
+**Directory**: `wp-content/uploads/beer-journal/logs/`
+
+**File Naming**: `beer-journal-{YYYY-MM-DD}.log`
+
+**Example**: `beer-journal-2025-11-10.log`
+
+## Log Levels
+
+Following WordPress standards:
+
+- **ERROR**: Critical errors that prevent functionality
+- **WARNING**: Non-critical issues that may affect functionality
+- **INFO**: General informational messages
+- **DEBUG**: Detailed debugging information (only in debug mode)
+
+## Log Format
+
+```
+[YYYY-MM-DD HH:MM:SS] LEVEL: Message
+```
+
+**Example**:
+```
+[2025-11-10 18:15:23] INFO: RSS sync started
+[2025-11-10 18:15:24] INFO: Found 5 new check-ins
+[2025-11-10 18:15:25] WARNING: Check-in saved as draft (missing_rating)
+[2025-11-10 18:15:26] ERROR: Failed to download image: Network timeout
+```
+
+## Log Rotation
+
+### Strategy: Daily Rotation
+
+**Implementation**:
+- New log file created each day
+- Old logs kept for configurable retention period
+- Automatic cleanup of old logs
+
+**Retention Settings**:
+- Default: 30 days
+- Configurable via option: `bj_log_retention_days` (default: 30)
+- Admin can set to 0 to disable auto-cleanup
+
+### Cleanup Process
+
+**Schedule**: Daily via WP-Cron
+
+**Process**:
+1. Check log directory
+2. Find log files older than retention period
+3. Delete old files
+4. Log cleanup action
+
+**Implementation**:
+```php
+add_action('bj_daily_log_cleanup', 'bj_cleanup_old_logs');
+
+function bj_cleanup_old_logs() {
+    $retention_days = get_option('bj_log_retention_days', 30);
+    
+    if ($retention_days === 0) {
+        return; // Cleanup disabled
+    }
+    
+    $log_dir = bj_get_log_directory();
+    $cutoff_date = strtotime("-{$retention_days} days");
+    
+    $files = glob($log_dir . 'beer-journal-*.log');
+    $deleted = 0;
+    
+    foreach ($files as $file) {
+        $file_date = filemtime($file);
+        
+        if ($file_date < $cutoff_date) {
+            if (unlink($file)) {
+                $deleted++;
+            }
+        }
+    }
+    
+    if ($deleted > 0) {
+        bj_log(sprintf('Cleaned up %d old log file(s)', $deleted), 'INFO');
+    }
+}
+```
+
+## Log Size Management
+
+### Maximum File Size
+
+**Limit**: 10 MB per log file
+
+**Behavior**: When file exceeds limit:
+- Current file is closed
+- New file created with suffix: `beer-journal-{YYYY-MM-DD}-{N}.log`
+- Example: `beer-journal-2025-11-10-2.log`
+
+**Implementation**:
+```php
+function bj_get_log_file_path() {
+    $log_dir = bj_get_log_directory();
+    $date = date('Y-m-d');
+    $base_file = $log_dir . "beer-journal-{$date}.log";
+    
+    // Check if file exists and is too large
+    if (file_exists($base_file) && filesize($base_file) > 10 * 1024 * 1024) {
+        // Find next available number
+        $counter = 1;
+        while (file_exists("{$log_dir}beer-journal-{$date}-{$counter}.log")) {
+            $counter++;
+        }
+        return "{$log_dir}beer-journal-{$date}-{$counter}.log";
+    }
+    
+    return $base_file;
+}
+```
+
+## Logging Functions
+
+### Core Logging Function
+
+```php
+function bj_log($message, $level = 'INFO') {
+    // Skip DEBUG in production
+    if ($level === 'DEBUG' && !WP_DEBUG) {
+        return;
+    }
+    
+    $log_file = bj_get_log_file_path();
+    $timestamp = date('Y-m-d H:i:s');
+    $log_entry = "[{$timestamp}] {$level}: {$message}\n";
+    
+    // Ensure directory exists
+    $log_dir = dirname($log_file);
+    if (!file_exists($log_dir)) {
+        wp_mkdir_p($log_dir);
+    }
+    
+    // Append to log file
+    file_put_contents($log_file, $log_entry, FILE_APPEND | LOCK_EX);
+}
+```
+
+### Convenience Functions
+
+```php
+function bj_log_error($message) {
+    bj_log($message, 'ERROR');
+}
+
+function bj_log_warning($message) {
+    bj_log($message, 'WARNING');
+}
+
+function bj_log_info($message) {
+    bj_log($message, 'INFO');
+}
+
+function bj_log_debug($message) {
+    bj_log($message, 'DEBUG');
+}
+```
+
+## What to Log
+
+### Always Log (INFO/ERROR/WARNING)
+- RSS sync start/end
+- Import batch start/end
+- Failed imports with reasons
+- Network errors
+- Scraping failures
+- Image download failures
+- Draft creation reasons
+
+### Debug Mode Only (DEBUG)
+- Detailed scraping steps
+- Selector matching results
+- Data transformation steps
+- Cache hits/misses
+- Performance metrics
+
+## Log Viewing
+
+### Admin Interface
+
+**Location**: Beer Journal → Logs
+
+**Features**:
+- View current day's log
+- Download log files
+- Filter by log level
+- Search log entries
+- Clear logs (with confirmation)
+
+**Implementation**:
+```php
+add_submenu_page(
+    'edit.php?post_type=beer',
+    __('Logs', 'beer-journal'),
+    __('Logs', 'beer-journal'),
+    'manage_options',
+    'beer-journal-logs',
+    'bj_render_logs_page'
+);
+```
+
+## Security Considerations
+
+1. **File Permissions**: Log files should be readable only by server user
+2. **Directory Protection**: Add `.htaccess` to prevent direct web access
+3. **Sensitive Data**: Never log passwords, API keys, or personal data
+4. **Path Disclosure**: Use relative paths in error messages
+
+## Performance Considerations
+
+1. **Async Logging**: Consider queueing log writes for high-volume scenarios
+2. **Log Rotation**: Prevents disk space issues
+3. **Debug Mode**: Only enable detailed logging when needed
+
+## Related Documentation
+
+- [Error Handling](../features/error-handling-detailed.md)
+- [Development Guidelines](coding-standards.md)
+
