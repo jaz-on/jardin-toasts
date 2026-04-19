@@ -3,17 +3,18 @@ name: Documentation Validation
 on:
   push:
     branches:
-      - docs
       - main
+      - dev
     paths:
       - 'docs/**'
       - '.github/workflows/docs-validation.yml'
   pull_request:
     branches:
-      - docs
       - main
+      - dev
     paths:
       - 'docs/**'
+      - '.github/workflows/docs-validation.yml'
 
 jobs:
   validate:
