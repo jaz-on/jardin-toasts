@@ -4,12 +4,14 @@ Donate link: https://example.com/
 Tags: beer, untappd, checkin, brewery, rating, journal, sync
 Requires at least: 6.0
 Tested up to: 6.7
-Stable tag: 1.0.0
+Stable tag: 0.1.0
 Requires PHP: 8.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Import and display your Untappd beer check-ins on your WordPress site with automatic synchronization.
+
+**Development status:** version 0.1.0 is an installable bootstrap only. MVP features (RSS sync, import, CPT, etc.) are planned and documented in the `docs/` tree in the Git repository; they are not yet available in this build.
 
 == Description ==
 

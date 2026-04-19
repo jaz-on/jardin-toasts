@@ -7,6 +7,10 @@ on:
       - dev
     paths:
       - 'docs/**'
+      - 'DEVELOPMENT.md'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'readme.txt'
       - '.github/workflows/docs-validation.yml'
   pull_request:
     branches:
@@ -14,6 +18,10 @@ on:
       - dev
     paths:
       - 'docs/**'
+      - 'DEVELOPMENT.md'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'readme.txt'
       - '.github/workflows/docs-validation.yml'
 
 jobs:

@@ -46,10 +46,7 @@ php scripts/analyze-docs.php
 
 ### MERGE_DOCS.md
 
-Contient les commandes pour merger la branche `docs` dans `main`.
-
-**Usage** :
-Suivre les instructions dans `MERGE_DOCS.md` pour effectuer le merge de documentation.
+Anciennes commandes de merge `docs` → `main` (la branche `docs` n’existe plus). Voir [DEVELOPMENT.md](../DEVELOPMENT.md) pour le flux `dev` → `main`.
 
 ### RELEASE_NOTES_DOCS.md
 

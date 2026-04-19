@@ -1,6 +1,8 @@
 # Commandes pour merger la branche docs dans main
 
-Ce fichier contient les commandes à exécuter pour merger la branche `docs` dans `main` selon le plan d'action.
+> **Historique :** la branche distante `docs` a été retirée (2026-04). La documentation vit dans `docs/` sur **`main`** et **`dev`**. Pour publier des changements doc, merger `dev` → `main` (voir [DEVELOPMENT.md](../../DEVELOPMENT.md)). Le contenu ci-dessous reste comme référence d’anciennes procédures.
+
+Ce fichier contenait les commandes pour merger la branche `docs` dans `main` selon l’ancien plan d’action.
 
 ## Phase 1.1 : Validation pré-merge
 

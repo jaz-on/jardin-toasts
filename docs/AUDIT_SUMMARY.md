@@ -20,11 +20,8 @@ Complete audit and validation of Beer Journal documentation structure, content, 
 - No placeholder content or incomplete sections found
 
 ### Phase 3: Git Workflow ✅
-- Branch `docs` active and clean
-- Commits organized by category:
-  - `docs(structure)`: Added .gitkeep files
-  - `docs(validation)`: Fixed broken cross-references
-  - `docs(terminology)`: Standardized Custom Post Type name
+- **Update (2026-04):** default branch is `main`; integration branch `dev`; former long-lived `docs` branch removed (documentation lives in `docs/` on `main` / `dev`)
+- Historical commits were organized by category (structure, validation, terminology)
 
 ### Phase 4: Consistency Validation ✅
 - **Cross-references**: 209 links verified, 4 broken links fixed

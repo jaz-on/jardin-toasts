@@ -1,33 +1,26 @@
-# Création et utilisation de la branche develop
+# Branche d’intégration `dev`
 
-Ce document explique comment créer et utiliser la branche `develop` pour le développement.
+Ce document décrit l’usage de la branche **`dev`** (intégration quotidienne, ex. Git Updater sur un site de développement).
 
-## Création de la branche develop
+## Branche `dev` actuelle
 
-### Après merge de docs
-
-Une fois la branche `docs` mergée dans `main`, créer la branche `develop` :
+La branche **`dev`** existe déjà sur le dépôt et sert d’intégration continue (ex. Git Updater sur un site de développement). Pour en créer une équivalente sur un autre clone :
 
 ```bash
-# 1. S'assurer d'être sur main et à jour
 git checkout main
 git pull origin main
-
-# 2. Créer la branche develop
-git checkout -b develop
-
-# 3. Pousser la branche et configurer le tracking
-git push -u origin develop
+git checkout -b dev
+git push -u origin dev
 ```
 
-## Utilisation de develop
+## Utilisation de `dev`
 
 ### Workflow de développement
 
 ```
-main (production)
+main (référence / production)
   ↑
-  └── develop (intégration)
+  └── dev (intégration)
       ├── feature/base-structure
       ├── feature/rss-parser
       ├── feature/scraper
@@ -37,9 +30,9 @@ main (production)
 ### Créer une branche de feature
 
 ```bash
-# Toujours partir de develop
-git checkout develop
-git pull origin develop
+# Toujours partir de dev
+git checkout dev
+git pull origin dev
 
 # Créer la branche de feature
 git checkout -b feature/feature-name
@@ -52,21 +45,21 @@ git commit -m "feat: Implement feature"
 git push -u origin feature/feature-name
 ```
 
-### Merger une feature dans develop
+### Merger une feature dans dev
 
 ```bash
-# Sur develop
-git checkout develop
-git pull origin develop
+# Sur dev
+git checkout dev
+git pull origin dev
 
 # Merger la feature
-git merge feature/feature-name --no-ff -m "feat: Merge feature-name into develop"
+git merge feature/feature-name --no-ff -m "feat: Merge feature-name into dev"
 
 # Pousser
-git push origin develop
+git push origin dev
 ```
 
-### Merger develop dans main
+### Merger dev dans main
 
 Après validation et tests :
 
@@ -75,8 +68,8 @@ Après validation et tests :
 git checkout main
 git pull origin main
 
-# Merger develop
-git merge develop --no-ff -m "chore: Merge develop into main for release"
+# Merger dev
+git merge dev --no-ff -m "chore: Merge dev into main for release"
 
 # Pousser
 git push origin main
@@ -91,21 +84,21 @@ git push origin --tags
 ### Branches de feature
 
 - **Nommage** : `feature/feature-name` (kebab-case)
-- **Base** : Toujours partir de `develop`
-- **Merge** : Dans `develop` après validation
+- **Base** : Toujours partir de `dev`
+- **Merge** : Dans `dev` après validation
 - **Suppression** : Supprimer après merge dans `main`
 
 ### Branches de bugfix
 
 - **Nommage** : `bugfix/issue-description`
-- **Base** : `develop` (ou `main` pour hotfix)
-- **Merge** : Dans `develop` (ou `main` pour hotfix)
+- **Base** : `dev` (ou `main` pour hotfix)
+- **Merge** : Dans `dev` (ou `main` pour hotfix)
 
 ### Branches de hotfix
 
 - **Nommage** : `hotfix/issue-description`
 - **Base** : `main`
-- **Merge** : Dans `main` ET `develop`
+- **Merge** : Dans `main` ET `dev`
 
 ## Intégration avec documentation
 
@@ -115,10 +108,10 @@ Lors du développement d'une feature :
 
 1. **Code** : Sur `feature/feature-name`
 2. **Documentation** : Sur `docs/feature-name`
-3. **Merge code** : `feature/feature-name` → `develop`
+3. **Merge code** : `feature/feature-name` → `dev`
 4. **Merge doc** : `docs/feature-name` → `docs`
 5. **Merge docs** : `docs` → `main`
-6. **Merge develop** : `develop` → `main`
+6. **Merge dev** : `dev` → `main`
 
 Voir [Workflow de documentation](workflow-documentation.md) pour plus de détails.
 
@@ -128,7 +121,7 @@ Voir [Workflow de documentation](workflow-documentation.md) pour plus de détail
 
 ```bash
 # 1. Créer branche de feature
-git checkout develop
+git checkout dev
 git checkout -b feature/rss-parser
 
 # 2. Développer
@@ -141,12 +134,12 @@ git commit -m "feat(rss): Add RSS parser class"
 # 4. Pousser
 git push -u origin feature/rss-parser
 
-# 5. Créer PR vers develop
+# 5. Créer PR vers dev
 # (via interface GitHub)
 
 # 6. Après merge, supprimer la branche locale
-git checkout develop
-git pull origin develop
+git checkout dev
+git pull origin dev
 git branch -d feature/rss-parser
 ```
 
@@ -178,7 +171,7 @@ git merge docs
 
 ## Bonnes pratiques
 
-1. **Toujours partir de develop** pour les nouvelles features
+1. **Toujours partir de dev** pour les nouvelles features
 2. **Valider avant merge** : Tests, linting, validation docs
 3. **Messages de commit clairs** : Suivre Conventional Commits
 4. **PR descriptives** : Expliquer les changements

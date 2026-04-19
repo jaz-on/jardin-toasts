@@ -276,10 +276,9 @@ function bj_display_rating($post_id, $show_label = true, $show_raw = true) {
 ## Git Workflow
 
 ### Branches
-- **main**: Production-ready code
-- **develop**: Development branch
-- **feature/**: Feature branches
-- **docs/**: Documentation branch
+- **main**: Default branch; production-ready / reference code
+- **dev**: Development integration; Git Updater on dev sites targets this branch
+- **feature/**: Feature branches (from `dev` unless hotfix from `main`)
 
 ### Commits
 - **Format**: Conventional commits preferred

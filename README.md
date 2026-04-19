@@ -2,6 +2,12 @@
 
 A WordPress plugin to automatically sync and display your Untappd beer check-ins on your WordPress site.
 
+## Development status
+
+**Current release in this repository: 0.1.0** — installable plugin bootstrap only (`beer-journal.php`). Untappd sync, CPT, admin UI, and other MVP behaviour are **specified in [`docs/`](docs/)** and tracked for a future **1.0.0**; they are **not** implemented in code yet. See [CHANGELOG.md](CHANGELOG.md) and [DEVELOPMENT.md](DEVELOPMENT.md).
+
+**Branches:** [`main`](https://github.com/jaz-on/beer-journal) is the default branch (reference + releases). Day-to-day integration and [Git Updater](https://git-updater.com/) on a dev site typically use the **`dev`** branch.
+
 ## Description
 
 Beer Journal allows you to automatically sync your Untappd check-ins to your WordPress site, creating a beautiful beer journal with ratings, photos, and detailed information about each beer you've tried.

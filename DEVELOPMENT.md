@@ -1,5 +1,13 @@
 # Development Guide
 
+## Repository and branches
+
+- **`main`**: default branch on GitHub; reference tree, releases, and PR target. Protected (no force-push).
+- **`dev`**: integration branch for day-to-day work; typical target for [Git Updater](https://git-updater.com/) on a development site (`Primary Branch: dev` in plugin headers).
+- **Documentation** lives in `docs/` on the same branches (no separate long-lived `docs` branch).
+
+**Plugin status:** `0.1.0` is an installable bootstrap (`beer-journal.php` only). MVP behaviour is described under `docs/` and in [CHANGELOG.md](CHANGELOG.md) as *target scope*, not as shipped code.
+
 ## Quick Start
 
 This guide will help you get started developing Beer Journal.
@@ -59,7 +67,7 @@ beer-journal/
 Follow this order when implementing features:
 
 ### 1. Structure de base
-- [ ] Main plugin file (`beer-journal.php`)
+- [x] Main plugin file (`beer-journal.php`) — bootstrap only (headers, constants, text domain); feature code still to add
 - [ ] Activation/deactivation hooks
 - [ ] Custom Post Type registration (`BJ_Post_Type`)
 - [ ] Taxonomies registration (`BJ_Taxonomies`)
@@ -189,40 +197,11 @@ npm start
 
 ### Branches
 
-- `main`: Production-ready code
-- `develop`: Development branch
-- `feature/`: Feature branches
-- `docs/`: Documentation branch
+- **`main`**: production-ready / reference; default branch; merge via PR when collaboration grows.
+- **`dev`**: daily integration; push here to trigger Git Updater on the dev WordPress site (webhook + `branch=dev`).
+- **`feature/*`**: short-lived branches from `dev` (or `main` for hotfixes, as needed).
 
-### Documentation Workflow
-
-The `docs` branch is used for documentation maintenance and updates.
-
-**Structure**:
-```
-main (production)
-  ↑
-  ├── docs (documentation stable)
-  │   ├── docs/feature-name (documentation for a feature)
-  │   └── docs/update-topic (major documentation updates)
-  │
-  └── develop (code in development)
-      └── feature/* (code branches)
-```
-
-**Rules**:
-- **Small corrections**: Directly on `docs`, then merge to `main`
-- **Feature documentation**: Create `docs/feature-name` branch from `docs`
-- **Major updates**: Create `docs/update-topic` branch from `docs`
-- **Validation**: Always validate links and consistency before merge
-
-**Lifecycle**:
-1. Code development on `develop` or `feature/*`
-2. Parallel documentation on `docs/feature-name`
-3. Merge code → `develop`
-4. Merge doc → `docs`
-5. Validate and merge `docs` → `main`
-6. Merge `develop` → `main` (with up-to-date documentation)
+Documentation changes go through the same branches: edit `docs/` on `dev`, open a PR to `main` when ready to publish.
 
 **Tools**:
 - `scripts/validate-docs.sh` - Validate documentation structure and links
