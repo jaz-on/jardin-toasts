@@ -58,6 +58,26 @@ function bj_get_default_rating_labels() {
 }
 
 /**
+ * Stored rating labels (0–5) merged with defaults.
+ *
+ * @return array<int, string>
+ */
+function bj_get_rating_labels() {
+	$defaults = bj_get_default_rating_labels();
+	$stored   = get_option( 'bj_rating_labels', false );
+	if ( false === $stored || ! is_array( $stored ) ) {
+		return apply_filters( 'bj_rating_labels', $defaults );
+	}
+	$out = array();
+	for ( $i = 0; $i <= 5; $i++ ) {
+		$out[ $i ] = isset( $stored[ $i ] ) && '' !== $stored[ $i ]
+			? (string) $stored[ $i ]
+			: ( isset( $defaults[ $i ] ) ? $defaults[ $i ] : '' );
+	}
+	return apply_filters( 'bj_rating_labels', $out );
+}
+
+/**
  * Default Untappd RSS feed URL used when the option is not stored yet.
  *
  * Optional: define `BJ_RSS_FEED_URL` in wp-config.php to override the default feed URL.
@@ -109,6 +129,36 @@ function bj_get_untappd_username() {
 		return bj_get_default_untappd_username();
 	}
 	return (string) $stored;
+}
+
+/**
+ * Extract Untappd profile username from an RSS feed URL.
+ *
+ * @param string $url RSS URL.
+ * @return string Username slug or empty.
+ */
+function bj_parse_username_from_rss_url( $url ) {
+	if ( ! is_string( $url ) || '' === trim( $url ) ) {
+		return '';
+	}
+	if ( preg_match( '#untappd\.com/rss/user/([^/?&#]+)#i', $url, $m ) ) {
+		return sanitize_user( rawurldecode( $m[1] ), true );
+	}
+	return '';
+}
+
+/**
+ * Public URL for the beer check-in archive (rewrite slug: checkins).
+ *
+ * @return string
+ */
+function bj_get_checkin_archive_url() {
+	$pt = 'beer_checkin';
+	if ( ! post_type_exists( $pt ) ) {
+		return home_url( '/' );
+	}
+	$link = get_post_type_archive_link( $pt );
+	return is_string( $link ) && '' !== $link ? $link : home_url( '/' );
 }
 
 /**

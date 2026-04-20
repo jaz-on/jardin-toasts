@@ -26,6 +26,22 @@ class BJ_Settings {
 	 */
 	public function register() {
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
+		add_action( 'init', array( __CLASS__, 'maybe_migrate_placeholder_toggle' ), 2 );
+	}
+
+	/**
+	 * One-time: if a placeholder attachment was saved before the toggle existed, enable the toggle.
+	 *
+	 * @return void
+	 */
+	public static function maybe_migrate_placeholder_toggle() {
+		if ( '1' === get_option( 'bj_placeholder_toggle_migrated', '' ) ) {
+			return;
+		}
+		if ( (int) get_option( 'bj_placeholder_image_id', 0 ) > 0 ) {
+			update_option( 'bj_use_placeholder_image', true );
+		}
+		update_option( 'bj_placeholder_toggle_migrated', '1', false );
 	}
 
 	/**
@@ -60,6 +76,7 @@ class BJ_Settings {
 			'bj_notify_on_error'        => true,
 			'bj_notification_email'     => '',
 			'bj_archive_layout'         => 'grid',
+			'bj_use_placeholder_image'  => false,
 			'bj_placeholder_image_id'   => 0,
 			'bj_last_rss_sync_at'       => '',
 		);
@@ -118,6 +135,7 @@ class BJ_Settings {
 			case 'bj_import_venues':
 			case 'bj_notify_on_sync':
 			case 'bj_notify_on_error':
+			case 'bj_use_placeholder_image':
 				return (bool) $value;
 			case 'bj_import_batch_size':
 			case 'bj_import_delay':
@@ -127,9 +145,9 @@ class BJ_Settings {
 			case 'bj_excluded_checkins':
 				return is_array( $value ) ? array_map( 'sanitize_text_field', $value ) : array();
 			case 'bj_rating_rules':
-				return is_array( $value ) ? $value : bj_get_default_rating_rules();
+				return self::sanitize_rating_rules_value( $value );
 			case 'bj_rating_labels':
-				return is_array( $value ) ? $value : bj_get_default_rating_labels();
+				return self::sanitize_rating_labels_value( $value );
 			case 'bj_import_checkpoint':
 				return is_array( $value ) ? $value : array();
 			case 'bj_untappd_username':
@@ -162,5 +180,60 @@ class BJ_Settings {
 		$defaults = self::get_defaults();
 		$fallback = array_key_exists( $key, $defaults ) ? $defaults[ $key ] : false;
 		return get_option( $key, $fallback );
+	}
+
+	/**
+	 * Sanitize rating band rules from settings form.
+	 *
+	 * @param mixed $value Posted value.
+	 * @return array<int, array{min: float, max: float, round: int}>
+	 */
+	private static function sanitize_rating_rules_value( $value ) {
+		$defaults = bj_get_default_rating_rules();
+		if ( ! is_array( $value ) ) {
+			return $defaults;
+		}
+		$out   = array();
+		$count = count( $defaults );
+		for ( $i = 0; $i < $count; $i++ ) {
+			$def = $defaults[ $i ];
+			if ( ! isset( $value[ $i ] ) || ! is_array( $value[ $i ] ) ) {
+				$out[] = $def;
+				continue;
+			}
+			$row   = $value[ $i ];
+			$min   = isset( $row['min'] ) ? floatval( wp_unslash( $row['min'] ) ) : $def['min'];
+			$max   = isset( $row['max'] ) ? floatval( wp_unslash( $row['max'] ) ) : $def['max'];
+			$round = isset( $row['round'] ) ? absint( $row['round'] ) : $def['round'];
+			$round = min( 5, max( 0, $round ) );
+			$out[] = array(
+				'min'   => $min,
+				'max'   => $max,
+				'round' => $round,
+			);
+		}
+		return $out;
+	}
+
+	/**
+	 * Sanitize per-star labels (0–5).
+	 *
+	 * @param mixed $value Posted value.
+	 * @return array<int, string>
+	 */
+	private static function sanitize_rating_labels_value( $value ) {
+		$defaults = bj_get_default_rating_labels();
+		if ( ! is_array( $value ) ) {
+			return $defaults;
+		}
+		$out = array();
+		for ( $i = 0; $i <= 5; $i++ ) {
+			if ( ! isset( $value[ $i ] ) ) {
+				$out[ $i ] = isset( $defaults[ $i ] ) ? $defaults[ $i ] : '';
+				continue;
+			}
+			$out[ $i ] = sanitize_text_field( wp_unslash( (string) $value[ $i ] ) );
+		}
+		return $out;
 	}
 }

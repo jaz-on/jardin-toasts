@@ -4,7 +4,7 @@
 
 **Phase 1 (MVP)** is **complete** in code for everything listed in [README.md](../../README.md) under “Phase 1 (MVP) - Version 1.0”. Core shipped items are under **[1.0.0](../../CHANGELOG.md#100---2026-04-20)** in [CHANGELOG.md](../../CHANGELOG.md); follow-up polish (stats box, caching helpers, email notifications, archive grid/table, placeholder image, optional DB index) is recorded under **[Unreleased](../../CHANGELOG.md#unreleased)** until you authorize a new version number.
 
-Items below marked **Phase 2** are intentionally out of scope for the first release.
+**Phase 2+ (post-MVP)** is tracked only in [`../todolist-future/TODOLIST.md`](../todolist-future/TODOLIST.md) (single backlog).
 
 ## Version 1.0.x (implemented)
 
@@ -31,8 +31,6 @@ Items below marked **Phase 2** are intentionally out of scope for the first rele
 - [x] Logs viewer (tail of today’s file, Advanced tab)
 - [x] **At a glance** stats: published/draft counts + last RSS sync time (Unreleased)
 - [x] Email notifications: optional on sync success and on RSS error (Unreleased)
-- [ ] **Phase 2:** Dedicated taxonomies merge/review UI
-- [ ] **Phase 2:** Advanced statistics with charts (dashboard widget level)
 
 ### Frontend
 - [x] Default plugin templates: archive, single, taxonomies (`public/templates/`)
@@ -42,7 +40,6 @@ Items below marked **Phase 2** are intentionally out of scope for the first rele
 - [x] JSON-LD Review block (option `bj_schema_enabled`)
 - [x] Microformats classes on templates (option `bj_microformats_enabled`)
 - [x] Archive + taxonomy **grid or table** layout (option `bj_archive_layout`) (Unreleased)
-- [ ] **Phase 2:** Front-end filters by rating (AJAX / faceted UI)
 
 ### Data management
 - [x] Publish vs draft when rating missing (draft + `_bj_incomplete_reason`)
@@ -69,5 +66,6 @@ Items below marked **Phase 2** are intentionally out of scope for the first rele
 
 ## Related Documentation
 
+- [Post-MVP backlog (TODOLIST)](../todolist-future/TODOLIST.md)
 - [Roadmap](roadmap.md)
 - [Core Modules](core-modules.md)

@@ -44,6 +44,9 @@ class BJ_Image_Handler {
 
 		$att_id = media_sideload_image( $url, $post_id, $title, 'id' );
 		if ( is_wp_error( $att_id ) ) {
+			if ( ! get_option( 'bj_use_placeholder_image', false ) ) {
+				return $att_id;
+			}
 			$placeholder = absint( get_option( 'bj_placeholder_image_id', 0 ) );
 			if ( $placeholder && wp_attachment_is_image( $placeholder ) ) {
 				set_post_thumbnail( $post_id, $placeholder );

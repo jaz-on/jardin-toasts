@@ -66,6 +66,7 @@ Complete documentation is available in the `/docs/` directory:
 - [User Flows](docs/user-flows/installation.md)
 - [WordPress Integration](docs/wordpress/hooks.md)
 - [Development Guide](docs/development/contributing.md)
+- [Post-MVP backlog](docs/todolist-future/TODOLIST.md)
 
 ## Project Structure
 
@@ -74,7 +75,7 @@ beer-journal/
 ├── includes/          # Core plugin classes
 ├── admin/             # Admin interface
 ├── public/            # Frontend templates and assets
-├── blocks/            # Gutenberg blocks (Phase 2)
+├── blocks/            # Gutenberg (planned — see docs/todolist-future/TODOLIST.md)
 ├── languages/         # Translation files
 └── docs/              # Complete documentation
 ```
@@ -90,21 +91,9 @@ beer-journal/
 - Complete admin settings page + at-a-glance stats
 - Logs, error handling, and optional email notifications
 
-### Phase 2 (Advanced) - Version 1.5
-- Gutenberg blocks (3 blocks)
-- Advanced statistics with charts
-- WordPress dashboard widget
-- Shortcodes for legacy support
-- CSV/JSON export
-- AJAX search/filters
+### After the MVP (Phase 2+)
 
-### Phase 3+ (Future)
-- REST API endpoints
-- Webhooks for real-time sync
-- Interactive map view
-- Wishlist feature
-- Private notes on check-ins
-- Cellar management
+Retained ideas (stats/dashboard, export-import, external sources, taxonomy merge UI, front filters, rating rebuild, badges, documentation for blocks/shortcodes) are **centralized** in [`docs/todolist-future/TODOLIST.md`](docs/todolist-future/TODOLIST.md). Priorities and checkboxes are maintained there, not in this README.
 
 ## Important Notes
 

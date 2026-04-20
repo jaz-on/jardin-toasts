@@ -69,22 +69,32 @@ class BJ_Admin {
 			array( 'dashicons' ),
 			BJ_VERSION
 		);
+		wp_enqueue_media();
 		wp_enqueue_script(
 			'beer-journal-admin',
 			BJ_PLUGIN_URL . 'admin/assets/js/admin.js',
-			array( 'jquery' ),
+			array( 'jquery', 'media' ),
 			BJ_VERSION,
 			true
 		);
+		$placeholder_id = absint( BJ_Settings::get( 'bj_placeholder_image_id' ) );
+		$placeholder_thumb = $placeholder_id ? wp_get_attachment_image_url( $placeholder_id, 'thumbnail' ) : '';
 		wp_localize_script(
 			'beer-journal-admin',
 			'bjAdmin',
 			array(
-				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-				'nonce'   => wp_create_nonce( 'bj_admin' ),
-				'i18n'    => array(
-					'working' => __( 'Working…', 'beer-journal' ),
-					'done'    => __( 'Done.', 'beer-journal' ),
+				'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
+				'nonce'             => wp_create_nonce( 'bj_admin' ),
+				'rssUsername'       => bj_parse_username_from_rss_url( bj_get_rss_feed_url() ),
+				'placeholderId'     => $placeholder_id,
+				'placeholderThumb' => $placeholder_thumb ? $placeholder_thumb : '',
+				'i18n'              => array(
+					'working'        => __( 'Working…', 'beer-journal' ),
+					'done'           => __( 'Done.', 'beer-journal' ),
+					'useRssUsername' => __( 'Use username from RSS feed', 'beer-journal' ),
+					'chooseImage'    => __( 'Choose image', 'beer-journal' ),
+					'replaceImage'   => __( 'Replace image', 'beer-journal' ),
+					'removeImage'    => __( 'Remove', 'beer-journal' ),
 				),
 			)
 		);

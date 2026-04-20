@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Best-effort **DB index** `bj_checkin_meta` on `wp_postmeta` (activation + init); state stored in `bj_db_index_checkin_v1`
 
 ### Changed
+- Display & content: public archive URL shown under layout; beer photos / venues / social as Yes–No toggles with clearer copy; fallback image uses `bj_use_placeholder_image` + Media Library picker (no attachment ID field); `bj_parse_username_from_rss_url()`, `bj_get_checkin_archive_url()`
+- Import tab: username explained (slug only); “Use username from RSS feed” button; batch size & delay as labeled selects; Sync tab links to Import profile
+- Ratings tab: editable raw min/max bands, star level per band, and per-star labels (saved to `bj_rating_rules` / `bj_rating_labels` with sanitization); helper `bj_get_rating_labels()`
 - Settings screen: tab intros, card-style panels, stats strip, clearer copy; `BJ_Settings::get()` for defaults; enqueue uses Dashicons; “General” tab renamed to “Display & content”
 - Imported check-in notes: `bj_normalize_imported_post_content()` applies `wpautop` for plain text; single check-in template gets improved `.entry-content` typography
 - Default Untappd username for new installs / unset option: `jaz_on` (`bj_get_untappd_username()`)
@@ -23,23 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default RSS feed URL is the maintainer’s Untappd RSS (example); override with `BJ_RSS_FEED_URL` in `wp-config.php` or the `bj_default_rss_feed_url` filter
 
 ### Planned for future versions
-- Gutenberg blocks (checkins-list, checkin-card, stats-dashboard)
-- Advanced statistics with charts
-- WordPress dashboard widget
-- Shortcodes for legacy support
-- CSV/JSON export functionality
-- AJAX search and filters
-- REST API endpoints
-- Webhooks for real-time sync
-- Interactive map view (Google Maps)
-- Wishlist feature
-- Private notes on check-ins
-- Cellar management
-- Multi-user support
-- Team profile aggregation
-- Export to other platforms
-- Import from BeerAdvocate, RateBeer
-- PWA support (offline mode)
+
+The retained post-MVP backlog (stats, export/import, integrations, admin tax UI, front filters, rating recalculation, badges, Phase 2 docs) lives in a **single document** : [`docs/todolist-future/TODOLIST.md`](docs/todolist-future/TODOLIST.md). Older broad idea lists are no longer maintained here.
 
 ## [1.0.0] - 2026-04-20
 

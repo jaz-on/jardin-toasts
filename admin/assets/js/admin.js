@@ -98,4 +98,72 @@
 				$btn.prop( 'disabled', false );
 			} );
 	} );
+
+	var $phToggle = $( '#bj_use_placeholder_image' );
+	var $phPicker = $( '#bj-placeholder-picker' );
+	var $phId = $( '#bj_placeholder_image_id' );
+	var $phPreview = $( '#bj-placeholder-preview' );
+	var $phSelect = $( '#bj-placeholder-select' );
+	var $phClear = $( '#bj-placeholder-clear' );
+
+	function bjTogglePlaceholderPicker() {
+		if ( ! $phToggle.length || ! $phPicker.length ) {
+			return;
+		}
+		$phPicker.toggle( $phToggle.is( ':checked' ) );
+	}
+
+	if ( $phToggle.length ) {
+		$phToggle.on( 'change', bjTogglePlaceholderPicker );
+		bjTogglePlaceholderPicker();
+	}
+
+	if ( typeof wp !== 'undefined' && wp.media && $phSelect.length ) {
+		var frame;
+		$phSelect.on( 'click', function ( e ) {
+			e.preventDefault();
+			if ( frame ) {
+				frame.open();
+				return;
+			}
+			frame = wp.media( {
+				title: bjAdmin.i18n.chooseImage,
+				button: { text: bjAdmin.i18n.chooseImage },
+				multiple: false,
+				library: { type: 'image' },
+			} );
+			frame.on( 'select', function () {
+				var att = frame.state().get( 'selection' ).first().toJSON();
+				$phId.val( att.id );
+				var url =
+					att.sizes && att.sizes.thumbnail
+						? att.sizes.thumbnail.url
+						: att.url;
+				$phPreview.html( '<img src="' + url + '" alt="" />' );
+				$phSelect.text( bjAdmin.i18n.replaceImage );
+			} );
+			frame.open();
+		} );
+	}
+
+	$phClear.on( 'click', function ( e ) {
+		e.preventDefault();
+		$phId.val( '0' );
+		$phPreview.empty();
+		$phSelect.text( bjAdmin.i18n.chooseImage );
+	} );
+
+	if ( bjAdmin.placeholderThumb && $phPreview.length && parseInt( bjAdmin.placeholderId, 10 ) > 0 ) {
+		$phPreview.html(
+			'<img src="' + bjAdmin.placeholderThumb + '" alt="" />'
+		);
+		$phSelect.text( bjAdmin.i18n.replaceImage );
+	}
+
+	$( '#bj-use-rss-username' ).on( 'click', function ( e ) {
+		e.preventDefault();
+		if ( bjAdmin.rssUsername ) {
+			$( '#bj_untappd_username' ).val( bjAdmin.rssUsername );
+		}
+	} );
 }( jQuery ) );

@@ -35,9 +35,11 @@ $defaults = array(
 	'bj_notify_on_error',
 	'bj_notification_email',
 	'bj_archive_layout',
+	'bj_use_placeholder_image',
 	'bj_placeholder_image_id',
 	'bj_last_rss_sync_at',
 	'bj_db_index_checkin_v1',
+	'bj_placeholder_toggle_migrated',
 );
 
 foreach ( $defaults as $key ) {

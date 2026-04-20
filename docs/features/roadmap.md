@@ -2,7 +2,7 @@
 
 ## Vue d'ensemble
 
-Ce document liste uniquement les fonctionnalités du MVP (Phase 1, version 1.0). Les phases ultérieures et les idées futures ont été déplacées vers `docs/todolist-future/TODOLIST.md` pour éviter qu'elles soient mélangées à la documentation MVP et générées par l'agent IA.
+Ce document liste uniquement les fonctionnalités du MVP (Phase 1, version 1.0). Le backlog **post-MVP retenu** est centralisé dans [`../todolist-future/TODOLIST.md`](../todolist-future/TODOLIST.md).
 
 
 ## Fonctionnalités principales
@@ -15,6 +15,6 @@ Ce document liste uniquement les fonctionnalités du MVP (Phase 1, version 1.0).
 
 ## Références
 
-- [Checklist](checklist.md) — Checklist de développement
-- [Core Modules](core-modules.md) — Modules principaux
-- [Checklist](checklist.md) — Checklist de développement
+- [Checklist](checklist.md) — Développement MVP
+- [TODOLIST post-MVP](../todolist-future/TODOLIST.md)
+- [Core Modules](core-modules.md)
