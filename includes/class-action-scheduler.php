@@ -52,7 +52,7 @@ class BJ_Action_Scheduler {
 		if ( ! get_option( 'bj_sync_enabled', true ) ) {
 			return;
 		}
-		$feed = get_option( 'bj_rss_feed_url', '' );
+		$feed = bj_get_rss_feed_url();
 		if ( ! is_string( $feed ) || '' === trim( $feed ) ) {
 			return;
 		}

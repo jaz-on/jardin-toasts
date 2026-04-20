@@ -38,8 +38,8 @@ $tabs     = array(
 				<tr>
 					<th scope="row"><label for="bj_rss_feed_url"><?php esc_html_e( 'Untappd RSS feed URL', 'beer-journal' ); ?></label></th>
 					<td>
-						<input name="bj_rss_feed_url" id="bj_rss_feed_url" type="url" class="regular-text" value="<?php echo esc_attr( get_option( 'bj_rss_feed_url', '' ) ); ?>" placeholder="https://untappd.com/rss/user/…" />
-						<p class="description"><?php esc_html_e( 'Your public RSS feed (about 25 most recent check-ins).', 'beer-journal' ); ?></p>
+						<input name="bj_rss_feed_url" id="bj_rss_feed_url" type="url" class="regular-text" value="<?php echo esc_attr( bj_get_rss_feed_url() ); ?>" placeholder="https://untappd.com/rss/user/username?key=…" />
+						<p class="description"><?php esc_html_e( 'Your Untappd RSS feed (about 25 most recent check-ins). A default feed URL is pre-filled as an example.', 'beer-journal' ); ?></p>
 					</td>
 				</tr>
 				<tr>

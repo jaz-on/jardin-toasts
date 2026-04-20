@@ -12,7 +12,7 @@ RSS sync configuration and state.
 
 | Option Name | Type | Description | Default |
 |-------------|------|-------------|---------|
-| `bj_rss_feed_url` | string | Untappd RSS feed URL | `""` |
+| `bj_rss_feed_url` | string | Untappd RSS feed URL | Maintainer default RSS URL from `bj_get_default_rss_feed_url()` until saved |
 | `bj_sync_enabled` | bool | Whether automatic sync is enabled | `true` |
 | `bj_sync_frequency` | string | Manual frequency override (optional) | `""` |
 | `bj_last_checkin_date` | datetime | Date of last imported check-in | `""` |

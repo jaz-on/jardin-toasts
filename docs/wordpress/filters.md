@@ -112,6 +112,22 @@ add_filter('bj_rating_mapped', function($rounded, $raw_rating) {
 
 ## Data Filters
 
+### Default RSS feed URL
+
+**Filter**: `bj_default_rss_feed_url`
+
+**Parameters**:
+- `$url` (string): Default Untappd RSS URL used when `bj_rss_feed_url` has never been saved, or when overriding via `BJ_RSS_FEED_URL` in `wp-config.php`.
+
+**Usage**:
+```php
+add_filter( 'bj_default_rss_feed_url', function ( $url ) {
+	return 'https://untappd.com/rss/user/yourname';
+} );
+```
+
+---
+
 ### RSS Item Parsed
 
 **Filter**: `bj_rss_item_parsed`

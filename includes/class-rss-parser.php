@@ -21,7 +21,7 @@ class BJ_RSS_Parser {
 	 * @return true|WP_Error
 	 */
 	public function sync_new_items( BJ_Importer $importer ) {
-		$url = get_option( 'bj_rss_feed_url', '' );
+		$url = bj_get_rss_feed_url();
 		if ( ! is_string( $url ) || '' === trim( $url ) ) {
 			return new WP_Error( 'no_feed', __( 'RSS feed URL is not configured.', 'beer-journal' ) );
 		}

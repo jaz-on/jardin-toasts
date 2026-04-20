@@ -58,6 +58,38 @@ function bj_get_default_rating_labels() {
 }
 
 /**
+ * Default Untappd RSS feed URL used when the option is not stored yet.
+ *
+ * Optional: define `BJ_RSS_FEED_URL` in wp-config.php to override the default feed URL.
+ *
+ * @return string
+ */
+function bj_get_default_rss_feed_url() {
+	if ( defined( 'BJ_RSS_FEED_URL' ) && is_string( BJ_RSS_FEED_URL ) && '' !== trim( BJ_RSS_FEED_URL ) ) {
+		return apply_filters( 'bj_default_rss_feed_url', esc_url_raw( BJ_RSS_FEED_URL ) );
+	}
+	return apply_filters(
+		'bj_default_rss_feed_url',
+		'https://untappd.com/rss/user/jaz_on?key=89731ff4bd5fc508dc3eae87a6cf93f4'
+	);
+}
+
+/**
+ * Effective RSS feed URL: stored value, or default when the option has never been saved.
+ *
+ * An intentionally empty saved value stays empty (disables sync until configured again).
+ *
+ * @return string
+ */
+function bj_get_rss_feed_url() {
+	$stored = get_option( 'bj_rss_feed_url', false );
+	if ( false === $stored ) {
+		return bj_get_default_rss_feed_url();
+	}
+	return trim( (string) $stored );
+}
+
+/**
  * Map raw Untappd rating (0–5) to rounded star level using stored rules.
  *
  * @param float|null $raw Raw rating.

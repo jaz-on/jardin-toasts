@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - RSS sync records `bj_last_rss_sync_at` on every successful run; import invalidates stats transient
 - `vendor/` (runtime Composer packages) and `composer.lock` are versioned so Git / Git Updater installs work without `composer install` on the server
+- Default RSS feed URL is the maintainer’s Untappd RSS (example); override with `BJ_RSS_FEED_URL` in `wp-config.php` or the `bj_default_rss_feed_url` filter
 
 ### Planned for future versions
 - Gutenberg blocks (checkins-list, checkin-card, stats-dashboard)

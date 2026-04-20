@@ -35,7 +35,7 @@ class BJ_Settings {
 	 */
 	public static function get_defaults() {
 		return array(
-			'bj_rss_feed_url'           => '',
+			'bj_rss_feed_url'           => bj_get_default_rss_feed_url(),
 			'bj_sync_enabled'           => true,
 			'bj_last_checkin_date'      => '',
 			'bj_last_imported_guid'     => '',

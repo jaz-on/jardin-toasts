@@ -44,11 +44,10 @@ Beer Journal allows you to automatically sync your Untappd check-ins to your Wor
 
 ### Initial Setup
 
-1. Get your Untappd RSS feed URL: `https://untappd.com/rss/user/YOUR_USERNAME`
-2. Go to **Beer Journal** in the admin menu and open the **Synchronization** tab
-3. Enter your RSS feed URL
-4. Choose your sync frequency (adaptive polling recommended)
-5. Click "Save Settings"
+1. Go to **Beer Journal** in the admin menu and open the **Synchronization** tab.
+2. The **RSS feed URL** field is pre-filled with the maintainer’s default Untappd RSS URL as an example; replace it with your own feed from Untappd (Account → RSS) if needed. You can also set `BJ_RSS_FEED_URL` in `wp-config.php` to override the default.
+3. Choose your sync frequency (adaptive polling recommended).
+4. Click **Save Settings**.
 
 ### Import Historical Check-ins
 
