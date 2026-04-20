@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Legal notice for site owners: [docs/legal/scraping-notice.md](docs/legal/scraping-notice.md)
+- Info notice on **Beer Journal → Advanced** tab summarizing scraping responsibility
+- README: link to legal notice; note on WP-Cron vs real cron on low-traffic sites
+
+### Changed
+- Plugin header `Primary Branch` set to `dev` for Git Updater workflows targeting the integration branch
+
 ### Planned for future versions
 - Gutenberg blocks (checkins-list, checkin-card, stats-dashboard)
 - Advanced statistics with charts

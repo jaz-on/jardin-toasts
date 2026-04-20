@@ -12,7 +12,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       beer-journal
  * GitHub Plugin URI: https://github.com/jaz-on/beer-journal
- * Primary Branch:    main
+ * Primary Branch:    dev
  *
  * @package BeerJournal
  */

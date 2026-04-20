@@ -184,6 +184,11 @@ $tabs     = array(
 					</td>
 				</tr>
 			</table>
+			<div class="notice notice-info inline" style="margin: 1em 0;">
+				<p>
+					<?php esc_html_e( 'Beer Journal reads public Untappd RSS and HTML only. Untappd may change pages at any time. You are responsible for complying with Untappd’s terms and for republishing only data you are allowed to use. See the repository file docs/legal/scraping-notice.md for details.', 'beer-journal' ); ?>
+				</p>
+			</div>
 			<h2><?php esc_html_e( 'Logs (today)', 'beer-journal' ); ?></h2>
 			<textarea readonly rows="12" class="large-text code"><?php echo esc_textarea( BJ_Logger::tail_today( 300 ) ); ?></textarea>
 			<p class="description">

@@ -38,12 +38,14 @@ Beer Journal allows you to automatically sync your Untappd check-ins to your Wor
 - **MySQL**: 5.7+ / MariaDB 10.3+
 - **PHP Extensions**: curl (or allow_url_fopen), dom, json, mbstring
 
+**Scheduled sync** uses WordPress’s pseudo-cron: visits to your site trigger scheduled tasks. On low-traffic sites, sync may run late unless you add a real cron job that hits `wp-cron.php` on a schedule (see WordPress documentation for “Cron Jobs”).
+
 ## Configuration
 
 ### Initial Setup
 
 1. Get your Untappd RSS feed URL: `https://untappd.com/rss/user/YOUR_USERNAME`
-2. Go to **Beer Journal > Settings > Synchronization**
+2. Go to **Beer Journal** in the admin menu and open the **Synchronization** tab
 3. Enter your RSS feed URL
 4. Choose your sync frequency (adaptive polling recommended)
 5. Click "Save Settings"
@@ -114,7 +116,7 @@ This plugin does **not** use an official Untappd API (none exists). Instead, it:
 - Scrapes HTML pages for complete metadata (rating, ABV, style, etc.)
 - Implements rate limiting to respect Untappd's servers
 
-Use the plugin only with **public** Untappd data you are allowed to republish on your site. Untappd may change page HTML at any time; scraping can break until the plugin is updated. This project is not affiliated with Untappd.
+Use the plugin only with **public** Untappd data you are allowed to republish on your site. Untappd may change page HTML at any time; scraping can break until the plugin is updated. This project is not affiliated with Untappd. A longer notice for site owners is in [docs/legal/scraping-notice.md](docs/legal/scraping-notice.md).
 
 ### Data Limitations
 
