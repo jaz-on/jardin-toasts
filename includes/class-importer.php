@@ -68,10 +68,11 @@ class BJ_Importer {
 
 		$beer_name    = isset( $data['beer_name'] ) ? sanitize_text_field( (string) $data['beer_name'] ) : '';
 		$brewery_name = isset( $data['brewery_name'] ) ? sanitize_text_field( (string) $data['brewery_name'] ) : '';
-		$comment      = isset( $data['comment'] ) ? wp_kses_post( (string) $data['comment'] ) : '';
+		$comment = isset( $data['comment'] ) ? wp_kses_post( (string) $data['comment'] ) : '';
 		if ( '' === $comment && isset( $data['post_content'] ) ) {
 			$comment = wp_kses_post( (string) $data['post_content'] );
 		}
+		$comment = bj_normalize_imported_post_content( $comment );
 
 		$rating_raw = isset( $data['rating_raw'] ) && null !== $data['rating_raw'] ? floatval( $data['rating_raw'] ) : null;
 

@@ -90,6 +90,47 @@ function bj_get_rss_feed_url() {
 }
 
 /**
+ * Default Untappd profile username (historical import / examples).
+ *
+ * @return string
+ */
+function bj_get_default_untappd_username() {
+	return apply_filters( 'bj_default_untappd_username', 'jaz_on' );
+}
+
+/**
+ * Username field value: stored, or default when the option was never saved.
+ *
+ * @return string
+ */
+function bj_get_untappd_username() {
+	$stored = get_option( 'bj_untappd_username', false );
+	if ( false === $stored ) {
+		return bj_get_default_untappd_username();
+	}
+	return (string) $stored;
+}
+
+/**
+ * Normalize check-in post content for storage and display (paragraphs for plain text).
+ *
+ * @param string $content Raw or HTML comment.
+ * @return string
+ */
+function bj_normalize_imported_post_content( $content ) {
+	$content = trim( (string) $content );
+	if ( '' === $content ) {
+		return '';
+	}
+	$content = wp_kses_post( $content );
+	// Already has block-level markup from Untappd / scraper.
+	if ( preg_match( '/<(p|div|ul|ol|blockquote|h[1-6]|table|pre|figure)\b/i', $content ) ) {
+		return $content;
+	}
+	return wpautop( $content );
+}
+
+/**
  * Map raw Untappd rating (0–5) to rounded star level using stored rules.
  *
  * @param float|null $raw Raw rating.

@@ -66,7 +66,7 @@ class BJ_Admin {
 		wp_enqueue_style(
 			'beer-journal-admin',
 			BJ_PLUGIN_URL . 'admin/assets/css/admin.css',
-			array(),
+			array( 'dashicons' ),
 			BJ_VERSION
 		);
 		wp_enqueue_script(

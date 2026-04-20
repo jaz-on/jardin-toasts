@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Best-effort **DB index** `bj_checkin_meta` on `wp_postmeta` (activation + init); state stored in `bj_db_index_checkin_v1`
 
 ### Changed
+- Settings screen: tab intros, card-style panels, stats strip, clearer copy; `BJ_Settings::get()` for defaults; enqueue uses Dashicons; “General” tab renamed to “Display & content”
+- Imported check-in notes: `bj_normalize_imported_post_content()` applies `wpautop` for plain text; single check-in template gets improved `.entry-content` typography
+- Default Untappd username for new installs / unset option: `jaz_on` (`bj_get_untappd_username()`)
 - RSS sync records `bj_last_rss_sync_at` on every successful run; import invalidates stats transient
 - `vendor/` (runtime Composer packages) and `composer.lock` are versioned so Git / Git Updater installs work without `composer install` on the server
 - Default RSS feed URL is the maintainer’s Untappd RSS (example); override with `BJ_RSS_FEED_URL` in `wp-config.php` or the `bj_default_rss_feed_url` filter

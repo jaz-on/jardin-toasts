@@ -39,7 +39,7 @@ class BJ_Settings {
 			'bj_sync_enabled'           => true,
 			'bj_last_checkin_date'      => '',
 			'bj_last_imported_guid'     => '',
-			'bj_untappd_username'       => '',
+			'bj_untappd_username'       => bj_get_default_untappd_username(),
 			'bj_excluded_checkins'      => array(),
 			'bj_rating_rules'           => bj_get_default_rating_rules(),
 			'bj_rating_labels'          => bj_get_default_rating_labels(),
@@ -150,5 +150,17 @@ class BJ_Settings {
 			default:
 				return is_scalar( $value ) ? sanitize_text_field( (string) $value ) : $value;
 		}
+	}
+
+	/**
+	 * Option value with registered default when the key is absent from the database.
+	 *
+	 * @param string $key Option name.
+	 * @return mixed
+	 */
+	public static function get( $key ) {
+		$defaults = self::get_defaults();
+		$fallback = array_key_exists( $key, $defaults ) ? $defaults[ $key ] : false;
+		return get_option( $key, $fallback );
 	}
 }
