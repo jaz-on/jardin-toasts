@@ -1,0 +1,9 @@
+.bj-admin-wrap .bj-ajax-status {
+	margin-left: 8px;
+	font-style: italic;
+}
+
+.bj-admin-wrap textarea.code {
+	font-family: Consolas, Monaco, monospace;
+	font-size: 12px;
+}

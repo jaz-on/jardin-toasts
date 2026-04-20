@@ -6,7 +6,7 @@
 - **`dev`**: integration branch for day-to-day work. The plugin header uses `Primary Branch: main` so default GitHub / Git Updater installs track stable work; on a development site (e.g. dev.jasonrouet.com), set the branch to `dev` in Git Updater’s settings per plugin.
 - **Documentation** lives in `docs/` on the same branches (no separate long-lived `docs` branch).
 
-**Plugin status:** `0.1.0` is an installable bootstrap (`beer-journal.php` only). MVP behaviour is described under `docs/` and in [CHANGELOG.md](CHANGELOG.md) as *target scope*, not as shipped code.
+**Plugin status:** `1.0.0` ships the MVP described in `docs/` (CPT, sync, scraping, import, admin, front). See [CHANGELOG.md](CHANGELOG.md) for the exact shipped feature list.
 
 ## Quick Start
 
@@ -67,61 +67,61 @@ beer-journal/
 Follow this order when implementing features:
 
 ### 1. Structure de base
-- [x] Main plugin file (`beer-journal.php`) — bootstrap only (headers, constants, text domain); feature code still to add
-- [ ] Activation/deactivation hooks
-- [ ] Custom Post Type registration (`BJ_Post_Type`)
-- [ ] Taxonomies registration (`BJ_Taxonomies`)
-- [ ] Meta fields registration (`BJ_Meta_Fields`)
-- [ ] Settings page structure (`BJ_Settings`)
+- [x] Main plugin file (`beer-journal.php`) — bootstrap, Composer, lifecycle hooks
+- [x] Activation/deactivation hooks (`BJ_Activator`, `BJ_Deactivator`)
+- [x] Custom Post Type registration (`BJ_Post_Type`)
+- [x] Taxonomies registration (`BJ_Taxonomies`)
+- [x] Meta fields registration (`BJ_Meta_Fields`)
+- [x] Settings API (`BJ_Settings`)
 
 ### 2. RSS Sync (Priorité)
-- [ ] RSS Parser (`BJ_RSS_Parser`)
-- [ ] Adaptive polling scheduler (`BJ_Action_Scheduler`)
-- [ ] GUID comparison logic
-- [ ] Integration with importer
+- [x] RSS Parser (`BJ_RSS_Parser`)
+- [x] Adaptive polling scheduler (`BJ_Action_Scheduler`)
+- [x] GUID comparison logic
+- [x] Integration with importer
 
 ### 3. Scraping
-- [ ] HTML Scraper (`BJ_Scraper`)
-- [ ] Data extraction logic
-- [ ] Error handling and retry
+- [x] HTML Scraper (`BJ_Scraper`)
+- [x] Data extraction logic
+- [x] Error handling and retry
 
 ### 4. Import Process
-- [ ] Importer (`BJ_Importer`)
-- [ ] Data validation
-- [ ] Post creation
-- [ ] Taxonomy assignment
-- [ ] Meta fields assignment
-- [ ] Rating mapping
+- [x] Importer (`BJ_Importer`)
+- [x] Data validation
+- [x] Post creation
+- [x] Taxonomy assignment
+- [x] Meta fields assignment
+- [x] Rating mapping
 
 ### 5. Image Handling
-- [ ] Image Handler (`BJ_Image_Handler`)
-- [ ] Download from URL
-- [ ] Media Library integration
-- [ ] Placeholder fallback
+- [x] Image Handler (`BJ_Image_Handler`)
+- [x] Download from URL
+- [x] Media Library integration
+- [ ] Placeholder fallback (optional / theme-level)
 
 ### 6. Historical Import
-- [ ] Crawler (`BJ_Crawler`)
-- [ ] Pagination handling
-- [ ] Batch processing
-- [ ] Progress tracking
+- [x] Crawler (`BJ_Crawler`)
+- [x] Pagination handling (best-effort profile pages)
+- [x] Batch processing (AJAX + optional background hook)
+- [x] Progress tracking (checkpoint option)
 
 ### 7. Admin Interface
-- [ ] Settings page (`BJ_Admin`)
-- [ ] Import interface
-- [ ] Progress tracking (AJAX)
-- [ ] Logs viewer
+- [x] Settings page (`BJ_Admin`, 5 tabs)
+- [x] Import interface (discover + batch)
+- [x] Progress feedback (AJAX)
+- [x] Logs viewer (Advanced tab)
 
 ### 8. Frontend Templates
-- [ ] Archive template
-- [ ] Single template
-- [ ] Taxonomy templates
-- [ ] Template tags
+- [x] Archive template
+- [x] Single template
+- [x] Taxonomy templates
+- [x] Template tags (`public/template-tags.php`)
 
 ### 9. Polish & Optimization
-- [ ] Caching
-- [ ] Logging
-- [ ] Error handling refinement
-- [ ] Performance optimization
+- [ ] Caching (transients — partial / future tuning)
+- [x] Logging
+- [x] Error handling refinement (core paths)
+- [ ] Performance optimization (ongoing)
 
 ## Coding Standards
 

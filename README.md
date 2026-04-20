@@ -4,7 +4,9 @@ A WordPress plugin to automatically sync and display your Untappd beer check-ins
 
 ## Development status
 
-**Current release in this repository: 0.1.0** — installable plugin bootstrap only (`beer-journal.php`). Untappd sync, CPT, admin UI, and other MVP behaviour are **specified in [`docs/`](docs/)** and tracked for a future **1.0.0**; they are **not** implemented in code yet. See [CHANGELOG.md](CHANGELOG.md) and [DEVELOPMENT.md](DEVELOPMENT.md).
+**Current release: 1.0.0** — full MVP: CPT `beer_checkin`, taxonomies, RSS sync with adaptive cron, HTML scraping, historical import (discover + batched AJAX), admin settings (5 tabs), logging, frontend templates, JSON-LD / microformats options. See [CHANGELOG.md](CHANGELOG.md) and [DEVELOPMENT.md](DEVELOPMENT.md).
+
+**Dependencies:** run `composer install` in the plugin directory so `vendor/` exists (the plugin uses Symfony DomCrawler and registers autoloaded classes). If you deploy with Git Updater, ensure Composer has been run on the target site or commit `vendor/` for distribution builds.
 
 **Branches:** [`main`](https://github.com/jaz-on/beer-journal) is the default branch (reference + releases). Day-to-day integration and [Git Updater](https://git-updater.com/) on a dev site typically use the **`dev`** branch.
 
@@ -26,7 +28,7 @@ Beer Journal allows you to automatically sync your Untappd check-ins to your Wor
 
 1. Upload the plugin files to `/wp-content/plugins/beer-journal/`
 2. Activate the plugin through the 'Plugins' screen
-3. Go to **Beer Journal > Settings** to configure your Untappd RSS feed URL
+3. Go to **Beer Journal** in the admin menu (or **Settings** from the plugin row) and open the **Synchronization** tab to configure your Untappd RSS feed URL
 4. Start syncing your check-ins!
 
 ## Requirements
@@ -48,7 +50,7 @@ Beer Journal allows you to automatically sync your Untappd check-ins to your Wor
 
 ### Import Historical Check-ins
 
-1. Go to **Beer Journal > Settings > Historical Import**
+1. Go to **Beer Journal** → **Historical import** tab
 2. Enter your Untappd profile URL
 3. Configure batch size and delays
 4. Click "Start Import"
@@ -111,6 +113,8 @@ This plugin does **not** use an official Untappd API (none exists). Instead, it:
 - Uses the RSS feed for recent check-ins (limited to 25 most recent)
 - Scrapes HTML pages for complete metadata (rating, ABV, style, etc.)
 - Implements rate limiting to respect Untappd's servers
+
+Use the plugin only with **public** Untappd data you are allowed to republish on your site. Untappd may change page HTML at any time; scraping can break until the plugin is updated. This project is not affiliated with Untappd.
 
 ### Data Limitations
 

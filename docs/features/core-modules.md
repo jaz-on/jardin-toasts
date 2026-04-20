@@ -97,10 +97,11 @@ beer-journal/
 **Class**: `BJ_Post_Type`
 
 **Features**:
-- CPT registration (`beer`)
+- CPT registration (`beer_checkin`)
 - REST API support
 - Rewrite rules
 - Capabilities
+- Admin menu: appears as submenu under top-level **Beer Journal** (`show_in_menu` => `beer-journal`)
 
 ---
 

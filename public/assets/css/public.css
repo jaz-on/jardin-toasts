@@ -1,0 +1,37 @@
+.bj-checkin-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 1.5rem;
+}
+
+.bj-card {
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.bj-card__thumb img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.bj-card__body {
+	padding: 1rem;
+}
+
+.bj-card__title {
+	margin: 0 0 0.5rem;
+	font-size: 1.1rem;
+}
+
+.bj-meta {
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+	margin-top: 0.5rem;
+}
+
+.bj-stars {
+	letter-spacing: 0.1em;
+}
