@@ -64,14 +64,17 @@ Ce plan suit la stratégie "Docs First, Code Second" pour auditer et documenter 
 
 ---
 
-## Phase 2 : Créer la branche documentation
+## Phase 2 : Modèle de branches (mise à jour 2026-04)
 
-### Étape 2.1 : Isoler la documentation
-- [ ] Créer une branche `docs` dédiée
-- [ ] Basculer sur la branche `docs`
-- [ ] Commiter la structure de dossiers créée
+L’approche « branche Git nommée `docs` » a été **abandonnée**. À la place :
 
-**Justification :** Isoler les commits massifs de documentation auto-générée des changements fonctionnels pour faciliter la revue.
+- **`main`** : branche par défaut GitHub ; référence + releases.
+- **`dev`** : intégration quotidienne (ex. Git Updater sur un site de dev).
+- Le dossier **`docs/`** est commité sur **`dev`** et **`main`** comme le reste du dépôt.
+
+Pour de gros chantiers uniquement documentation, utiliser une branche **`feature/docs-…`** depuis **`dev`**, puis merger dans **`dev`**.
+
+**Références :** [DEVELOPMENT.md](../DEVELOPMENT.md), [workflow-documentation.md](development/workflow-documentation.md).
 
 ---
 
@@ -717,10 +720,10 @@ Ce plan suit la stratégie "Docs First, Code Second" pour auditer et documenter 
 5. Polish & optimisation (caching, logs, blocks, i18n)
 
 ### Prochaines étapes après l'audit
-1. Commiter la branche `docs`
-2. Créer une PR pour review
-3. Fusionner dans `main` une fois validée
-4. Commencer le développement avec la documentation comme référence
+1. Travailler sur **`dev`** (branche + commits dans le dépôt, dossier `docs/` inclus)
+2. Ouvrir une PR **`dev` → `main`** pour review si besoin
+3. Fusionner dans **`main`** une fois validé
+4. Poursuivre le développement avec la documentation comme référence
 5. Mettre à jour la documentation au fur et à mesure du développement
 
 ---

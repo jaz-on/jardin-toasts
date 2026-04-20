@@ -143,30 +143,28 @@ git pull origin dev
 git branch -d feature/rss-parser
 ```
 
-### Documentation en parallèle
+### Documentation (même flux que le code)
+
+La documentation vit dans le dossier `docs/` sur les mêmes branches. Pas de branche Git nommée `docs`.
 
 ```bash
-# 1. Créer branche de documentation
-git checkout docs
-git checkout -b docs/feature-rss-parser
-
-# 2. Documenter
-# ... documentation ...
-
-# 3. Commiter
-git add .
-git commit -m "docs: Document RSS parser feature"
-
-# 4. Merger dans docs
-git checkout docs
-git merge docs/feature-rss-parser
-
-# 5. Valider
+# Option A : doc sur la même branche feature que le code (recommandé)
+git checkout dev
+git checkout -b feature/rss-parser
+# ... code + fichiers sous docs/ ...
 ./scripts/validate-docs.sh
+git add .
+git commit -m "feat(rss): parser et doc"
+git checkout dev
+git merge feature/rss-parser --no-ff
 
-# 6. Merger docs dans main
-git checkout main
-git merge docs
+# Option B : branche doc seule depuis dev
+git checkout dev
+git checkout -b feature/docs-rss-parser
+# ... uniquement docs/ ...
+./scripts/validate-docs.sh
+git commit -am "docs: RSS parser"
+git checkout dev && git merge feature/docs-rss-parser --no-ff
 ```
 
 ## Bonnes pratiques
