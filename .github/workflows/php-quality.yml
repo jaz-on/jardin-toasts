@@ -1,0 +1,53 @@
+name: PHP Quality
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - '**.php'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'phpunit.xml.dist'
+      - 'phpstan.neon.dist'
+      - '.github/workflows/php-quality.yml'
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - '**.php'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'phpunit.xml.dist'
+      - 'phpstan.neon.dist'
+      - '.github/workflows/php-quality.yml'
+
+jobs:
+  quality:
+    name: PHPCS, PHPStan, PHPUnit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, mbstring
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: PHPCS
+        run: composer run phpcs
+
+      - name: PHPStan
+        run: composer run phpstan
+
+      - name: PHPUnit
+        run: composer run test

@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- RSS sync **queue** (`bj_rss_sync_queue`) with per-cron cap (`bj_rss_max_per_run`, Advanced settings) and follow-up hook `bj_rss_queue_tick`; batch meta lookup `bj_get_post_ids_by_checkin_ids()`; manual “Run sync now” uses higher cap via `bj_rss_manual_sync_max_items`
+- **Sync health** (Advanced): queue depth, incomplete draft count, scraper markup version; stats strip shows RSS queue and incomplete drafts
+- Bulk action **Re-scrape from Untappd** on check-in list (`bj_bulk_rescrape_max_per_request`); helper `bj_rescrape_checkin_post()`
+- `BJ_Scraper_Config` with `bj_scraper_dom_selectors` filter and `MARKUP_VERSION` for support logs
+- PHPStan (`phpstan.neon.dist`, `composer phpstan`) and GitHub Action **PHP Quality** (PHPCS, PHPStan, PHPUnit)
 - Admin “At a glance” stats (cached counts + last RSS sync time); `bj_get_cached_data()` / `bj_invalidate_stats_cache()`
 - Optional **email notifications** (sync success, RSS errors) with dedicated address; wired for cron, manual sync, and AJAX
 - **Archive layout** option: grid (cards) or **table** on archive and taxonomy templates; shared `archive-loop` partial; `body_class` layout hint
@@ -15,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Best-effort **DB index** `bj_checkin_meta` on `wp_postmeta` (activation + init); state stored in `bj_db_index_checkin_v1`
 
 ### Changed
+- **Dependencies**: removed unused Guzzle; HTTP remains WordPress `wp_remote_get`; runtime Composer is Symfony DomCrawler + CSS Selector only
+- RSS sync no longer skips work on **GUID-only** match; missing check-ins after a failed import can be detected via batched ID lookup
 - Display & content: public archive URL shown under layout; beer photos / venues / social as Yes–No toggles with clearer copy; fallback image uses `bj_use_placeholder_image` + Media Library picker (no attachment ID field); `bj_parse_username_from_rss_url()`, `bj_get_checkin_archive_url()`
 - Import tab: username explained (slug only); “Use username from RSS feed” button; batch size & delay as labeled selects; Sync tab links to Import profile
 - Ratings tab: editable raw min/max bands, star level per band, and per-star labels (saved to `bj_rating_rules` / `bj_rating_labels` with sanitization); helper `bj_get_rating_labels()`

@@ -25,6 +25,9 @@ class BJ_Admin {
 		add_action( 'wp_ajax_bj_sync_now', array( $this, 'ajax_sync_now' ) );
 		add_action( 'wp_ajax_bj_crawl_discover', array( $this, 'ajax_crawl_discover' ) );
 		add_action( 'wp_ajax_bj_crawl_batch', array( $this, 'ajax_crawl_batch' ) );
+		add_filter( 'bulk_actions-edit-beer_checkin', array( $this, 'beer_checkin_bulk_actions' ) );
+		add_filter( 'handle_bulk_actions-edit-beer_checkin', array( $this, 'handle_beer_checkin_bulk' ), 10, 3 );
+		add_action( 'admin_notices', array( $this, 'bulk_rescrape_admin_notice' ) );
 	}
 
 	/**
@@ -136,7 +139,7 @@ class BJ_Admin {
 		}
 		$parser   = new BJ_RSS_Parser();
 		$importer = new BJ_Importer();
-		$result   = $parser->sync_new_items( $importer );
+		$result   = $parser->sync_new_items( $importer, array( 'manual' => true ) );
 		if ( is_wp_error( $result ) ) {
 			bj_send_notification_email(
 				'[Beer Journal] ' . __( 'RSS sync failed', 'beer-journal' ),
@@ -263,5 +266,96 @@ class BJ_Admin {
 				'done'         => empty( $queue ),
 			)
 		);
+	}
+
+	/**
+	 * Bulk action label for check-in list.
+	 *
+	 * @param array<string, string> $actions Actions.
+	 * @return array<string, string>
+	 */
+	public function beer_checkin_bulk_actions( $actions ) {
+		$actions['bj_bulk_rescrape'] = __( 'Re-scrape from Untappd', 'beer-journal' );
+		return $actions;
+	}
+
+	/**
+	 * Run re-scrape on selected check-ins (capped per request).
+	 *
+	 * @param string $redirect_url Redirect URL.
+	 * @param string $action       Action name.
+	 * @param array<int, int>      $post_ids   Post IDs.
+	 * @return string
+	 */
+	public function handle_beer_checkin_bulk( $redirect_url, $action, $post_ids ) {
+		if ( 'bj_bulk_rescrape' !== $action || ! is_array( $post_ids ) ) {
+			return $redirect_url;
+		}
+		$cap   = (int) apply_filters( 'bj_bulk_rescrape_max_per_request', 5 );
+		$cap   = max( 1, min( 25, $cap ) );
+		$done  = 0;
+		$total = count( $post_ids );
+		foreach ( $post_ids as $pid ) {
+			if ( $done >= $cap ) {
+				break;
+			}
+			$pid = absint( $pid );
+			if ( ! $pid || ! current_user_can( 'edit_post', $pid ) ) {
+				continue;
+			}
+			$res = bj_rescrape_checkin_post( $pid );
+			if ( ! is_wp_error( $res ) ) {
+				++$done;
+			}
+		}
+		return add_query_arg(
+			array(
+				'bj_rescraped'      => $done,
+				'bj_rescrape_total' => $total,
+				'bj_rescrape_cap'   => $cap,
+			),
+			$redirect_url
+		);
+	}
+
+	/**
+	 * Notice after bulk re-scrape.
+	 *
+	 * @return void
+	 */
+	public function bulk_rescrape_admin_notice() {
+		if ( ! isset( $_GET['bj_rescraped'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return;
+		}
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen || 'edit-beer_checkin' !== $screen->id ) {
+			return;
+		}
+		$done = absint( wp_unslash( $_GET['bj_rescraped'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$total = isset( $_GET['bj_rescrape_total'] ) ? absint( wp_unslash( $_GET['bj_rescrape_total'] ) ) : $done; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$cap   = isset( $_GET['bj_rescrape_cap'] ) ? absint( wp_unslash( $_GET['bj_rescrape_cap'] ) ) : 5; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( $total > $cap && $done === $cap ) {
+			echo '<div class="notice notice-warning is-dismissible"><p>';
+			echo esc_html(
+				sprintf(
+					/* translators: 1: processed count, 2: cap, 3: selected count */
+					__( 'Re-scraped %1$d check-in(s) (limit %2$d per run). Select again to process more of the %3$d selected.', 'beer-journal' ),
+					$done,
+					$cap,
+					$total
+				)
+			);
+			echo '</p></div>';
+			return;
+		}
+		echo '<div class="notice notice-success is-dismissible"><p>';
+		echo esc_html(
+			sprintf(
+				/* translators: %d: number of check-ins */
+				_n( 'Re-scraped %d check-in from Untappd.', 'Re-scraped %d check-ins from Untappd.', $done, 'beer-journal' ),
+				$done
+			)
+		);
+		echo '</p></div>';
 	}
 }

@@ -288,3 +288,12 @@
 	font-family: ui-monospace, SFMono-Regular, Consolas, Menlo, monospace;
 	font-size: 12px;
 }
+
+.bj-sync-health-list {
+	margin: 0.5em 0 0 1.25em;
+	list-style: disc;
+}
+
+.bj-sync-health-list li {
+	margin-bottom: 0.35em;
+}

@@ -21,6 +21,7 @@ return array(
     'BJ_Public' => $baseDir . '/public/class-public.php',
     'BJ_RSS_Parser' => $baseDir . '/includes/class-rss-parser.php',
     'BJ_Scraper' => $baseDir . '/includes/class-scraper.php',
+    'BJ_Scraper_Config' => $baseDir . '/includes/class-scraper-config.php',
     'BJ_Settings' => $baseDir . '/includes/class-settings.php',
     'BJ_Taxonomies' => $baseDir . '/includes/class-taxonomies.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',

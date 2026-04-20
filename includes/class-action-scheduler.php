@@ -22,6 +22,7 @@ class BJ_Action_Scheduler {
 	public function register() {
 		add_filter( 'cron_schedules', array( $this, 'add_cron_schedules' ) );
 		add_action( 'bj_rss_sync', array( $this, 'run_rss_sync' ) );
+		add_action( 'bj_rss_queue_tick', array( $this, 'run_rss_queue_tick' ) );
 		add_action( 'bj_background_import_batch', array( $this, 'run_background_import_batch' ) );
 		add_action( 'bj_daily_log_cleanup', array( $this, 'run_log_cleanup' ) );
 		add_action( 'init', array( $this, 'maybe_schedule_events' ), 30 );
@@ -122,6 +123,23 @@ class BJ_Action_Scheduler {
 			);
 		}
 		$this->reschedule_adaptive();
+	}
+
+	/**
+	 * Single-event callback: drain RSS import queue without fetching the feed.
+	 *
+	 * @return void
+	 */
+	public function run_rss_queue_tick() {
+		if ( ! get_option( 'bj_sync_enabled', true ) ) {
+			return;
+		}
+		$parser   = new BJ_RSS_Parser();
+		$importer = new BJ_Importer();
+		$result   = $parser->drain_queue_tick( $importer );
+		if ( is_wp_error( $result ) ) {
+			BJ_Logger::error( 'RSS queue tick failed: ' . $result->get_error_message() );
+		}
 	}
 
 	/**

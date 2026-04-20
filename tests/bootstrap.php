@@ -1,11 +1,13 @@
 <?php
 /**
- * PHPUnit bootstrap (minimal WordPress stubs for pure helpers).
+ * PHPUnit bootstrap: Composer autoload + minimal WP stubs for pure helpers.
  *
  * @package BeerJournal
  */
 
 define( 'ABSPATH', dirname( __DIR__ ) . '/' );
+
+require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 
 if ( ! function_exists( '__' ) ) {
 	/**
@@ -28,5 +30,3 @@ if ( ! function_exists( 'apply_filters' ) ) {
 		return $value;
 	}
 }
-
-require_once dirname( __DIR__ ) . '/includes/functions.php';

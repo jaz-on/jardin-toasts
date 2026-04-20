@@ -24,20 +24,18 @@ This guide will help you get started developing Beer Journal.
 
 ### 1. Install PHP Dependencies
 
-Runtime Composer packages are **committed** in `vendor/` so Git-based installs work out of the box. To add **dev** dependencies (PHPUnit, PHPCS, WPCS), run:
+Runtime Composer packages are **committed** in `vendor/` so Git-based installs work out of the box. A full **`composer install`** also pulls dev tools (PHPUnit, PHPCS, WPCS, PHPStan, WordPress stubs). The plugin uses **WordPress HTTP** for scraping; runtime PHP deps are **Symfony DomCrawler** and **Symfony CSS Selector** only.
 
 ```bash
 composer install
+composer run phpcs    # coding standard
+composer run phpstan  # static analysis
+composer run test     # PHPUnit
 ```
 
-The committed tree matches **`composer install --no-dev`** (runtime packages only). After a full `composer install`, Git may show changes under `vendor/`; before committing unrelated work, run `composer install --no-dev` again (or `git restore vendor` if you did not mean to change dependencies).
+After a full `composer install`, Git may show changes under `vendor/`; before committing unrelated work, align with what you intend to ship (often `composer update` + commit `composer.lock` and `vendor/` when dependencies change).
 
-This will install (or ensure you have):
-- Guzzle HTTP client
-- Symfony DomCrawler
-- Symfony CSS Selector
-- PHPUnit (dev)
-- PHP_CodeSniffer (dev)
+CI runs **PHP Quality** (`.github/workflows/php-quality.yml`): PHPCS, PHPStan, PHPUnit on pushes/PRs to `main` and `dev` when PHP or Composer files change.
 
 ### 2. Install JavaScript Dependencies
 
@@ -245,7 +243,6 @@ docs(api): Document REST endpoints
 - [WordPress Plugin Handbook](https://developer.wordpress.org/plugins/)
 - [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/)
 - [Symfony DomCrawler](https://symfony.com/doc/current/components/dom_crawler.html)
-- [Guzzle HTTP Client](https://docs.guzzlephp.org/)
 - [Documentation](../docs/)
 
 ## Getting Help

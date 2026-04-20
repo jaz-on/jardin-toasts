@@ -114,8 +114,10 @@ refactor: Improve RSS parser performance
 
 **Framework**: PHPUnit
 
-**Run Tests**:
+**Run checks**:
 ```bash
+composer run phpcs
+composer run phpstan
 composer test
 ```
 

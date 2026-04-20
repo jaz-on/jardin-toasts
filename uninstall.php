@@ -25,6 +25,8 @@ $defaults = array(
 	'bj_import_mode',
 	'bj_import_images',
 	'bj_scraping_delay',
+	'bj_rss_max_per_run',
+	'bj_rss_sync_queue',
 	'bj_schema_enabled',
 	'bj_microformats_enabled',
 	'bj_debug_mode',
@@ -47,5 +49,6 @@ foreach ( $defaults as $key ) {
 }
 
 wp_clear_scheduled_hook( 'bj_rss_sync' );
+wp_clear_scheduled_hook( 'bj_rss_queue_tick' );
 wp_clear_scheduled_hook( 'bj_background_import_batch' );
 wp_clear_scheduled_hook( 'bj_daily_log_cleanup' );

@@ -7,11 +7,8 @@ namespace Composer\Autoload;
 class ComposerStaticInit9655599cbf609db15f57185486ff93bd
 {
     public static $files = array (
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '8250c7fe9fd6b653dc890ffc71d894e8' => __DIR__ . '/../..' . '/includes/functions.php',
     );
 
@@ -23,20 +20,9 @@ class ComposerStaticInit9655599cbf609db15f57185486ff93bd
             'Symfony\\Component\\DomCrawler\\' => 29,
             'Symfony\\Component\\CssSelector\\' => 30,
         ),
-        'P' =>
-        array (
-            'Psr\\Http\\Message\\' => 17,
-            'Psr\\Http\\Client\\' => 16,
-        ),
         'M' =>
         array (
             'Masterminds\\' => 12,
-        ),
-        'G' =>
-        array (
-            'GuzzleHttp\\Psr7\\' => 16,
-            'GuzzleHttp\\Promise\\' => 19,
-            'GuzzleHttp\\' => 11,
         ),
     );
 
@@ -57,30 +43,9 @@ class ComposerStaticInit9655599cbf609db15f57185486ff93bd
         array (
             0 => __DIR__ . '/..' . '/symfony/css-selector',
         ),
-        'Psr\\Http\\Message\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
-        ),
-        'Psr\\Http\\Client\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-client/src',
-        ),
         'Masterminds\\' =>
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
-        ),
-        'GuzzleHttp\\Psr7\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
-        ),
-        'GuzzleHttp\\Promise\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
-        ),
-        'GuzzleHttp\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
     );
 
@@ -100,6 +65,7 @@ class ComposerStaticInit9655599cbf609db15f57185486ff93bd
         'BJ_Public' => __DIR__ . '/../..' . '/public/class-public.php',
         'BJ_RSS_Parser' => __DIR__ . '/../..' . '/includes/class-rss-parser.php',
         'BJ_Scraper' => __DIR__ . '/../..' . '/includes/class-scraper.php',
+        'BJ_Scraper_Config' => __DIR__ . '/../..' . '/includes/class-scraper-config.php',
         'BJ_Settings' => __DIR__ . '/../..' . '/includes/class-settings.php',
         'BJ_Taxonomies' => __DIR__ . '/../..' . '/includes/class-taxonomies.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',

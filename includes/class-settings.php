@@ -66,6 +66,7 @@ class BJ_Settings {
 			'bj_import_mode'            => 'manual',
 			'bj_import_images'          => true,
 			'bj_scraping_delay'         => 3,
+			'bj_rss_max_per_run'        => 10,
 			'bj_schema_enabled'         => true,
 			'bj_microformats_enabled'   => true,
 			'bj_debug_mode'             => false,
@@ -141,6 +142,7 @@ class BJ_Settings {
 			case 'bj_import_delay':
 			case 'bj_scraping_delay':
 			case 'bj_log_retention_days':
+			case 'bj_rss_max_per_run':
 				return absint( $value );
 			case 'bj_excluded_checkins':
 				return is_array( $value ) ? array_map( 'sanitize_text_field', $value ) : array();

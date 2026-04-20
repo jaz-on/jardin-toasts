@@ -9,8 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$stats = bj_get_global_stats();
-$last  = get_option( 'bj_last_rss_sync_at', '' );
+$stats   = bj_get_global_stats();
+$last    = get_option( 'bj_last_rss_sync_at', '' );
+$queue   = bj_get_rss_sync_queue();
+$pending = is_array( $queue ) ? count( $queue ) : 0;
+$draft_i = bj_count_draft_incomplete_checkins();
 ?>
 <div class="bj-stats-strip" role="region" aria-label="<?php esc_attr_e( 'Beer Journal summary', 'beer-journal' ); ?>">
 	<div class="bj-stats-strip__item">
@@ -37,5 +40,13 @@ $last  = get_option( 'bj_last_rss_sync_at', '' );
 			?>
 		</span>
 		<span class="bj-stats-strip__label"><?php esc_html_e( 'Last RSS sync', 'beer-journal' ); ?></span>
+	</div>
+	<div class="bj-stats-strip__item">
+		<span class="bj-stats-strip__value"><?php echo esc_html( number_format_i18n( $pending ) ); ?></span>
+		<span class="bj-stats-strip__label"><?php esc_html_e( 'RSS queue', 'beer-journal' ); ?></span>
+	</div>
+	<div class="bj-stats-strip__item">
+		<span class="bj-stats-strip__value"><?php echo esc_html( number_format_i18n( $draft_i ) ); ?></span>
+		<span class="bj-stats-strip__label"><?php esc_html_e( 'Incomplete drafts', 'beer-journal' ); ?></span>
 	</div>
 </div>

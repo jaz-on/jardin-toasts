@@ -6,7 +6,7 @@ A WordPress plugin to automatically sync and display your Untappd beer check-ins
 
 **Current release: 1.0.0** — Phase 1 (MVP) complete: CPT `beer_checkin`, taxonomies, RSS sync with adaptive cron, HTML scraping, historical import (discover + batched AJAX), admin settings (5 tabs), logging, frontend templates, JSON-LD / microformats options. See [CHANGELOG.md](CHANGELOG.md) and [DEVELOPMENT.md](DEVELOPMENT.md).
 
-**Dependencies:** runtime Composer packages (Guzzle, Symfony DomCrawler, etc.) are **included in the repository** under `vendor/` so installs from Git or [Git Updater](https://git-updater.com/) work without running Composer on the server. For local development (PHPUnit, PHPCS), run `composer install` in the plugin directory to also install dev dependencies.
+**Dependencies:** runtime Composer packages (Symfony DomCrawler and CSS Selector) are **included in the repository** under `vendor/` so installs from Git or [Git Updater](https://git-updater.com/) work without running Composer on the server. HTTP uses WordPress (`wp_remote_get`). For local development (PHPUnit, PHPCS, PHPStan), run `composer install` in the plugin directory to also install dev dependencies.
 
 **Branches:** [`main`](https://github.com/jaz-on/beer-journal) is the default branch (reference + releases). Day-to-day integration and [Git Updater](https://git-updater.com/) on a dev site typically use the **`dev`** branch.
 

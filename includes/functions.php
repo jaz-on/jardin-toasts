@@ -278,6 +278,132 @@ function bj_get_post_id_by_checkin_id( $checkin_id ) {
 }
 
 /**
+ * Map Untappd check-in IDs to post IDs (batch, one query).
+ *
+ * @param array<int, string|int> $checkin_ids Check-in IDs.
+ * @return array<string, int> checkin_id => post_id
+ */
+function bj_get_post_ids_by_checkin_ids( array $checkin_ids ) {
+	global $wpdb;
+	$clean = array();
+	foreach ( $checkin_ids as $id ) {
+		$s = sanitize_text_field( (string) $id );
+		if ( '' !== $s ) {
+			$clean[ $s ] = true;
+		}
+	}
+	$ids = array_keys( $clean );
+	if ( empty( $ids ) ) {
+		return array();
+	}
+	$ids = array_slice( $ids, 0, 100 );
+	$placeholders = implode( ',', array_fill( 0, count( $ids ), '%s' ) );
+	// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPlaceholder
+	$sql = "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value IN ({$placeholders})";
+	$params = array_merge( array( '_bj_checkin_id' ), $ids );
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	$prepared = $wpdb->prepare( $sql, $params );
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$rows = $wpdb->get_results( $prepared, ARRAY_A );
+	if ( ! is_array( $rows ) ) {
+		return array();
+	}
+	$map = array();
+	foreach ( $rows as $row ) {
+		if ( isset( $row['meta_value'], $row['post_id'] ) ) {
+			$map[ (string) $row['meta_value'] ] = absint( $row['post_id'] );
+		}
+	}
+	return $map;
+}
+
+/**
+ * Max RSS import attempts per cron run (scrapes + posts). Manual sync uses a higher cap via filter.
+ *
+ * @param bool $manual True when triggered from admin AJAX.
+ * @return int
+ */
+function bj_get_rss_sync_max_per_run( $manual = false ) {
+	if ( $manual ) {
+		$max = (int) apply_filters( 'bj_rss_manual_sync_max_items', 500 );
+		return max( 1, $max );
+	}
+	$n = absint( get_option( 'bj_rss_max_per_run', 10 ) );
+	$n = max( 1, min( 100, $n ) );
+	return (int) apply_filters( 'bj_rss_max_per_run', $n );
+}
+
+/**
+ * Load persisted RSS sync queue rows.
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function bj_get_rss_sync_queue() {
+	$q = get_option( 'bj_rss_sync_queue', array() );
+	return is_array( $q ) ? array_values( $q ) : array();
+}
+
+/**
+ * Persist RSS sync queue.
+ *
+ * @param array<int, array<string, mixed>> $queue Rows (FIFO).
+ * @return void
+ */
+function bj_save_rss_sync_queue( array $queue ) {
+	update_option( 'bj_rss_sync_queue', array_values( $queue ), false );
+}
+
+/**
+ * Append rows to the RSS queue without duplicate check-in IDs (later rows win).
+ *
+ * @param array<int, array<string, mixed>> $queue Existing queue.
+ * @param array<int, array<string, mixed>> $rows  Rows to append.
+ * @return array<int, array<string, mixed>>
+ */
+function bj_rss_queue_merge_unique( array $queue, array $rows ) {
+	$seen = array();
+	$out  = array();
+	foreach ( $queue as $row ) {
+		if ( ! is_array( $row ) || empty( $row['checkin_id'] ) ) {
+			continue;
+		}
+		$cid = (string) $row['checkin_id'];
+		$seen[ $cid ] = count( $out );
+		$out[]        = $row;
+	}
+	foreach ( $rows as $row ) {
+		if ( ! is_array( $row ) || empty( $row['checkin_id'] ) ) {
+			continue;
+		}
+		$cid = (string) $row['checkin_id'];
+		if ( isset( $seen[ $cid ] ) ) {
+			$out[ $seen[ $cid ] ] = $row;
+		} else {
+			$seen[ $cid ] = count( $out );
+			$out[]        = $row;
+		}
+	}
+	return array_values( $out );
+}
+
+/**
+ * Schedule a single queue drain if backlog exists and none is pending.
+ *
+ * @return void
+ */
+function bj_maybe_schedule_rss_queue_tick() {
+	$q = bj_get_rss_sync_queue();
+	if ( empty( $q ) ) {
+		return;
+	}
+	if ( wp_next_scheduled( 'bj_rss_queue_tick' ) ) {
+		return;
+	}
+	$delay = max( 60, absint( get_option( 'bj_scraping_delay', 3 ) ) );
+	wp_schedule_single_event( time() + $delay, 'bj_rss_queue_tick' );
+}
+
+/**
  * Transient-backed cache helper (see docs/development/caching.md).
  *
  * @param string   $key      Short key (prefix bj_ added).
@@ -305,6 +431,81 @@ function bj_get_cached_data( $key, $producer, $ttl = null ) {
  */
 function bj_invalidate_stats_cache() {
 	delete_transient( 'bj_global_stats' );
+	delete_transient( 'bj_incomplete_checkin_count' );
+}
+
+/**
+ * Approximate count of draft check-ins missing scraped data (cached briefly).
+ *
+ * @return int
+ */
+function bj_count_draft_incomplete_checkins() {
+	if ( ! post_type_exists( BJ_Post_Type::POST_TYPE ) ) {
+		return 0;
+	}
+	return (int) bj_get_cached_data(
+		'incomplete_checkin_count',
+		static function () {
+			$q = new WP_Query(
+				array(
+					'post_type'              => BJ_Post_Type::POST_TYPE,
+					'post_status'            => 'draft',
+					'fields'                 => 'ids',
+					'posts_per_page'         => 200,
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+					'meta_query'             => array(
+						array(
+							'key'     => '_bj_incomplete_reason',
+							'compare' => 'EXISTS',
+						),
+					),
+				)
+			);
+			return is_array( $q->posts ) ? count( $q->posts ) : 0;
+		},
+		15 * MINUTE_IN_SECONDS
+	);
+}
+
+/**
+ * Re-fetch Untappd HTML for an existing check-in post and update meta/content.
+ *
+ * @param int $post_id Post ID.
+ * @return int|WP_Error Post ID on success.
+ */
+function bj_rescrape_checkin_post( $post_id ) {
+	$post_id = absint( $post_id );
+	if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
+		return new WP_Error( 'forbidden', __( 'You cannot edit this check-in.', 'beer-journal' ) );
+	}
+	if ( get_post_type( $post_id ) !== BJ_Post_Type::POST_TYPE ) {
+		return new WP_Error( 'wrong_type', __( 'Not a beer check-in post.', 'beer-journal' ) );
+	}
+	$url = get_post_meta( $post_id, '_bj_checkin_url', true );
+	if ( ! is_string( $url ) || '' === $url || false === strpos( $url, 'untappd.com' ) ) {
+		return new WP_Error( 'no_url', __( 'No valid Untappd check-in URL on this post.', 'beer-journal' ) );
+	}
+	$cid = get_post_meta( $post_id, '_bj_checkin_id', true );
+	$data = array(
+		'checkin_id'   => is_string( $cid ) && '' !== $cid ? $cid : (string) bj_parse_checkin_id_from_url( $url ),
+		'checkin_url'  => esc_url_raw( $url ),
+		'checkin_date' => (string) get_post_meta( $post_id, '_bj_checkin_date', true ),
+	);
+	if ( '' === $data['checkin_id'] ) {
+		return new WP_Error( 'no_id', __( 'Missing check-in ID.', 'beer-journal' ) );
+	}
+	$scraper = new BJ_Scraper();
+	$scraped = $scraper->scrape_checkin_url( $url );
+	if ( ! is_wp_error( $scraped ) ) {
+		$data = array_merge( $data, $scraped );
+	} else {
+		BJ_Logger::warning( 'Re-scrape failed for post ' . $post_id . ': ' . $scraped->get_error_message() );
+		return $scraped;
+	}
+	$importer = new BJ_Importer();
+	return $importer->import_checkin_data( $data, 'rss' );
 }
 
 /**

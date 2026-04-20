@@ -218,6 +218,8 @@ function bj_import_checkin($data) {
 - **Transients**: Cache expensive operations
 
 ### Example Query
+Use this shape for **custom** `WP_Query` loops (e.g. widgets or shortcodes). Theme archive templates for `beer_checkin` normally use the **main query**; do not set `no_found_rows` there.
+
 ```php
 $args = [
     'post_type' => 'beer_checkin',
@@ -253,13 +255,12 @@ function bj_display_rating($post_id, $show_label = true, $show_raw = true) {
 ## Dependencies
 
 ### Composer
-- **Guzzle**: HTTP client for requests
 - **Symfony DomCrawler**: HTML parsing
-- **Symfony CSS Selector**: CSS selector support
+- **Symfony CSS Selector**: CSS selector support (required by DomCrawler)
 
 ### WordPress
 - **SimplePie**: RSS parsing (built-in)
-- **WP_HTTP**: For HTTP requests (preferred over curl)
+- **WP_HTTP** (`wp_remote_get`, etc.): All outbound HTTP for scraping and crawlers
 
 ## Version Compatibility
 

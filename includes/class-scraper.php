@@ -200,15 +200,17 @@ class BJ_Scraper {
 	 * @return void
 	 */
 	private function extract_from_dom( Crawler $crawler, array &$data ) {
-		$selectors = array(
-			'beer'    => array( '.beer-details h2', 'h1', '.name h1' ),
-			'brewery' => array( '.beer-details p.brewery', '.brewery', 'a.brewery' ),
-			'style'   => array( '.beer-details .style', '.beer-style', 'p.style' ),
-			'rating'  => array( '.rating-serving .rating', '.rating', '[data-rating]' ),
-			'comment' => array( '.checkin-comment', '.comment-text' ),
-			'venue'   => array( '.venue-name', '.top-location' ),
-			'photo'   => array( '.photo img', '.label img' ),
+		$selectors = BJ_Scraper_Config::dom_selectors();
+		$defaults  = array(
+			'beer'    => array(),
+			'brewery' => array(),
+			'style'   => array(),
+			'rating'  => array(),
+			'comment' => array(),
+			'venue'   => array(),
+			'photo'   => array(),
 		);
+		$selectors = wp_parse_args( $selectors, $defaults );
 
 		foreach ( $selectors['beer'] as $sel ) {
 			if ( $crawler->filter( $sel )->count() > 0 ) {

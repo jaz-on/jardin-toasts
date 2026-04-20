@@ -425,7 +425,38 @@ $tab_intros = array(
 									<p class="description"><?php esc_html_e( 'Higher values are gentler; lower values are faster but easier to rate-limit.', 'beer-journal' ); ?></p>
 								</td>
 							</tr>
+							<tr>
+								<th scope="row"><label for="bj_rss_max_per_run"><?php esc_html_e( 'RSS imports per cron run', 'beer-journal' ); ?></label></th>
+								<td>
+									<input name="bj_rss_max_per_run" id="bj_rss_max_per_run" type="number" min="1" max="100" class="small-text" value="<?php echo esc_attr( (string) (int) BJ_Settings::get( 'bj_rss_max_per_run' ) ); ?>" />
+									<p class="description"><?php esc_html_e( 'Each scheduled sync scrapes at most this many new check-ins; the rest stay in a queue and are processed by follow-up events. “Run sync now” uses a higher limit.', 'beer-journal' ); ?></p>
+								</td>
+							</tr>
 						</table>
+					</div>
+				</div>
+
+				<div class="bj-panel">
+					<div class="bj-panel__header">
+						<h2 class="bj-panel__title"><?php esc_html_e( 'Sync health', 'beer-journal' ); ?></h2>
+						<p class="bj-panel__summary"><?php esc_html_e( 'Quick signals when diagnosing RSS backlog or failed scrapes.', 'beer-journal' ); ?></p>
+					</div>
+					<div class="bj-panel__body">
+						<ul class="bj-sync-health-list">
+							<li>
+								<strong><?php esc_html_e( 'RSS queue depth', 'beer-journal' ); ?>:</strong>
+								<?php echo esc_html( number_format_i18n( count( bj_get_rss_sync_queue() ) ) ); ?>
+							</li>
+							<li>
+								<strong><?php esc_html_e( 'Draft check-ins needing data', 'beer-journal' ); ?>:</strong>
+								<?php echo esc_html( number_format_i18n( bj_count_draft_incomplete_checkins() ) ); ?>
+							</li>
+							<li>
+								<strong><?php esc_html_e( 'Scraper markup version', 'beer-journal' ); ?>:</strong>
+								<?php echo esc_html( (string) (int) BJ_Scraper_Config::MARKUP_VERSION ); ?>
+							</li>
+						</ul>
+						<p class="description"><?php esc_html_e( 'Recent log lines appear below under “Log file (today)”. Enable debug logging for more detail.', 'beer-journal' ); ?></p>
 					</div>
 				</div>
 

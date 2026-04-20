@@ -21,6 +21,7 @@ class BJ_Deactivator {
 	 */
 	public static function deactivate() {
 		wp_clear_scheduled_hook( 'bj_rss_sync' );
+		wp_clear_scheduled_hook( 'bj_rss_queue_tick' );
 		wp_clear_scheduled_hook( 'bj_background_import_batch' );
 		wp_clear_scheduled_hook( 'bj_daily_log_cleanup' );
 		flush_rewrite_rules();
