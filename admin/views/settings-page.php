@@ -290,9 +290,9 @@ $tab_intros = array(
 									<label class="bj-toggle">
 										<input type="hidden" name="bj_use_placeholder_image" value="0" />
 										<input name="bj_use_placeholder_image" type="checkbox" value="1" id="bj_use_placeholder_image" <?php checked( $bj_use_ph ); ?> />
-										<span><?php esc_html_e( 'Yes — if a beer photo cannot be downloaded, use a fallback image', 'beer-journal' ); ?></span>
+										<span><?php esc_html_e( 'Use a fallback image when Untappd download fails (on by default). Uncheck to leave the post without a featured image.', 'beer-journal' ); ?></span>
 									</label>
-									<p class="description"><?php esc_html_e( 'Choose an image from your Media Library. No numeric ID needed.', 'beer-journal' ); ?></p>
+									<p class="description"><?php esc_html_e( 'Pick a generic beer or logo from your Media Library (no attachment ID to type). There is no built-in remote beer-photo API (keys, licensing, reliability); you can wire Open Food Facts, Wikimedia, or your own source in PHP with the bj_placeholder_attachment_id filter, returning a Media Library attachment ID you created.', 'beer-journal' ); ?></p>
 									<div class="bj-placeholder-picker" id="bj-placeholder-picker" style="<?php echo $bj_use_ph ? '' : 'display:none;'; ?>">
 										<input type="hidden" name="bj_placeholder_image_id" id="bj_placeholder_image_id" value="<?php echo esc_attr( (string) (int) BJ_Settings::get( 'bj_placeholder_image_id' ) ); ?>" />
 										<p class="bj-placeholder-picker__actions">
@@ -425,7 +425,7 @@ $tab_intros = array(
 				<div class="bj-panel">
 					<div class="bj-panel__header">
 						<h2 class="bj-panel__title"><?php esc_html_e( 'Scraping & performance', 'beer-journal' ); ?></h2>
-						<p class="bj-panel__summary"><?php esc_html_e( 'Delay between HTTP requests when fetching check-in HTML (RSS sync and imports).', 'beer-journal' ); ?></p>
+						<p class="bj-panel__summary"><?php esc_html_e( 'These settings throttle how aggressively the plugin hits Untappd when it downloads check-in HTML (automatic RSS sync, “Run sync now”, and background import). They are separate from the Synchronization tab (feed URL and whether RSS runs) and from Historical import → “Pause between requests”, which only spaces out clicks in that admin wizard.', 'beer-journal' ); ?></p>
 					</div>
 					<div class="bj-panel__body">
 						<table class="form-table" role="presentation">
@@ -434,14 +434,14 @@ $tab_intros = array(
 								<td>
 									<input name="bj_scraping_delay" id="bj_scraping_delay" type="number" min="1" class="small-text" value="<?php echo esc_attr( (string) (int) BJ_Settings::get( 'bj_scraping_delay' ) ); ?>" />
 									<span class="description"><?php esc_html_e( 'seconds', 'beer-journal' ); ?></span>
-									<p class="description"><?php esc_html_e( 'Higher values are gentler; lower values are faster but easier to rate-limit.', 'beer-journal' ); ?></p>
+									<p class="description"><?php esc_html_e( 'Minimum 1 second (values below 1 are saved as 1). Higher values are gentler; lower values are faster but easier to rate-limit.', 'beer-journal' ); ?></p>
 								</td>
 							</tr>
 							<tr>
 								<th scope="row"><label for="bj_rss_max_per_run"><?php esc_html_e( 'RSS imports per scheduled sync', 'beer-journal' ); ?></label></th>
 								<td>
 									<input name="bj_rss_max_per_run" id="bj_rss_max_per_run" type="number" min="1" max="100" class="small-text" value="<?php echo esc_attr( (string) (int) BJ_Settings::get( 'bj_rss_max_per_run' ) ); ?>" />
-									<p class="description"><?php esc_html_e( 'Each scheduled sync scrapes at most this many new check-ins; the rest stay in a queue and are processed by follow-up events. “Run sync now” uses a higher limit.', 'beer-journal' ); ?></p>
+									<p class="description"><?php esc_html_e( 'Minimum 1 per run (values below 1 are saved as 1). Each automatic sync scrapes at most this many new check-ins; the rest stay in a queue and are processed by follow-up events. “Run sync now” uses a higher limit.', 'beer-journal' ); ?></p>
 								</td>
 							</tr>
 						</table>

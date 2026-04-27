@@ -328,9 +328,21 @@ function bj_get_rss_sync_max_per_run( $manual = false ) {
 		$max = (int) apply_filters( 'bj_rss_manual_sync_max_items', 500 );
 		return max( 1, $max );
 	}
-	$n = absint( get_option( 'bj_rss_max_per_run', 10 ) );
+	$n = class_exists( 'BJ_Settings' ) ? (int) BJ_Settings::get( 'bj_rss_max_per_run' ) : absint( get_option( 'bj_rss_max_per_run', 10 ) );
 	$n = max( 1, min( 100, $n ) );
 	return (int) apply_filters( 'bj_rss_max_per_run', $n );
+}
+
+/**
+ * Pause (seconds) between Untappd HTTP requests during HTML scraping (RSS sync paths and check-in scrapes).
+ * Minimum 1. Distinct from Historical import → “Pause between requests”, which only applies to admin-driven batches.
+ *
+ * @return int
+ */
+function bj_get_scraping_delay_seconds() {
+	$d = class_exists( 'BJ_Settings' ) ? (int) BJ_Settings::get( 'bj_scraping_delay' ) : absint( get_option( 'bj_scraping_delay', 3 ) );
+	$d = max( 1, $d );
+	return (int) apply_filters( 'bj_scraping_delay_seconds', $d );
 }
 
 /**
@@ -396,7 +408,7 @@ function bj_maybe_schedule_rss_queue_tick() {
 	if ( empty( $q ) ) {
 		return;
 	}
-	$delay = max( 60, absint( get_option( 'bj_scraping_delay', 3 ) ) );
+	$delay = max( 60, bj_get_scraping_delay_seconds() );
 	$group = bj_action_scheduler_group();
 
 	if ( bj_using_action_scheduler() ) {

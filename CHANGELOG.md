@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Fallback image** is **on by default** (opt-out); admin copy explains Media Library vs optional `bj_placeholder_attachment_id` filter for external sources (no bundled remote beer-photo API).
+- **Advanced → scraping delay / RSS cap**: values are clamped on save (minimum 1); UI clarifies difference from Synchronization and Historical import pacing; new helper `bj_get_scraping_delay_seconds()` centralizes the delay used by scrapes and queue scheduling.
+
 ### Fixed
 - Composer **classmap** referenced Finder duplicate filenames (`class-* 2.php`, `class-public 2.php`) that are not deployed on Linux servers; autoload now targets the canonical files and duplicate copies were removed from the tree.
 - **`beer-journal.php`** preloads the same four core classes before `vendor/autoload.php` so sites that still ship a stale classmap (or OPcache) do not fatal when `BJ_Taxonomies` (etc.) is first used.

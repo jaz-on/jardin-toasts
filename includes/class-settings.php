@@ -77,7 +77,7 @@ class BJ_Settings {
 			'bj_notify_on_error'        => true,
 			'bj_notification_email'     => '',
 			'bj_archive_layout'         => 'grid',
-			'bj_use_placeholder_image'  => false,
+			'bj_use_placeholder_image'  => true,
 			'bj_placeholder_image_id'   => 0,
 			'bj_last_rss_sync_at'       => '',
 		);
@@ -140,10 +140,12 @@ class BJ_Settings {
 				return (bool) $value;
 			case 'bj_import_batch_size':
 			case 'bj_import_delay':
-			case 'bj_scraping_delay':
 			case 'bj_log_retention_days':
-			case 'bj_rss_max_per_run':
 				return absint( $value );
+			case 'bj_scraping_delay':
+				return max( 1, absint( $value ) );
+			case 'bj_rss_max_per_run':
+				return max( 1, min( 100, absint( $value ) ) );
 			case 'bj_excluded_checkins':
 				return is_array( $value ) ? array_map( 'sanitize_text_field', $value ) : array();
 			case 'bj_rating_rules':

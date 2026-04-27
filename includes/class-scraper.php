@@ -33,8 +33,7 @@ class BJ_Scraper {
 			return new WP_Error( 'bad_url', __( 'Invalid Untappd check-in URL.', 'beer-journal' ) );
 		}
 
-		$delay = absint( get_option( 'bj_scraping_delay', 3 ) );
-		$this->respect_rate_limit( $delay );
+		$this->respect_rate_limit( bj_get_scraping_delay_seconds() );
 
 		$attempts = 0;
 		$html     = '';

@@ -21,6 +21,9 @@ class BJ_Image_Handler {
 	 * @param int    $post_id Post ID.
 	 * @param string $title Attachment title.
 	 * @return int|WP_Error Attachment ID or error.
+	 *
+	 * When sideload fails and placeholders are enabled, uses the saved attachment ID, then the
+	 * `bj_placeholder_attachment_id` filter so extensions can return another attachment (e.g. from an API).
 	 */
 	public function import_for_post( $url, $post_id, $title = '' ) {
 		if ( ! get_option( 'bj_import_images', true ) ) {
@@ -44,13 +47,14 @@ class BJ_Image_Handler {
 
 		$att_id = media_sideload_image( $url, $post_id, $title, 'id' );
 		if ( is_wp_error( $att_id ) ) {
-			if ( ! get_option( 'bj_use_placeholder_image', false ) ) {
+			if ( ! BJ_Settings::get( 'bj_use_placeholder_image' ) ) {
 				return $att_id;
 			}
-			$placeholder = absint( get_option( 'bj_placeholder_image_id', 0 ) );
+			$placeholder = absint( BJ_Settings::get( 'bj_placeholder_image_id' ) );
+			$placeholder = (int) apply_filters( 'bj_placeholder_attachment_id', $placeholder, $post_id, $url, (string) $title );
 			if ( $placeholder && wp_attachment_is_image( $placeholder ) ) {
 				set_post_thumbnail( $post_id, $placeholder );
-				BJ_Logger::info( 'Image sideload failed; using placeholder attachment ' . $placeholder );
+				BJ_Logger::info( 'Image sideload failed; using placeholder attachment ' . (string) $placeholder );
 				return $placeholder;
 			}
 			return $att_id;
