@@ -141,7 +141,7 @@ function bj_parse_username_from_rss_url( $url ) {
 	if ( ! is_string( $url ) || '' === trim( $url ) ) {
 		return '';
 	}
-	if ( preg_match( '#untappd\.com/rss/user/([^/?&#]+)#i', $url, $m ) ) {
+	if ( preg_match( '~untappd\.com/rss/user/([^/?#&]+)~i', $url, $m ) ) {
 		return sanitize_user( rawurldecode( $m[1] ), true );
 	}
 	return '';
