@@ -38,7 +38,7 @@ Beer Journal allows you to automatically sync your Untappd check-ins to your Wor
 - **MySQL**: 5.7+ / MariaDB 10.3+
 - **PHP Extensions**: curl (or allow_url_fopen), dom, json, mbstring
 
-**Scheduled sync** uses WordPress’s pseudo-cron: visits to your site trigger scheduled tasks. On low-traffic sites, sync may run late unless you add a real cron job that hits `wp-cron.php` on a schedule (see WordPress documentation for “Cron Jobs”).
+**Scheduled sync** prefers **[Action Scheduler](https://actionscheduler.org/)** when it is loaded (standalone plugin or via WooCommerce): recurring RSS sync, log cleanup, and follow-up queue ticks use `as_schedule_*` in the `beer-journal` group. If Action Scheduler is **not** present, the plugin falls back to **WP-Cron** (`wp_schedule_*`), which is still pseudo-cron on low-traffic sites unless you call `wp-cron.php` from a real system cron (see WordPress docs). Action Scheduler is recommended on production for reliability, retries, and the Tools → Scheduled Actions UI.
 
 ## Configuration
 
