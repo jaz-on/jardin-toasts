@@ -173,7 +173,12 @@ class BJ_Crawler {
 		update_option( 'bj_import_checkpoint', $cp, false );
 
 		if ( ! empty( $queue ) && 'background' === get_option( 'bj_import_mode', 'manual' ) ) {
-			wp_schedule_single_event( time() + max( 60, absint( get_option( 'bj_import_delay', 3 ) ) * 10 ), 'bj_background_import_batch' );
+			$delay = time() + max( 60, absint( get_option( 'bj_import_delay', 3 ) ) * 10 );
+			if ( function_exists( 'as_schedule_single_action' ) ) {
+				as_schedule_single_action( $delay, 'bj_background_import_batch', array(), bj_action_scheduler_group() );
+			} else {
+				wp_schedule_single_event( $delay, 'bj_background_import_batch' );
+			}
 		}
 	}
 }

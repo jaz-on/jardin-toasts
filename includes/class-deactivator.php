@@ -20,6 +20,12 @@ class BJ_Deactivator {
 	 * @return void
 	 */
 	public static function deactivate() {
+		$group = function_exists( 'bj_action_scheduler_group' ) ? bj_action_scheduler_group() : 'beer-journal';
+		if ( function_exists( 'as_unschedule_all_actions' ) ) {
+			foreach ( array( 'bj_rss_sync', 'bj_rss_queue_tick', 'bj_background_import_batch', 'bj_daily_log_cleanup' ) as $hook ) {
+				as_unschedule_all_actions( $hook, array(), $group );
+			}
+		}
 		wp_clear_scheduled_hook( 'bj_rss_sync' );
 		wp_clear_scheduled_hook( 'bj_rss_queue_tick' );
 		wp_clear_scheduled_hook( 'bj_background_import_batch' );

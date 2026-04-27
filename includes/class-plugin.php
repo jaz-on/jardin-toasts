@@ -63,5 +63,8 @@ class BJ_Plugin {
 
 		$public = new BJ_Public();
 		$public->register();
+
+		$blocks = new BJ_Blocks();
+		$blocks->register();
 	}
 }

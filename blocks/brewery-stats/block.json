@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "beer-journal/brewery-stats",
+	"title": "Brewery stats",
+	"category": "widgets",
+	"icon": "chart-bar",
+	"description": "Published check-in count for a brewery term.",
+	"textdomain": "beer-journal",
+	"attributes": {
+		"breweryTermId": {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"supports": {
+		"html": false
+	},
+	"render": "file:./render.php"
+}

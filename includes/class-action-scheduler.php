@@ -1,6 +1,6 @@
 <?php
 /**
- * WP-Cron scheduling for RSS sync and background tasks.
+ * Background jobs: Action Scheduler when available, else WP-Cron.
  *
  * @package BeerJournal
  */
@@ -29,7 +29,7 @@ class BJ_Action_Scheduler {
 	}
 
 	/**
-	 * Add sixhourly interval.
+	 * Add sixhourly interval (WP-Cron fallback).
 	 *
 	 * @param array<string, array<string, mixed>> $schedules Schedules.
 	 * @return array<string, array<string, mixed>>
@@ -45,7 +45,25 @@ class BJ_Action_Scheduler {
 	}
 
 	/**
-	 * Schedule cron hooks if missing.
+	 * Map adaptive recurrence slug to seconds (Action Scheduler).
+	 *
+	 * @param string $recurrence daily|sixhourly|weekly.
+	 * @return int
+	 */
+	public static function recurrence_interval_seconds( $recurrence ) {
+		switch ( $recurrence ) {
+			case 'sixhourly':
+				return 6 * HOUR_IN_SECONDS;
+			case 'weekly':
+				return WEEK_IN_SECONDS;
+			case 'daily':
+			default:
+				return DAY_IN_SECONDS;
+		}
+	}
+
+	/**
+	 * Schedule jobs if missing.
 	 *
 	 * @return void
 	 */
@@ -57,11 +75,43 @@ class BJ_Action_Scheduler {
 		if ( ! is_string( $feed ) || '' === trim( $feed ) ) {
 			return;
 		}
+
+		if ( bj_using_action_scheduler() ) {
+			$this->maybe_schedule_events_action_scheduler();
+			return;
+		}
+
 		if ( ! wp_next_scheduled( 'bj_rss_sync' ) ) {
-			$this->reschedule_adaptive();
+			$this->reschedule_adaptive_wp_cron();
 		}
 		if ( ! wp_next_scheduled( 'bj_daily_log_cleanup' ) ) {
 			wp_schedule_event( time() + DAY_IN_SECONDS, 'daily', 'bj_daily_log_cleanup' );
+		}
+	}
+
+	/**
+	 * Schedule recurring jobs via Action Scheduler.
+	 *
+	 * @return void
+	 */
+	private function maybe_schedule_events_action_scheduler() {
+		$group = bj_action_scheduler_group();
+
+		// One-time migration off WP-Cron.
+		wp_clear_scheduled_hook( 'bj_rss_sync' );
+		wp_clear_scheduled_hook( 'bj_daily_log_cleanup' );
+		wp_clear_scheduled_hook( 'bj_rss_queue_tick' );
+		wp_clear_scheduled_hook( 'bj_background_import_batch' );
+
+		if ( ! as_next_scheduled_action( 'bj_rss_sync', array(), $group ) ) {
+			$recurrence = self::get_adaptive_recurrence();
+			$interval   = self::recurrence_interval_seconds( $recurrence );
+			as_schedule_recurring_action( time() + MINUTE_IN_SECONDS, $interval, 'bj_rss_sync', array(), $group );
+			BJ_Logger::info( 'RSS sync scheduled via Action Scheduler, interval seconds: ' . (string) $interval );
+		}
+
+		if ( ! as_next_scheduled_action( 'bj_daily_log_cleanup', array(), $group ) ) {
+			as_schedule_recurring_action( time() + DAY_IN_SECONDS, DAY_IN_SECONDS, 'bj_daily_log_cleanup', array(), $group );
 		}
 	}
 
@@ -90,11 +140,11 @@ class BJ_Action_Scheduler {
 	}
 
 	/**
-	 * Clear and reschedule RSS sync with adaptive interval.
+	 * Clear and reschedule RSS sync (WP-Cron).
 	 *
 	 * @return void
 	 */
-	public function reschedule_adaptive() {
+	private function reschedule_adaptive_wp_cron() {
 		wp_clear_scheduled_hook( 'bj_rss_sync' );
 		$recurrence = self::get_adaptive_recurrence();
 		wp_schedule_event( time() + MINUTE_IN_SECONDS, $recurrence, 'bj_rss_sync' );
@@ -102,7 +152,25 @@ class BJ_Action_Scheduler {
 	}
 
 	/**
-	 * Cron callback: sync RSS feed.
+	 * Reschedule RSS sync with adaptive interval.
+	 *
+	 * @return void
+	 */
+	public function reschedule_adaptive() {
+		if ( bj_using_action_scheduler() ) {
+			$group      = bj_action_scheduler_group();
+			$recurrence = self::get_adaptive_recurrence();
+			$interval   = self::recurrence_interval_seconds( $recurrence );
+			as_unschedule_all_actions( 'bj_rss_sync', array(), $group );
+			as_schedule_recurring_action( time() + MINUTE_IN_SECONDS, $interval, 'bj_rss_sync', array(), $group );
+			BJ_Logger::info( 'RSS sync rescheduled via Action Scheduler, interval seconds: ' . (string) $interval );
+			return;
+		}
+		$this->reschedule_adaptive_wp_cron();
+	}
+
+	/**
+	 * Cron / AS callback: sync RSS feed.
 	 *
 	 * @return void
 	 */
@@ -126,7 +194,7 @@ class BJ_Action_Scheduler {
 	}
 
 	/**
-	 * Single-event callback: drain RSS import queue without fetching the feed.
+	 * Drain RSS import queue.
 	 *
 	 * @return void
 	 */
@@ -143,7 +211,7 @@ class BJ_Action_Scheduler {
 	}
 
 	/**
-	 * Placeholder for chained background import (used by crawler).
+	 * Background import batch.
 	 *
 	 * @return void
 	 */

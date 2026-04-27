@@ -396,11 +396,41 @@ function bj_maybe_schedule_rss_queue_tick() {
 	if ( empty( $q ) ) {
 		return;
 	}
+	$delay = max( 60, absint( get_option( 'bj_scraping_delay', 3 ) ) );
+	$group = bj_action_scheduler_group();
+
+	if ( bj_using_action_scheduler() ) {
+		if ( as_next_scheduled_action( 'bj_rss_queue_tick', array(), $group ) ) {
+			return;
+		}
+		as_schedule_single_action( time() + $delay, 'bj_rss_queue_tick', array(), $group );
+		return;
+	}
+
 	if ( wp_next_scheduled( 'bj_rss_queue_tick' ) ) {
 		return;
 	}
-	$delay = max( 60, absint( get_option( 'bj_scraping_delay', 3 ) ) );
 	wp_schedule_single_event( time() + $delay, 'bj_rss_queue_tick' );
+}
+
+/**
+ * Whether the Action Scheduler API is available (WooCommerce or standalone plugin).
+ *
+ * @return bool
+ */
+function bj_using_action_scheduler() {
+	return function_exists( 'as_schedule_recurring_action' )
+		&& function_exists( 'as_next_scheduled_action' )
+		&& function_exists( 'as_schedule_single_action' );
+}
+
+/**
+ * Action Scheduler group for all Beer Journal jobs.
+ *
+ * @return string
+ */
+function bj_action_scheduler_group() {
+	return 'beer-journal';
 }
 
 /**

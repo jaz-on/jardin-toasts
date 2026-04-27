@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "beer-journal/checkin-card",
+	"title": "Check-in card",
+	"category": "widgets",
+	"icon": "beer",
+	"description": "Single beer check-in card (uses theme/plugin card markup).",
+	"textdomain": "beer-journal",
+	"attributes": {
+		"postId": {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"supports": {
+		"html": false,
+		"spacing": {
+			"margin": true
+		}
+	},
+	"render": "file:./render.php"
+}
