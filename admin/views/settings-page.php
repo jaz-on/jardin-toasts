@@ -72,7 +72,13 @@ $tab_intros = array(
 										<input name="bj_sync_enabled" type="checkbox" value="1" <?php checked( BJ_Settings::get( 'bj_sync_enabled' ) ); ?> />
 										<span><?php esc_html_e( 'Enable scheduled RSS synchronization', 'beer-journal' ); ?></span>
 									</label>
-									<p class="description"><?php esc_html_e( 'Uses adaptive WP-Cron: more frequent when you check in often, lighter when you are quiet. Low-traffic sites may need a real cron hitting wp-cron.php.', 'beer-journal' ); ?></p>
+									<p class="description"><?php
+									if ( bj_using_action_scheduler() ) {
+										esc_html_e( 'Uses Action Scheduler with adaptive intervals: more frequent when you check in often, lighter when you are quiet. Inspect the beer-journal group under Tools → Scheduled Actions (menu location may differ if WooCommerce owns Action Scheduler).', 'beer-journal' );
+									} else {
+										esc_html_e( 'Uses adaptive WP-Cron: more frequent when you check in often, lighter when you are quiet. Low-traffic sites should hit wp-cron.php from a real system cron, or install the Action Scheduler plugin for a proper job queue.', 'beer-journal' );
+									}
+									?></p>
 								</td>
 							</tr>
 						</table>
@@ -82,7 +88,7 @@ $tab_intros = array(
 				<div class="bj-panel bj-panel--actions">
 					<div class="bj-panel__header">
 						<h2 class="bj-panel__title"><?php esc_html_e( 'Run a sync now', 'beer-journal' ); ?></h2>
-						<p class="bj-panel__summary"><?php esc_html_e( 'Fetches the RSS feed immediately and imports any new items (same code path as cron).', 'beer-journal' ); ?></p>
+						<p class="bj-panel__summary"><?php esc_html_e( 'Fetches the RSS feed immediately and imports any new items (same code path as automatic scheduled sync).', 'beer-journal' ); ?></p>
 					</div>
 					<div class="bj-panel__body bj-panel__body--inline">
 						<button type="button" class="button button-secondary" id="bj-sync-now"><?php esc_html_e( 'Run sync now', 'beer-journal' ); ?></button>
@@ -177,9 +183,15 @@ $tab_intros = array(
 								<td>
 									<select name="bj_import_mode" id="bj_import_mode">
 										<option value="manual" <?php selected( BJ_Settings::get( 'bj_import_mode' ), 'manual' ); ?>><?php esc_html_e( 'Manual — AJAX batches (recommended)', 'beer-journal' ); ?></option>
-										<option value="background" <?php selected( BJ_Settings::get( 'bj_import_mode' ), 'background' ); ?>><?php esc_html_e( 'Background — WP-Cron', 'beer-journal' ); ?></option>
+										<option value="background" <?php selected( BJ_Settings::get( 'bj_import_mode' ), 'background' ); ?>><?php echo esc_html( bj_using_action_scheduler() ? __( 'Background — Action Scheduler', 'beer-journal' ) : __( 'Background — WP-Cron', 'beer-journal' ) ); ?></option>
 									</select>
-									<p class="description"><?php esc_html_e( 'Manual keeps you in control; background can spread work when cron runs reliably.', 'beer-journal' ); ?></p>
+									<p class="description"><?php
+									if ( bj_using_action_scheduler() ) {
+										esc_html_e( 'Manual keeps you in control; background runs import batches via Action Scheduler when the queue has work.', 'beer-journal' );
+									} else {
+										esc_html_e( 'Manual keeps you in control; background spreads work across WP-Cron single events when the queue has work (less reliable on low-traffic sites).', 'beer-journal' );
+									}
+									?></p>
 								</td>
 							</tr>
 						</table>
@@ -426,7 +438,7 @@ $tab_intros = array(
 								</td>
 							</tr>
 							<tr>
-								<th scope="row"><label for="bj_rss_max_per_run"><?php esc_html_e( 'RSS imports per cron run', 'beer-journal' ); ?></label></th>
+								<th scope="row"><label for="bj_rss_max_per_run"><?php esc_html_e( 'RSS imports per scheduled sync', 'beer-journal' ); ?></label></th>
 								<td>
 									<input name="bj_rss_max_per_run" id="bj_rss_max_per_run" type="number" min="1" max="100" class="small-text" value="<?php echo esc_attr( (string) (int) BJ_Settings::get( 'bj_rss_max_per_run' ) ); ?>" />
 									<p class="description"><?php esc_html_e( 'Each scheduled sync scrapes at most this many new check-ins; the rest stay in a queue and are processed by follow-up events. “Run sync now” uses a higher limit.', 'beer-journal' ); ?></p>
