@@ -32,15 +32,21 @@ class BJ_Crawler {
 		$max_pages = max( 1, min( 50, $max_pages ) );
 
 		for ( $page = 1; $page <= $max_pages; $page++ ) {
+			if ( $page > 1 ) {
+				$this->sleep_delay( $delay );
+			}
+
 			$url = $this->profile_page_url( $username, $page );
 			$url = apply_filters( 'bj_crawler_profile_url', $url, $username, $page );
 
-			$this->sleep_delay( $delay );
 			$response = wp_remote_get(
 				$url,
 				array(
 					'timeout' => 25,
-					'headers' => array( 'Accept' => 'text/html' ),
+					'headers' => array(
+						'Accept' => 'text/html',
+						'Accept-Language' => 'en-US,en;q=0.9',
+					),
 					'user-agent' => apply_filters(
 						'bj_http_user_agent',
 						'Beer Journal/' . BJ_VERSION . '; ' . home_url( '/' )
@@ -53,12 +59,44 @@ class BJ_Crawler {
 			}
 
 			$html = wp_remote_retrieve_body( $response );
-			if ( ! is_string( $html ) || strlen( $html ) < 200 ) {
+			$code = wp_remote_retrieve_response_code( $response );
+			$len  = is_string( $html ) ? strlen( $html ) : 0;
+
+			if ( ! is_string( $html ) || $len < 200 ) {
+				if ( 1 === $page && empty( $seen ) ) {
+					return new WP_Error(
+						'untappd_empty_response',
+						sprintf(
+							/* translators: 1: HTTP status code, 2: response size in bytes */
+							__( 'Untappd returned almost no HTML (HTTP %1$d, %2$d bytes). The server may block outbound requests from your host, or Untappd may require a browser session.', 'beer-journal' ),
+							(int) $code,
+							$len
+						)
+					);
+				}
 				break;
 			}
 
-			$ids = $this->extract_checkin_ids_from_html( $html );
+			$ids = $this->extract_checkin_ids_from_html( $html, $username );
 			if ( empty( $ids ) ) {
+				if ( 1 === $page && empty( $seen ) ) {
+					$suspicious = ( $len < 4000 || $code < 200 || $code >= 400 );
+					if ( $suspicious ) {
+						return new WP_Error(
+							'untappd_discovery_blocked',
+							sprintf(
+								/* translators: 1: HTTP status code, 2: response size in bytes */
+								__( 'No check-in links found on the first profile page (HTTP %1$d, %2$d bytes). Often this means your web host cannot load Untappd the same way a browser can (bot protection).', 'beer-journal' ),
+								(int) $code,
+								$len
+							)
+						);
+					}
+					return new WP_Error(
+						'untappd_discovery_markup',
+						__( 'No check-in links matched in the profile HTML. Untappd may have changed their page layout; check for a plugin update or report this to the maintainer.', 'beer-journal' )
+					);
+				}
 				break;
 			}
 
@@ -98,16 +136,31 @@ class BJ_Crawler {
 	 * Extract check-in IDs from HTML anchors.
 	 *
 	 * @param string $html HTML.
+	 * @param string $username Expected profile owner (restricts matches to that user path).
 	 * @return array<int,string>
 	 */
-	private function extract_checkin_ids_from_html( $html ) {
+	private function extract_checkin_ids_from_html( $html, $username ) {
 		$ids = array();
-		if ( preg_match_all( '#\/user\/[^/]+\/checkin\/(\d+)#', $html, $m ) ) {
+		$user  = sanitize_user( $username, true );
+		$found = array();
+
+		if ( $user && preg_match_all( '#\/user\/' . preg_quote( $user, '#' ) . '\/checkin\/(\d+)#i', $html, $m ) ) {
 			foreach ( $m[1] as $id ) {
-				$ids[] = (string) $id;
+				$found[] = (string) $id;
 			}
 		}
-		return array_values( array_unique( $ids ) );
+
+		if ( empty( $found ) && preg_match_all( '#\/user\/[^/]+\/checkin\/(\d+)#', $html, $m ) ) {
+			foreach ( $m[1] as $id ) {
+				$found[] = (string) $id;
+			}
+		}
+
+		foreach ( $found as $id ) {
+			$ids[ $id ] = true;
+		}
+
+		return array_keys( $ids );
 	}
 
 	/**

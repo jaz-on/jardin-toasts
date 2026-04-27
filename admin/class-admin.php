@@ -36,22 +36,24 @@ class BJ_Admin {
 	 * @return void
 	 */
 	public function register_menu() {
+		$slug = BJ_Post_Type::ADMIN_MENU_SLUG;
+
 		add_menu_page(
 			__( 'Beer Journal', 'beer-journal' ),
 			__( 'Beer Journal', 'beer-journal' ),
 			'manage_options',
-			'beer-journal',
+			$slug,
 			array( $this, 'render_settings_page' ),
 			'dashicons-beer',
 			58
 		);
 
 		add_submenu_page(
-			'beer-journal',
+			$slug,
 			__( 'Beer Journal Settings', 'beer-journal' ),
 			__( 'Settings', 'beer-journal' ),
 			'manage_options',
-			'beer-journal',
+			$slug,
 			array( $this, 'render_settings_page' )
 		);
 	}
@@ -63,7 +65,7 @@ class BJ_Admin {
 	 * @return void
 	 */
 	public function enqueue_assets( $hook_suffix ) {
-		if ( false === strpos( $hook_suffix, 'beer-journal' ) ) {
+		if ( false === strpos( $hook_suffix, BJ_Post_Type::ADMIN_MENU_SLUG ) ) {
 			return;
 		}
 		wp_enqueue_style(
@@ -193,14 +195,31 @@ class BJ_Admin {
 			false
 		);
 
+		$discovered = count( $ids );
+		$queued     = count( $queue );
+
+		if ( $discovered > 0 && 0 === $queued ) {
+			$message = sprintf(
+				/* translators: %d: number of check-ins found on Untappd profile pages */
+				__( 'Found %d check-in(s) on your profile, but each one already exists in WordPress (same Untappd check-in ID). Nothing new to queue.', 'beer-journal' ),
+				$discovered
+			);
+		} elseif ( 0 === $discovered ) {
+			$message = __( 'No check-in links were collected. If the problem persists, your host may not be able to reach Untappd from PHP.', 'beer-journal' );
+		} else {
+			$message = sprintf(
+				/* translators: 1: newly queued count, 2: total discovered on profile */
+				__( '%1$d new check-in(s) queued for import (out of %2$d found on the crawled profile pages).', 'beer-journal' ),
+				$queued,
+				$discovered
+			);
+		}
+
 		wp_send_json_success(
 			array(
-				'queued' => count( $queue ),
-				'message' => sprintf(
-					/* translators: %d: number of check-ins */
-					_n( '%d new check-in queued for import.', '%d new check-ins queued for import.', count( $queue ), 'beer-journal' ),
-					count( $queue )
-				),
+				'queued'     => $queued,
+				'discovered' => $discovered,
+				'message'    => $message,
 			)
 		);
 	}

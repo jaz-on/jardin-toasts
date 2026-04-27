@@ -20,6 +20,12 @@ class BJ_Post_Type {
 	public const POST_TYPE = 'beer_checkin';
 
 	/**
+	 * Top-level admin menu slug (see BJ_Admin::register_menu).
+	 * CPT and taxonomies must use the same value so taxonomy screens nest under Beer Journal.
+	 */
+	public const ADMIN_MENU_SLUG = 'beer-journal';
+
+	/**
 	 * Register hooks.
 	 *
 	 * @return void
@@ -53,7 +59,7 @@ class BJ_Post_Type {
 			'public'             => true,
 			'publicly_queryable' => true,
 			'show_ui'            => true,
-			'show_in_menu'       => 'beer-journal',
+			'show_in_menu'       => self::ADMIN_MENU_SLUG,
 			'show_in_nav_menus'  => true,
 			'show_in_admin_bar'  => true,
 			'show_in_rest'       => true,

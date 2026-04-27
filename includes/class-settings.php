@@ -20,6 +20,21 @@ class BJ_Settings {
 	public const OPTION_GROUP = 'beer_journal';
 
 	/**
+	 * Options maintained only by importers / cron / AJAX — never posted from the settings form.
+	 *
+	 * If these were registered with {@see register_setting()} for the same group as the form,
+	 * {@see options.php} would call {@see update_option()} with null for any key missing from POST
+	 * and wipe RSS URL, import queue, sync cursors, etc. whenever another tab was saved.
+	 */
+	private const INTERNAL_OPTIONS = array(
+		'bj_last_checkin_date',
+		'bj_last_imported_guid',
+		'bj_last_rss_sync_at',
+		'bj_excluded_checkins',
+		'bj_import_checkpoint',
+	);
+
+	/**
 	 * Register hooks.
 	 *
 	 * @return void
@@ -103,6 +118,9 @@ class BJ_Settings {
 	 */
 	public function register_settings() {
 		foreach ( array_keys( self::get_defaults() ) as $key ) {
+			if ( in_array( $key, self::INTERNAL_OPTIONS, true ) ) {
+				continue;
+			}
 			register_setting(
 				self::OPTION_GROUP,
 				$key,

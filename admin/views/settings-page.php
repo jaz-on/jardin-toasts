@@ -46,7 +46,13 @@ $tab_intros = array(
 		<div class="bj-tab-panel">
 			<p class="bj-tab-intro"><?php echo isset( $tab_intros[ $tab ] ) ? esc_html( $tab_intros[ $tab ] ) : ''; ?></p>
 
-			<?php if ( 'sync' === $tab ) : ?>
+			<?php
+			/*
+			 * Render every settings tab in the same form so options.php receives all keys on save.
+			 * (Otherwise saving e.g. "Display & content" would POST missing fields and WordPress clears them.)
+			 */
+			?>
+			<div class="bj-tab-panel-body"<?php echo 'sync' !== $tab ? ' hidden' : ''; ?> data-bj-tab="sync">
 				<?php include BJ_PLUGIN_DIR . 'admin/views/stats-box.php'; ?>
 
 				<div class="bj-panel">
@@ -96,7 +102,8 @@ $tab_intros = array(
 					</div>
 				</div>
 
-			<?php elseif ( 'import' === $tab ) : ?>
+			</div>
+			<div class="bj-tab-panel-body"<?php echo 'import' !== $tab ? ' hidden' : ''; ?> data-bj-tab="import">
 				<?php
 				$rss_username = bj_parse_username_from_rss_url( bj_get_rss_feed_url() );
 				$batch_current  = (int) BJ_Settings::get( 'bj_import_batch_size' );
@@ -211,7 +218,8 @@ $tab_intros = array(
 				</div>
 				<input type="hidden" id="bj-discover-max-pages" value="15" />
 
-			<?php elseif ( 'general' === $tab ) : ?>
+			</div>
+			<div class="bj-tab-panel-body"<?php echo 'general' !== $tab ? ' hidden' : ''; ?> data-bj-tab="general">
 
 				<div class="bj-panel">
 					<div class="bj-panel__header">
@@ -307,7 +315,8 @@ $tab_intros = array(
 					</div>
 				</div>
 
-			<?php elseif ( 'rating' === $tab ) : ?>
+			</div>
+			<div class="bj-tab-panel-body"<?php echo 'rating' !== $tab ? ' hidden' : ''; ?> data-bj-tab="rating">
 				<?php
 				$rule_template = bj_get_default_rating_rules();
 				$rules         = BJ_Settings::get( 'bj_rating_rules' );
@@ -420,7 +429,8 @@ $tab_intros = array(
 					</div>
 				</div>
 
-			<?php else : ?>
+			</div>
+			<div class="bj-tab-panel-body"<?php echo 'advanced' !== $tab ? ' hidden' : ''; ?> data-bj-tab="advanced">
 
 				<div class="bj-panel">
 					<div class="bj-panel__header">
@@ -603,7 +613,7 @@ $tab_intros = array(
 					</div>
 				</div>
 
-			<?php endif; ?>
+			</div>
 
 		</div>
 
