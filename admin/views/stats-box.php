@@ -2,7 +2,7 @@
 /**
  * At-a-glance stats (dashboard strip).
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,14 +15,14 @@ $queue   = jb_get_rss_sync_queue();
 $pending = is_array( $queue ) ? count( $queue ) : 0;
 $draft_i = jb_count_draft_incomplete_checkins();
 ?>
-<div class="jb-stats-strip" role="region" aria-label="<?php esc_attr_e( 'Jardin Beer summary', 'jardin-beer' ); ?>">
+<div class="jb-stats-strip" role="region" aria-label="<?php esc_attr_e( 'Jardin Toasts summary', 'jardin-toasts' ); ?>">
 	<div class="jb-stats-strip__item">
 		<span class="jb-stats-strip__value"><?php echo esc_html( number_format_i18n( $stats['publish'] ) ); ?></span>
-		<span class="jb-stats-strip__label"><?php esc_html_e( 'Published', 'jardin-beer' ); ?></span>
+		<span class="jb-stats-strip__label"><?php esc_html_e( 'Published', 'jardin-toasts' ); ?></span>
 	</div>
 	<div class="jb-stats-strip__item">
 		<span class="jb-stats-strip__value"><?php echo esc_html( number_format_i18n( $stats['draft'] ) ); ?></span>
-		<span class="jb-stats-strip__label"><?php esc_html_e( 'Drafts', 'jardin-beer' ); ?></span>
+		<span class="jb-stats-strip__label"><?php esc_html_e( 'Drafts', 'jardin-toasts' ); ?></span>
 	</div>
 	<div class="jb-stats-strip__item jb-stats-strip__item--wide">
 		<span class="jb-stats-strip__value jb-stats-strip__value--small">
@@ -39,14 +39,14 @@ $draft_i = jb_count_draft_incomplete_checkins();
 			}
 			?>
 		</span>
-		<span class="jb-stats-strip__label"><?php esc_html_e( 'Last RSS sync', 'jardin-beer' ); ?></span>
+		<span class="jb-stats-strip__label"><?php esc_html_e( 'Last RSS sync', 'jardin-toasts' ); ?></span>
 	</div>
 	<div class="jb-stats-strip__item">
 		<span class="jb-stats-strip__value"><?php echo esc_html( number_format_i18n( $pending ) ); ?></span>
-		<span class="jb-stats-strip__label"><?php esc_html_e( 'RSS queue', 'jardin-beer' ); ?></span>
+		<span class="jb-stats-strip__label"><?php esc_html_e( 'RSS queue', 'jardin-toasts' ); ?></span>
 	</div>
 	<div class="jb-stats-strip__item">
 		<span class="jb-stats-strip__value"><?php echo esc_html( number_format_i18n( $draft_i ) ); ?></span>
-		<span class="jb-stats-strip__label"><?php esc_html_e( 'Incomplete drafts', 'jardin-beer' ); ?></span>
+		<span class="jb-stats-strip__label"><?php esc_html_e( 'Incomplete drafts', 'jardin-toasts' ); ?></span>
 	</div>
 </div>

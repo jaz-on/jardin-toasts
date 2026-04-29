@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer enqueues CSS and JavaScript files for frontend functionality. All assets are properly versioned and can be dequeued if needed.
+Jardin Toasts enqueues CSS and JavaScript files for frontend functionality. All assets are properly versioned and can be dequeued if needed.
 
 ## CSS Files
 
@@ -10,7 +10,7 @@ Jardin Beer enqueues CSS and JavaScript files for frontend functionality. All as
 
 **File**: `public/assets/css/public.css`
 
-**Handle**: `jardin-beer-public`
+**Handle**: `jardin-toasts-public`
 
 **Dependencies**: None
 
@@ -28,7 +28,7 @@ Jardin Beer enqueues CSS and JavaScript files for frontend functionality. All as
 
 **File**: `public/assets/js/public.js`
 
-**Handle**: `jardin-beer-public`
+**Handle**: `jardin-toasts-public`
 
 **Dependencies**: `jquery` (optional)
 
@@ -63,7 +63,7 @@ function jb_enqueue_public_assets() {
     
     // Enqueue CSS
     wp_enqueue_style(
-        'jardin-beer-public',
+        'jardin-toasts-public',
         plugin_dir_url(__FILE__) . 'public/assets/css/public.css',
         [],
         JB_VERSION
@@ -71,7 +71,7 @@ function jb_enqueue_public_assets() {
     
     // Enqueue JS
     wp_enqueue_script(
-        'jardin-beer-public',
+        'jardin-toasts-public',
         plugin_dir_url(__FILE__) . 'public/assets/js/public.js',
         ['jquery'],
         JB_VERSION,
@@ -79,7 +79,7 @@ function jb_enqueue_public_assets() {
     );
     
     // Localize script
-    wp_localize_script('jardin-beer-public', 'bjData', [
+    wp_localize_script('jardin-toasts-public', 'bjData', [
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('jb_public_nonce'),
     ]);
@@ -93,12 +93,12 @@ Assets can be conditionally enqueued:
 ```php
 // Only on archive pages
 if (is_post_type_archive('beer')) {
-    wp_enqueue_style('jardin-beer-public');
+    wp_enqueue_style('jardin-toasts-public');
 }
 
 // Only on single pages
 if (is_singular('beer')) {
-    wp_enqueue_style('jardin-beer-public');
+    wp_enqueue_style('jardin-toasts-public');
 }
 ```
 
@@ -108,7 +108,7 @@ if (is_singular('beer')) {
 
 ```php
 add_action('wp_enqueue_scripts', function() {
-    wp_dequeue_style('jardin-beer-public');
+    wp_dequeue_style('jardin-toasts-public');
 }, 100);
 ```
 
@@ -116,7 +116,7 @@ add_action('wp_enqueue_scripts', function() {
 
 ```php
 add_action('wp_enqueue_scripts', function() {
-    wp_dequeue_script('jardin-beer-public');
+    wp_dequeue_script('jardin-toasts-public');
 }, 100);
 ```
 
@@ -143,8 +143,8 @@ Multiple CSS/JS files can be concatenated for better performance.
 Assets can be served from CDN:
 
 ```php
-$css_url = 'https://cdn.example.com/jardin-beer/public.css';
-wp_enqueue_style('jardin-beer-public', $css_url);
+$css_url = 'https://cdn.example.com/jardin-toasts/public.css';
+wp_enqueue_style('jardin-toasts-public', $css_url);
 ```
 
 ## Localization
@@ -152,12 +152,12 @@ wp_enqueue_style('jardin-beer-public', $css_url);
 ### JavaScript Localization
 
 ```php
-wp_localize_script('jardin-beer-public', 'bjData', [
+wp_localize_script('jardin-toasts-public', 'bjData', [
     'ajaxUrl' => admin_url('admin-ajax.php'),
     'nonce' => wp_create_nonce('jb_public_nonce'),
     'strings' => [
-        'loading' => __('Loading...', 'jardin-beer'),
-        'error' => __('An error occurred', 'jardin-beer'),
+        'loading' => __('Loading...', 'jardin-toasts'),
+        'error' => __('An error occurred', 'jardin-toasts'),
     ],
 ]);
 ```
@@ -181,7 +181,7 @@ Assets are versioned to prevent caching issues:
 
 ```php
 wp_enqueue_style(
-    'jardin-beer-public',
+    'jardin-toasts-public',
     $css_url,
     [],
     JB_VERSION // Changes on each plugin update
@@ -194,7 +194,7 @@ Alternative versioning using file modification time:
 
 ```php
 $version = filemtime(plugin_dir_path(__FILE__) . 'public/assets/css/public.css');
-wp_enqueue_style('jardin-beer-public', $css_url, [], $version);
+wp_enqueue_style('jardin-toasts-public', $css_url, [], $version);
 ```
 
 ## Dependencies
@@ -205,7 +205,7 @@ Plugin CSS has no dependencies by default. If your theme requires specific CSS f
 
 ```php
 wp_enqueue_style(
-    'jardin-beer-public',
+    'jardin-toasts-public',
     $css_url,
     ['theme-style'], // Dependencies
     JB_VERSION
@@ -221,7 +221,7 @@ Additional dependencies can be added:
 
 ```php
 wp_enqueue_script(
-    'jardin-beer-public',
+    'jardin-toasts-public',
     $js_url,
     ['jquery', 'lodash'], // Dependencies
     JB_VERSION,

@@ -1,8 +1,8 @@
-# Vérification de la migration — analyse Eleventy → Jardin Beer
+# Vérification de la migration — analyse Eleventy → Jardin Toasts
 
 ## Statut de la migration
 
-Ce document vérifie que toutes les données de `UNTAPPD_ANALYSE_COMPARAISON.md` ont été migrées et classées dans la documentation Jardin Beer.
+Ce document vérifie que toutes les données de `UNTAPPD_ANALYSE_COMPARAISON.md` ont été migrées et classées dans la documentation Jardin Toasts.
 
 ---
 
@@ -10,7 +10,7 @@ Ce document vérifie que toutes les données de `UNTAPPD_ANALYSE_COMPARAISON.md`
 
 ### 1. Analyse principale
 - **Fichier** : `docs/features/untappd-integration.md`
-- **Contenu** : Résumé de l’implémentation Eleventy, comparaison avec Jardin Beer, contrat de données, pipelines, mapping WordPress, décisions validées
+- **Contenu** : Résumé de l’implémentation Eleventy, comparaison avec Jardin Toasts, contrat de données, pipelines, mapping WordPress, décisions validées
 - **Statut** : ✅ Complet
 
 ### 2. Structure de données
@@ -65,7 +65,7 @@ Ce document vérifie que toutes les données de `UNTAPPD_ANALYSE_COMPARAISON.md`
 ### 2. Utilitaires de normalisation
 - **Source** : `untappd-utils.js` — `escapeYamlValue()`, `generateSafeFilename()`, `parseFrontMatter()`, `findFilesRecursively()`
 - **Destination actuelle** : Non documenté explicitement
-- **Statut** : ⚠️ À documenter (équivalents PHP pour Jardin Beer)
+- **Statut** : ⚠️ À documenter (équivalents PHP pour Jardin Toasts)
 - **Action** : À créer dans `docs/development/helper-functions.md` ou compléter le doc existant
 
 ### 3. Template et valeurs par défaut

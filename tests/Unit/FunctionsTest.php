@@ -2,7 +2,7 @@
 /**
  * Tests for helper functions (no WordPress runtime).
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 namespace JB\Tests;

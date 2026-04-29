@@ -127,7 +127,7 @@ $rating = floatval(trim($rating_text));
 
 // Validate
 if ($rating < 0 || $rating > 5) {
-    error_log('Jardin Beer: Invalid rating - ' . $rating);
+    error_log('Jardin Toasts: Invalid rating - ' . $rating);
     return new WP_Error('invalid_rating', 'Rating must be 0-5');
 }
 ```
@@ -189,7 +189,7 @@ try {
     
     if (empty($rating)) {
         // Log warning
-        error_log('Jardin Beer: Could not extract rating from ' . $url);
+        error_log('Jardin Toasts: Could not extract rating from ' . $url);
         // Save as draft
         return new WP_Error('rating_not_found', 'Rating not found');
     }
@@ -294,7 +294,7 @@ if (empty($rating)) {
 
 // If still empty, log and save as draft
 if (empty($rating)) {
-    error_log('Jardin Beer: Could not extract rating from ' . $url);
+    error_log('Jardin Toasts: Could not extract rating from ' . $url);
     // Save as draft with reason
     update_post_meta($post_id, '_jb_incomplete_reason', 'missing_rating');
     return;

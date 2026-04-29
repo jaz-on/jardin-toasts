@@ -29,7 +29,7 @@ Ne pas traiter comme livrable v1 ; prioriser et découper en releases au fil de 
 - [ ] **Export JSON** : schéma versionné (`schema_version`) pour évolutions futures.
 - [ ] **Import générique** : mapping colonnes JSON/CSV ↔ champs plugin ; validation, mode dry-run, rapport d’erreurs.
 - [ ] Corrélation avec `_jb_checkin_id` / dédup ; option mise à jour vs création.
-- [ ] Capabilities dédiées (`export_jardin_beer`, `import_jardin_beer`) ou réutilisation `manage_options` + filtre.
+- [ ] Capabilities dédiées (`export_jardin_toasts`, `import_jardin_toasts`) ou réutilisation `manage_options` + filtre.
 - [ ] Documentation utilisateur (formats, exemples).
 
 ---
@@ -92,7 +92,7 @@ Ne pas traiter comme livrable v1 ; prioriser et découper en releases au fil de 
 
 **Objectif** : aligner la doc sur le backlog ci-dessus sans tout refaire `codebase-audit-plan.md`.
 
-- [ ] **Shortcodes** : documenter les signatures prévues (`[jardin_beer_*]`), attributs, exemples.
+- [ ] **Shortcodes** : documenter les signatures prévues (`[jardin_toasts_*]`), attributs, exemples.
 - [ ] **Gutenberg** : liste des blocs cibles, mapping design/code, guide d’extension.
 - [ ] **Fichiers / pages manquants** : extraire de `docs/codebase-audit-plan.md` les entrées encore pertinentes (chemins `docs/frontend/gutenberg-blocks.md`, etc.) ; créer les stubs ou marquer « obsolète ».
 - [ ] Liens depuis README / roadmap vers ce fichier pour éviter la dérive.

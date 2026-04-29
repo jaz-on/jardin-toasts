@@ -2,7 +2,7 @@
 /**
  * Registers taxonomies for beer check-ins.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -45,15 +45,15 @@ class JB_Taxonomies {
 	 */
 	private function register_beer_style() {
 		$labels = array(
-			'name'          => __( 'Beer styles', 'jardin-beer' ),
-			'singular_name' => __( 'Beer style', 'jardin-beer' ),
-			'search_items'  => __( 'Search styles', 'jardin-beer' ),
-			'all_items'     => __( 'All styles', 'jardin-beer' ),
-			'edit_item'     => __( 'Edit style', 'jardin-beer' ),
-			'update_item'   => __( 'Update style', 'jardin-beer' ),
-			'add_new_item'  => __( 'Add new style', 'jardin-beer' ),
-			'new_item_name' => __( 'New style name', 'jardin-beer' ),
-			'menu_name'     => __( 'Styles', 'jardin-beer' ),
+			'name'          => __( 'Beer styles', 'jardin-toasts' ),
+			'singular_name' => __( 'Beer style', 'jardin-toasts' ),
+			'search_items'  => __( 'Search styles', 'jardin-toasts' ),
+			'all_items'     => __( 'All styles', 'jardin-toasts' ),
+			'edit_item'     => __( 'Edit style', 'jardin-toasts' ),
+			'update_item'   => __( 'Update style', 'jardin-toasts' ),
+			'add_new_item'  => __( 'Add new style', 'jardin-toasts' ),
+			'new_item_name' => __( 'New style name', 'jardin-toasts' ),
+			'menu_name'     => __( 'Styles', 'jardin-toasts' ),
 		);
 
 		register_taxonomy(
@@ -80,15 +80,15 @@ class JB_Taxonomies {
 	 */
 	private function register_brewery() {
 		$labels = array(
-			'name'          => __( 'Breweries', 'jardin-beer' ),
-			'singular_name' => __( 'Brewery', 'jardin-beer' ),
-			'search_items'  => __( 'Search breweries', 'jardin-beer' ),
-			'all_items'     => __( 'All breweries', 'jardin-beer' ),
-			'edit_item'     => __( 'Edit brewery', 'jardin-beer' ),
-			'update_item'   => __( 'Update brewery', 'jardin-beer' ),
-			'add_new_item'  => __( 'Add new brewery', 'jardin-beer' ),
-			'new_item_name' => __( 'New brewery name', 'jardin-beer' ),
-			'menu_name'     => __( 'Breweries', 'jardin-beer' ),
+			'name'          => __( 'Breweries', 'jardin-toasts' ),
+			'singular_name' => __( 'Brewery', 'jardin-toasts' ),
+			'search_items'  => __( 'Search breweries', 'jardin-toasts' ),
+			'all_items'     => __( 'All breweries', 'jardin-toasts' ),
+			'edit_item'     => __( 'Edit brewery', 'jardin-toasts' ),
+			'update_item'   => __( 'Update brewery', 'jardin-toasts' ),
+			'add_new_item'  => __( 'Add new brewery', 'jardin-toasts' ),
+			'new_item_name' => __( 'New brewery name', 'jardin-toasts' ),
+			'menu_name'     => __( 'Breweries', 'jardin-toasts' ),
 		);
 
 		register_taxonomy(
@@ -115,15 +115,15 @@ class JB_Taxonomies {
 	 */
 	private function register_venue() {
 		$labels = array(
-			'name'          => __( 'Venues', 'jardin-beer' ),
-			'singular_name' => __( 'Venue', 'jardin-beer' ),
-			'search_items'  => __( 'Search venues', 'jardin-beer' ),
-			'all_items'     => __( 'All venues', 'jardin-beer' ),
-			'edit_item'     => __( 'Edit venue', 'jardin-beer' ),
-			'update_item'   => __( 'Update venue', 'jardin-beer' ),
-			'add_new_item'  => __( 'Add new venue', 'jardin-beer' ),
-			'new_item_name' => __( 'New venue name', 'jardin-beer' ),
-			'menu_name'     => __( 'Venues', 'jardin-beer' ),
+			'name'          => __( 'Venues', 'jardin-toasts' ),
+			'singular_name' => __( 'Venue', 'jardin-toasts' ),
+			'search_items'  => __( 'Search venues', 'jardin-toasts' ),
+			'all_items'     => __( 'All venues', 'jardin-toasts' ),
+			'edit_item'     => __( 'Edit venue', 'jardin-toasts' ),
+			'update_item'   => __( 'Update venue', 'jardin-toasts' ),
+			'add_new_item'  => __( 'Add new venue', 'jardin-toasts' ),
+			'new_item_name' => __( 'New venue name', 'jardin-toasts' ),
+			'menu_name'     => __( 'Venues', 'jardin-toasts' ),
 		);
 
 		register_taxonomy(

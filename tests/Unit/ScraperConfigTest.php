@@ -2,7 +2,7 @@
 /**
  * Scraper config.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 namespace JB\Tests;

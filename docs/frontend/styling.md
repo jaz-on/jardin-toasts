@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer provides default CSS that follows a "Database + Grid Hybrid" design philosophy. All styles can be overridden by themes.
+Jardin Toasts provides default CSS that follows a "Database + Grid Hybrid" design philosophy. All styles can be overridden by themes.
 
 ## Design Philosophy
 

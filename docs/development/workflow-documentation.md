@@ -1,6 +1,6 @@
 # Workflow de documentation
 
-Ce document décrit le workflow de documentation pour le plugin Jardin Beer.
+Ce document décrit le workflow de documentation pour le plugin Jardin Toasts.
 
 > **Mise à jour 2026-04 :** il n’y a plus de branche Git nommée `docs`. La doc est dans le dossier `docs/` sur **`dev`** puis **`main`**. Voir aussi [DEVELOP_BRANCH.md](DEVELOP_BRANCH.md) et [DEVELOPMENT.md](../../DEVELOPMENT.md).
 

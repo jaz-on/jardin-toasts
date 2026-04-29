@@ -53,7 +53,7 @@ https://untappd.com/rss/user/{username}
 $rss = fetch_feed($rss_url);
 
 if (is_wp_error($rss)) {
-    error_log('Jardin Beer: Failed to fetch RSS - ' . $rss->get_error_message());
+    error_log('Jardin Toasts: Failed to fetch RSS - ' . $rss->get_error_message());
     return false;
 }
 ```
@@ -135,7 +135,7 @@ $last_guid = get_option('jb_last_imported_guid');
 
 if ($latest_guid === $last_guid) {
     // No new check-ins
-    error_log('Jardin Beer: No new check-ins, skipping sync');
+    error_log('Jardin Toasts: No new check-ins, skipping sync');
     return;
 }
 
@@ -185,7 +185,7 @@ add_filter('cron_schedules', 'jb_add_cron_schedules');
 function jb_add_cron_schedules($schedules) {
     $schedules['sixhourly'] = [
         'interval' => 6 * HOUR_IN_SECONDS,
-        'display' => __('Every 6 Hours', 'jardin-beer'),
+        'display' => __('Every 6 Hours', 'jardin-toasts'),
     ];
     return $schedules;
 }

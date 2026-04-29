@@ -2,7 +2,7 @@
 /**
  * RSS queue helpers.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 namespace JB\Tests;

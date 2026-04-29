@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer compatibility requirements and tested versions.
+Jardin Toasts compatibility requirements and tested versions.
 
 ## WordPress Versions
 

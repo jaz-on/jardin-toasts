@@ -2,7 +2,7 @@
 
 ## Overview
 
-Thank you for your interest in contributing to Jardin Beer! This guide will help you get started.
+Thank you for your interest in contributing to Jardin Toasts! This guide will help you get started.
 
 ## Getting Started
 
@@ -20,8 +20,8 @@ Thank you for your interest in contributing to Jardin Beer! This guide will help
 
 1. **Clone Repository**:
 ```bash
-git clone https://github.com/your-username/jardin-beer.git
-cd jardin-beer
+git clone https://github.com/your-username/jardin-toasts.git
+cd jardin-toasts
 ```
 
 2. **Install Dependencies**:

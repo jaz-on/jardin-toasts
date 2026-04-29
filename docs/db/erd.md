@@ -2,7 +2,7 @@
 
 ## Overview
 
-This ERD shows the relationships between WordPress core tables and how Jardin Beer uses them to store check-in data.
+This ERD shows the relationships between WordPress core tables and how Jardin Toasts uses them to store check-in data.
 
 ## ERD Diagram
 

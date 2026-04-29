@@ -2,7 +2,7 @@
 /**
  * Optional database optimizations (indexes) for large sites.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

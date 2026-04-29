@@ -2,7 +2,7 @@
 /**
  * Registers the beer_checkin custom post type.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -41,18 +41,18 @@ class JB_Post_Type {
 	 */
 	public function register_post_type() {
 		$labels = array(
-			'name'               => __( 'Beer check-ins', 'jardin-beer' ),
-			'singular_name'      => __( 'Beer check-in', 'jardin-beer' ),
-			'menu_name'          => __( 'Jardin Beer', 'jardin-beer' ),
-			'all_items'          => __( 'Check-ins', 'jardin-beer' ),
-			'add_new'            => __( 'Add check-in', 'jardin-beer' ),
-			'add_new_item'       => __( 'Add new check-in', 'jardin-beer' ),
-			'edit_item'          => __( 'Edit check-in', 'jardin-beer' ),
-			'new_item'           => __( 'New check-in', 'jardin-beer' ),
-			'view_item'          => __( 'View check-in', 'jardin-beer' ),
-			'search_items'       => __( 'Search check-ins', 'jardin-beer' ),
-			'not_found'          => __( 'No check-ins found', 'jardin-beer' ),
-			'not_found_in_trash' => __( 'No check-ins in trash', 'jardin-beer' ),
+			'name'               => __( 'Beer check-ins', 'jardin-toasts' ),
+			'singular_name'      => __( 'Beer check-in', 'jardin-toasts' ),
+			'menu_name'          => __( 'Jardin Toasts', 'jardin-toasts' ),
+			'all_items'          => __( 'Check-ins', 'jardin-toasts' ),
+			'add_new'            => __( 'Add check-in', 'jardin-toasts' ),
+			'add_new_item'       => __( 'Add new check-in', 'jardin-toasts' ),
+			'edit_item'          => __( 'Edit check-in', 'jardin-toasts' ),
+			'new_item'           => __( 'New check-in', 'jardin-toasts' ),
+			'view_item'          => __( 'View check-in', 'jardin-toasts' ),
+			'search_items'       => __( 'Search check-ins', 'jardin-toasts' ),
+			'not_found'          => __( 'No check-ins found', 'jardin-toasts' ),
+			'not_found_in_trash' => __( 'No check-ins in trash', 'jardin-toasts' ),
 		);
 
 		$args = array(

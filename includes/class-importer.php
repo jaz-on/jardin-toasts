@@ -2,7 +2,7 @@
 /**
  * Creates and updates beer_checkin posts from normalized data.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,7 +23,7 @@ class JB_Importer {
 	public function import_from_rss_row( array $row ) {
 		$url = isset( $row['checkin_url'] ) ? $row['checkin_url'] : '';
 		if ( ! is_string( $url ) || '' === $url ) {
-			return new WP_Error( 'no_url', __( 'Missing check-in URL.', 'jardin-beer' ) );
+			return new WP_Error( 'no_url', __( 'Missing check-in URL.', 'jardin-toasts' ) );
 		}
 
 		$scraper = new JB_Scraper();
@@ -50,19 +50,19 @@ class JB_Importer {
 	public function import_checkin_data( array $data, $source = 'rss' ) {
 		$checkin_id = isset( $data['checkin_id'] ) ? (string) $data['checkin_id'] : '';
 		if ( '' === $checkin_id ) {
-			return new WP_Error( 'no_id', __( 'Missing check-in ID.', 'jardin-beer' ) );
+			return new WP_Error( 'no_id', __( 'Missing check-in ID.', 'jardin-toasts' ) );
 		}
 
 		$excluded = get_option( 'jb_excluded_checkins', array() );
 		if ( is_array( $excluded ) && in_array( $checkin_id, $excluded, true ) ) {
-			return new WP_Error( 'excluded', __( 'Check-in excluded by settings.', 'jardin-beer' ) );
+			return new WP_Error( 'excluded', __( 'Check-in excluded by settings.', 'jardin-toasts' ) );
 		}
 
 		$existing = jb_get_post_id_by_checkin_id( $checkin_id );
 		if ( $existing ) {
 			$exclude = get_post_meta( $existing, '_jb_exclude_sync', true );
 			if ( '1' === $exclude ) {
-				return new WP_Error( 'excluded_meta', __( 'Post excluded from sync.', 'jardin-beer' ) );
+				return new WP_Error( 'excluded_meta', __( 'Post excluded from sync.', 'jardin-toasts' ) );
 			}
 		}
 
@@ -99,7 +99,7 @@ class JB_Importer {
 			}
 		}
 
-		$title = $beer_name && $brewery_name ? $beer_name . ' - ' . $brewery_name : ( $beer_name ? $beer_name : __( 'Beer check-in', 'jardin-beer' ) );
+		$title = $beer_name && $brewery_name ? $beer_name . ' - ' . $brewery_name : ( $beer_name ? $beer_name : __( 'Beer check-in', 'jardin-toasts' ) );
 
 		$post_date_local = wp_date( 'Y-m-d H:i:s', $ts, wp_timezone() );
 		$post_date_gmt   = get_gmt_from_date( $post_date_local );

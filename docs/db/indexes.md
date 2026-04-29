@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes recommended database indexes for optimal performance with Jardin Beer. WordPress automatically creates some indexes, but additional indexes may be needed for specific queries.
+This document describes recommended database indexes for optimal performance with Jardin Toasts. WordPress automatically creates some indexes, but additional indexes may be needed for specific queries.
 
 ## WordPress Automatic Indexes
 

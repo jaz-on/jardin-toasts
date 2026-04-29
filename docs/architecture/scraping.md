@@ -156,7 +156,7 @@ flowchart TD
 ```php
 $response = wp_remote_get($checkin_url, [
     'timeout' => 10,
-    'user-agent' => 'Jardin Beer WordPress Plugin',
+    'user-agent' => 'Jardin Toasts WordPress Plugin',
     'headers' => [
         'Accept' => 'text/html,application/xhtml+xml',
     ],
@@ -300,7 +300,7 @@ if (empty($rating)) {
 
 // If still empty, log warning
 if (empty($rating)) {
-    error_log('Jardin Beer: Could not extract rating from ' . $url);
+    error_log('Jardin Toasts: Could not extract rating from ' . $url);
     // Save as draft with reason
 }
 ```
@@ -323,7 +323,7 @@ if (empty($rating)) {
 
 ### User-Agent
 - **Identify**: Use descriptive user-agent
-- **Example**: "Jardin Beer WordPress Plugin/1.0.0"
+- **Example**: "Jardin Toasts WordPress Plugin/1.0.0"
 
 ### Headers
 - **Accept**: Specify HTML content type

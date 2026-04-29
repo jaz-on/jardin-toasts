@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer provides numerous filters for customizing data, templates, and behavior. All filters are prefixed with `jb_`.
+Jardin Toasts provides numerous filters for customizing data, templates, and behavior. All filters are prefixed with `jb_`.
 
 Note: Pour éviter les divergences, la source de vérité des filtres frontend est `docs/frontend/hooks-filters.md`. Cette page référence et complète, sans dupliquer toute la matière.
 
@@ -21,7 +21,7 @@ Note: Pour éviter les divergences, la source de vérité des filtres frontend e
 add_filter('jb_checkin_template', function($template, $post_id) {
     // Use custom template for high-rated check-ins
     if (jb_get_rating($post_id, false) >= 4) {
-        return locate_template('jardin-beer/single-featured.php');
+        return locate_template('jardin-toasts/single-featured.php');
     }
     return $template;
 }, 10, 2);
@@ -272,7 +272,7 @@ add_filter('jb_image_url', function($url) {
 ```php
 add_filter('jb_image_alt_text', function($alt_text, $post_id) {
     // Customize alt text
-    return $alt_text . ' - Jardin Beer';
+    return $alt_text . ' - Jardin Toasts';
 }, 10, 2);
 ```
 

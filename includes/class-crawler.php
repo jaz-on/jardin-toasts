@@ -2,7 +2,7 @@
 /**
  * Historical import: discover check-in URLs from an Untappd profile.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -24,7 +24,7 @@ class JB_Crawler {
 	public function discover_checkins( $username, $max_pages = 10 ) {
 		$username = sanitize_user( $username, true );
 		if ( ! $username ) {
-			return new WP_Error( 'no_user', __( 'Invalid Untappd username.', 'jardin-beer' ) );
+			return new WP_Error( 'no_user', __( 'Invalid Untappd username.', 'jardin-toasts' ) );
 		}
 
 		$seen  = array();
@@ -49,7 +49,7 @@ class JB_Crawler {
 					),
 					'user-agent' => apply_filters(
 						'jb_http_user_agent',
-						'Jardin Beer/' . JB_VERSION . '; ' . home_url( '/' )
+						'Jardin Toasts/' . JB_VERSION . '; ' . home_url( '/' )
 					),
 				)
 			);
@@ -68,7 +68,7 @@ class JB_Crawler {
 						'untappd_empty_response',
 						sprintf(
 							/* translators: 1: HTTP status code, 2: response size in bytes */
-							__( 'Untappd returned almost no HTML (HTTP %1$d, %2$d bytes). The server may block outbound requests from your host, or Untappd may require a browser session.', 'jardin-beer' ),
+							__( 'Untappd returned almost no HTML (HTTP %1$d, %2$d bytes). The server may block outbound requests from your host, or Untappd may require a browser session.', 'jardin-toasts' ),
 							(int) $code,
 							$len
 						)
@@ -86,7 +86,7 @@ class JB_Crawler {
 							'untappd_discovery_blocked',
 							sprintf(
 								/* translators: 1: HTTP status code, 2: response size in bytes */
-								__( 'No check-in links found on the first profile page (HTTP %1$d, %2$d bytes). Often this means your web host cannot load Untappd the same way a browser can (bot protection).', 'jardin-beer' ),
+								__( 'No check-in links found on the first profile page (HTTP %1$d, %2$d bytes). Often this means your web host cannot load Untappd the same way a browser can (bot protection).', 'jardin-toasts' ),
 								(int) $code,
 								$len
 							)
@@ -94,7 +94,7 @@ class JB_Crawler {
 					}
 					return new WP_Error(
 						'untappd_discovery_markup',
-						__( 'No check-in links matched in the profile HTML. Untappd may have changed their page layout; check for a plugin update or report this to the maintainer.', 'jardin-beer' )
+						__( 'No check-in links matched in the profile HTML. Untappd may have changed their page layout; check for a plugin update or report this to the maintainer.', 'jardin-toasts' )
 					);
 				}
 				break;

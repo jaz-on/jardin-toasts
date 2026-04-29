@@ -88,12 +88,12 @@ update_option('jb_rating_rules', $custom_rules);
 
 ```php
 $default_labels = [
-    0 => __('Undrinkable - Not even beer', 'jardin-beer'),
-    1 => __('Terrible - Only if there\'s no alternative', 'jardin-beer'),
-    2 => __('Mediocre - Meh, it\'s okay I guess', 'jardin-beer'),
-    3 => __('Decent - A solid thirst quencher', 'jardin-beer'),
-    4 => __('Great - Now we\'re talking! A real pleasure', 'jardin-beer'),
-    5 => __('Exceptional - Buy it with your eyes closed. Masterpiece!', 'jardin-beer'),
+    0 => __('Undrinkable - Not even beer', 'jardin-toasts'),
+    1 => __('Terrible - Only if there\'s no alternative', 'jardin-toasts'),
+    2 => __('Mediocre - Meh, it\'s okay I guess', 'jardin-toasts'),
+    3 => __('Decent - A solid thirst quencher', 'jardin-toasts'),
+    4 => __('Great - Now we\'re talking! A real pleasure', 'jardin-toasts'),
+    5 => __('Exceptional - Buy it with your eyes closed. Masterpiece!', 'jardin-toasts'),
 ];
 ```
 
@@ -137,7 +137,7 @@ function jb_display_rating($post_id, $show_label = true, $show_raw = true) {
     if ($show_raw && $raw != $rounded && !empty($raw)) {
         $output .= sprintf(
             '<span class="jb-stars" title="%s">%s</span>',
-            esc_attr(sprintf(__('Original rating: %s', 'jardin-beer'), $raw)),
+            esc_attr(sprintf(__('Original rating: %s', 'jardin-toasts'), $raw)),
             $stars
         );
     } else {

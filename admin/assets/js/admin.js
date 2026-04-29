@@ -8,17 +8,17 @@
 	$( document ).on( 'click', '#jb-sync-now', function () {
 		var $btn = $( this );
 		$btn.prop( 'disabled', true );
-		setStatus( '#jb-sync-status', bjAdmin.i18n.working );
+		setStatus( '#jb-sync-status', jbAdmin.i18n.working );
 		$.post(
-			bjAdmin.ajaxUrl,
+			jbAdmin.ajaxUrl,
 			{
 				action: 'jb_sync_now',
-				nonce: bjAdmin.nonce,
+				nonce: jbAdmin.nonce,
 			}
 		)
 			.done( function ( res ) {
 				if ( res.success ) {
-					setStatus( '#jb-sync-status', res.data.message || bjAdmin.i18n.done );
+					setStatus( '#jb-sync-status', res.data.message || jbAdmin.i18n.done );
 				} else {
 					setStatus( '#jb-sync-status', res.data && res.data.message ? res.data.message : 'Error' );
 				}
@@ -36,12 +36,12 @@
 		var username = $( '#jb_untappd_username' ).val();
 		var maxPages = $( '#jb-discover-max-pages' ).val() || 10;
 		$btn.prop( 'disabled', true );
-		setStatus( '#jb-import-status', bjAdmin.i18n.working );
+		setStatus( '#jb-import-status', jbAdmin.i18n.working );
 		$.post(
-			bjAdmin.ajaxUrl,
+			jbAdmin.ajaxUrl,
 			{
 				action: 'jb_crawl_discover',
-				nonce: bjAdmin.nonce,
+				nonce: jbAdmin.nonce,
 				username: username,
 				max_pages: maxPages,
 			}
@@ -64,12 +64,12 @@
 	$( document ).on( 'click', '#jb-import-batch', function () {
 		var $btn = $( this );
 		$btn.prop( 'disabled', true );
-		setStatus( '#jb-import-status', bjAdmin.i18n.working );
+		setStatus( '#jb-import-status', jbAdmin.i18n.working );
 		$.post(
-			bjAdmin.ajaxUrl,
+			jbAdmin.ajaxUrl,
 			{
 				action: 'jb_crawl_batch',
-				nonce: bjAdmin.nonce,
+				nonce: jbAdmin.nonce,
 			}
 		)
 			.done( function ( res ) {
@@ -127,8 +127,8 @@
 				return;
 			}
 			frame = wp.media( {
-				title: bjAdmin.i18n.chooseImage,
-				button: { text: bjAdmin.i18n.chooseImage },
+				title: jbAdmin.i18n.chooseImage,
+				button: { text: jbAdmin.i18n.chooseImage },
 				multiple: false,
 				library: { type: 'image' },
 			} );
@@ -140,7 +140,7 @@
 						? att.sizes.thumbnail.url
 						: att.url;
 				$phPreview.html( '<img src="' + url + '" alt="" />' );
-				$phSelect.text( bjAdmin.i18n.replaceImage );
+				$phSelect.text( jbAdmin.i18n.replaceImage );
 			} );
 			frame.open();
 		} );
@@ -150,20 +150,20 @@
 		e.preventDefault();
 		$phId.val( '0' );
 		$phPreview.empty();
-		$phSelect.text( bjAdmin.i18n.chooseImage );
+		$phSelect.text( jbAdmin.i18n.chooseImage );
 	} );
 
-	if ( bjAdmin.placeholderThumb && $phPreview.length && parseInt( bjAdmin.placeholderId, 10 ) > 0 ) {
+	if ( jbAdmin.placeholderThumb && $phPreview.length && parseInt( jbAdmin.placeholderId, 10 ) > 0 ) {
 		$phPreview.html(
-			'<img src="' + bjAdmin.placeholderThumb + '" alt="" />'
+			'<img src="' + jbAdmin.placeholderThumb + '" alt="" />'
 		);
-		$phSelect.text( bjAdmin.i18n.replaceImage );
+		$phSelect.text( jbAdmin.i18n.replaceImage );
 	}
 
 	$( '#jb-use-rss-username' ).on( 'click', function ( e ) {
 		e.preventDefault();
-		if ( bjAdmin.rssUsername ) {
-			$( '#jb_untappd_username' ).val( bjAdmin.rssUsername );
+		if ( jbAdmin.rssUsername ) {
+			$( '#jb_untappd_username' ).val( jbAdmin.rssUsername );
 		}
 	} );
 }( jQuery ) );

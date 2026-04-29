@@ -1,8 +1,8 @@
 <?php
 /**
- * One-time migration from beer-journal / bj_ storage to jardin-beer / jb_ keys.
+ * One-time migrations: beer-journal / bj_ → jb_ keys; theme paths in post content; product rename jardin-beer → jardin-toasts.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,6 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class JB_Storage_Migration {
 
 	public const FLAG_OPTION = 'jb_storage_migrated_v1';
+
+	/**
+	 * Set after post content + Action Scheduler group cleanup for the jardin-toasts rename.
+	 */
+	public const PRODUCT_RENAME_FLAG = 'jb_jardin_toasts_product_rename_v1';
 
 	/**
 	 * Legacy Action Scheduler group slug.
@@ -50,6 +55,68 @@ class JB_Storage_Migration {
 		self::delete_legacy_transients( $wpdb );
 
 		update_option( self::FLAG_OPTION, '1', false );
+	}
+
+	/**
+	 * Rename persisted block/theme paths and clear Action Scheduler jobs in the legacy `jardin-beer` group (superseded by `jardin-toasts`).
+	 *
+	 * @return void
+	 */
+	public static function maybe_migrate_product_rename() {
+		if ( get_option( self::PRODUCT_RENAME_FLAG, '' ) ) {
+			return;
+		}
+
+		global $wpdb;
+
+		self::migrate_post_content_product_paths( $wpdb );
+		self::clear_action_scheduler_group_jardin_beer();
+		update_option( self::PRODUCT_RENAME_FLAG, '1', false );
+	}
+
+	/**
+	 * @param \wpdb $wpdb WordPress DB object.
+	 * @return void
+	 */
+	private static function migrate_post_content_product_paths( $wpdb ) {
+		$replacements = array(
+			array( 'jardin-beer/', 'jardin-toasts/' ),
+			array( '<!-- wp:jardin-beer/', '<!-- wp:jardin-toasts/' ),
+			array( 'wp:jardin-beer/', 'wp:jardin-toasts/' ),
+			array( 'wp-block-jardin-beer-', 'wp-block-jardin-toasts-' ),
+		);
+		foreach ( $replacements as $pair ) {
+			$from = $pair[0];
+			$to   = $pair[1];
+			$like = '%' . $wpdb->esc_like( $from ) . '%';
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPlaceholder -- static pattern.
+			$wpdb->query(
+				$wpdb->prepare(
+					"UPDATE {$wpdb->posts} SET post_content = REPLACE(post_content, %s, %s) WHERE post_content LIKE %s",
+					$from,
+					$to,
+					$like
+				)
+			);
+		}
+	}
+
+	/**
+	 * @return void
+	 */
+	private static function clear_action_scheduler_group_jardin_beer() {
+		if ( ! function_exists( 'as_unschedule_all_actions' ) ) {
+			return;
+		}
+		$hooks = array( 'jb_rss_sync', 'jb_rss_queue_tick', 'jb_background_import_batch', 'jb_daily_log_cleanup' );
+		$group = 'jardin-beer';
+		jb_when_action_scheduler_store_ready(
+			static function () use ( $hooks, $group ) {
+				foreach ( $hooks as $hook ) {
+					as_unschedule_all_actions( $hook, array(), $group );
+				}
+			}
+		);
 	}
 
 	/**
@@ -112,7 +179,7 @@ class JB_Storage_Migration {
 	 */
 	private static function migrate_block_markup( $wpdb ) {
 		$wpdb->query(
-			"UPDATE {$wpdb->posts} SET post_content = REPLACE(post_content, 'beer-journal/', 'jardin-beer/') WHERE post_content LIKE '%beer-journal/%'"
+			"UPDATE {$wpdb->posts} SET post_content = REPLACE(post_content, 'beer-journal/', 'jardin-toasts/') WHERE post_content LIKE '%beer-journal/%'"
 		);
 	}
 

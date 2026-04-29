@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer stores configuration and state in WordPress `wp_options` table. All option names are prefixed with `jb_` to avoid conflicts.
+Jardin Toasts stores configuration and state in WordPress `wp_options` table. All option names are prefixed with `jb_` to avoid conflicts.
 
 ## Option Categories
 
@@ -263,12 +263,12 @@ function jb_get_default_rating_rules() {
 ```php
 function jb_get_default_rating_labels() {
     return [
-        0 => __('Undrinkable - Not even beer', 'jardin-beer'),
-        1 => __('Terrible - Only if there\'s no alternative', 'jardin-beer'),
-        2 => __('Mediocre - Meh, it\'s okay I guess', 'jardin-beer'),
-        3 => __('Decent - A solid thirst quencher', 'jardin-beer'),
-        4 => __('Great - Now we\'re talking! A real pleasure', 'jardin-beer'),
-        5 => __('Exceptional - Buy it with your eyes closed. Masterpiece!', 'jardin-beer'),
+        0 => __('Undrinkable - Not even beer', 'jardin-toasts'),
+        1 => __('Terrible - Only if there\'s no alternative', 'jardin-toasts'),
+        2 => __('Mediocre - Meh, it\'s okay I guess', 'jardin-toasts'),
+        3 => __('Decent - A solid thirst quencher', 'jardin-toasts'),
+        4 => __('Great - Now we\'re talking! A real pleasure', 'jardin-toasts'),
+        5 => __('Exceptional - Buy it with your eyes closed. Masterpiece!', 'jardin-toasts'),
     ];
 }
 ```

@@ -1,8 +1,8 @@
 <?php
 /**
- * File-based logging for Jardin Beer.
+ * File-based logging for Jardin Toasts.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -35,7 +35,7 @@ class JB_Logger {
 		if ( self::LEVEL_DEBUG === $level && ! $debug ) {
 			return;
 		}
-		$file  = $dir . 'jardin-beer-' . gmdate( 'Y-m-d' ) . '.log';
+		$file  = $dir . 'jardin-toasts-' . gmdate( 'Y-m-d' ) . '.log';
 		$line  = sprintf( "[%s] %s: %s\n", gmdate( 'Y-m-d H:i:s' ), $level, $message );
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 		file_put_contents( $file, $line, FILE_APPEND | LOCK_EX );
@@ -92,9 +92,14 @@ class JB_Logger {
 		if ( ! $dir ) {
 			return '';
 		}
-		$file = $dir . 'jardin-beer-' . gmdate( 'Y-m-d' ) . '.log';
+		$file = $dir . 'jardin-toasts-' . gmdate( 'Y-m-d' ) . '.log';
 		if ( ! is_readable( $file ) ) {
-			return '';
+			$legacy = $dir . 'jardin-beer-' . gmdate( 'Y-m-d' ) . '.log';
+			if ( is_readable( $legacy ) ) {
+				$file = $legacy;
+			} else {
+				return '';
+			}
 		}
 		$content = file_get_contents( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		if ( ! is_string( $content ) || '' === $content ) {

@@ -2,15 +2,15 @@
 
 ## Overview
 
-Jardin Beer logs important events, errors, and debugging information to help diagnose issues and track import progress.
+Jardin Toasts logs important events, errors, and debugging information to help diagnose issues and track import progress.
 
 ## Log Location
 
-**Directory**: `wp-content/uploads/jardin-beer/logs/`
+**Directory**: `wp-content/uploads/jardin-toasts/logs/`
 
-**File Naming**: `jardin-beer-{YYYY-MM-DD}.log`
+**File Naming**: `jardin-toasts-{YYYY-MM-DD}.log`
 
-**Example**: `jardin-beer-2025-11-10.log`
+**Example**: `jardin-toasts-2025-11-10.log`
 
 ## Log Levels
 
@@ -73,7 +73,7 @@ function jb_cleanup_old_logs() {
     $log_dir = jb_get_log_directory();
     $cutoff_date = strtotime("-{$retention_days} days");
     
-    $files = glob($log_dir . 'jardin-beer-*.log');
+    $files = glob($log_dir . 'jardin-toasts-*.log');
     $deleted = 0;
     
     foreach ($files as $file) {
@@ -100,24 +100,24 @@ function jb_cleanup_old_logs() {
 
 **Behavior**: When file exceeds limit:
 - Current file is closed
-- New file created with suffix: `jardin-beer-{YYYY-MM-DD}-{N}.log`
-- Example: `jardin-beer-2025-11-10-2.log`
+- New file created with suffix: `jardin-toasts-{YYYY-MM-DD}-{N}.log`
+- Example: `jardin-toasts-2025-11-10-2.log`
 
 **Implementation**:
 ```php
 function jb_get_log_file_path() {
     $log_dir = jb_get_log_directory();
     $date = date('Y-m-d');
-    $base_file = $log_dir . "jardin-beer-{$date}.log";
+    $base_file = $log_dir . "jardin-toasts-{$date}.log";
     
     // Check if file exists and is too large
     if (file_exists($base_file) && filesize($base_file) > 10 * 1024 * 1024) {
         // Find next available number
         $counter = 1;
-        while (file_exists("{$log_dir}jardin-beer-{$date}-{$counter}.log")) {
+        while (file_exists("{$log_dir}jardin-toasts-{$date}-{$counter}.log")) {
             $counter++;
         }
-        return "{$log_dir}jardin-beer-{$date}-{$counter}.log";
+        return "{$log_dir}jardin-toasts-{$date}-{$counter}.log";
     }
     
     return $base_file;
@@ -192,7 +192,7 @@ function jb_log_debug($message) {
 
 ### Admin Interface
 
-**Location**: Jardin Beer → Logs
+**Location**: Jardin Toasts → Logs
 
 **Features**:
 - View current day's log
@@ -205,10 +205,10 @@ function jb_log_debug($message) {
 ```php
 add_submenu_page(
     'edit.php?post_type=beer_checkin',
-    __('Logs', 'jardin-beer'),
-    __('Logs', 'jardin-beer'),
+    __('Logs', 'jardin-toasts'),
+    __('Logs', 'jardin-toasts'),
     'manage_options',
-    'jardin-beer-logs',
+    'jardin-toasts-logs',
     'jb_render_logs_page'
 );
 ```

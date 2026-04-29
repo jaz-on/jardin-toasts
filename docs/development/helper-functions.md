@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer provides numerous helper functions for common operations. These functions are used throughout the plugin and can be used by theme developers.
+Jardin Toasts provides numerous helper functions for common operations. These functions are used throughout the plugin and can be used by theme developers.
 
 ## Taxonomy Functions
 
@@ -201,13 +201,13 @@ function jb_get_log_directory()
 
 **Returns**: `string` - Absolute path to log directory
 ```php
-'/path/to/wp-content/uploads/jardin-beer/logs/'
+'/path/to/wp-content/uploads/jardin-toasts/logs/'
 ```
 
 **Example**:
 ```php
 $log_dir = jb_get_log_directory();
-$log_file = $log_dir . 'jardin-beer-' . date('Y-m-d') . '.log';
+$log_file = $log_dir . 'jardin-toasts-' . date('Y-m-d') . '.log';
 ```
 
 **Location**: `includes/functions-logging.php`

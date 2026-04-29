@@ -2,7 +2,7 @@
 /**
  * Background jobs: Action Scheduler when available, else WP-Cron.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -38,7 +38,7 @@ class JB_Action_Scheduler {
 		if ( ! isset( $schedules['sixhourly'] ) ) {
 			$schedules['sixhourly'] = array(
 				'interval' => 6 * HOUR_IN_SECONDS,
-				'display'  => __( 'Every 6 hours', 'jardin-beer' ),
+				'display'  => __( 'Every 6 hours', 'jardin-toasts' ),
 			);
 		}
 		return $schedules;
@@ -192,7 +192,7 @@ class JB_Action_Scheduler {
 			$msg = $result->get_error_message();
 			JB_Logger::error( 'RSS sync failed: ' . $msg );
 			jb_send_notification_email(
-				'[Jardin Beer] ' . __( 'RSS sync failed', 'jardin-beer' ),
+				'[Jardin Toasts] ' . __( 'RSS sync failed', 'jardin-toasts' ),
 				$msg,
 				'error'
 			);
@@ -242,8 +242,13 @@ class JB_Action_Scheduler {
 			return;
 		}
 		$cutoff = time() - ( $days * DAY_IN_SECONDS );
-		$files  = glob( $dir . 'jardin-beer-*.log' );
-		if ( ! is_array( $files ) ) {
+		$toast_logs = glob( $dir . 'jardin-toasts-*.log' );
+		$legacy_logs = glob( $dir . 'jardin-beer-*.log' );
+		$files       = array_merge(
+			is_array( $toast_logs ) ? $toast_logs : array(),
+			is_array( $legacy_logs ) ? $legacy_logs : array()
+		);
+		if ( empty( $files ) ) {
 			return;
 		}
 		foreach ( $files as $file ) {

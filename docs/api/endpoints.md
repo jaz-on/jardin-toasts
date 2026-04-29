@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer n'expose pas d'endpoints REST personnalisés dans la version initiale (1.0.0). Le plugin utilise l'API REST native de WordPress pour le Custom Post Type `beer_checkin` et les taxonomies.
+Jardin Toasts n'expose pas d'endpoints REST personnalisés dans la version initiale (1.0.0). Le plugin utilise l'API REST native de WordPress pour le Custom Post Type `beer_checkin` et les taxonomies.
 
 ## Current Status
 

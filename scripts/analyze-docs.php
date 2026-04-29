@@ -11,7 +11,7 @@
  */
 
 // Vérifier que le script est exécuté depuis la racine du projet
-if ( ! file_exists( __DIR__ . '/../jardin-beer.php' ) ) {
+if ( ! file_exists( __DIR__ . '/../jardin-toasts.php' ) ) {
 	echo "Erreur : Ce script doit être exécuté depuis la racine du projet.\n";
 	exit( 1 );
 }

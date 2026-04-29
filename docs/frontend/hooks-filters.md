@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer provides numerous hooks (actions) and filters for customization. All hooks are prefixed with `jb_` to avoid conflicts.
+Jardin Toasts provides numerous hooks (actions) and filters for customization. All hooks are prefixed with `jb_` to avoid conflicts.
 
 Note: This page is the source of truth for frontend hooks/filters. Pages in `docs/wordpress/*.md` should reference this document to avoid duplication.
 
@@ -148,7 +148,7 @@ apply_filters('jb_checkin_template', $template, $post_id);
 add_filter('jb_checkin_template', function($template, $post_id) {
     // Use custom template for high-rated check-ins
     if (jb_get_rating($post_id, false) >= 4) {
-        return locate_template('jardin-beer/single-featured.php');
+        return locate_template('jardin-toasts/single-featured.php');
     }
     return $template;
 }, 10, 2);

@@ -2,7 +2,7 @@
 /**
  * Table row for archive (table layout).
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 ?>
 <tr>

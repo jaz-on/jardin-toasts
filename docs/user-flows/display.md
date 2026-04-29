@@ -160,7 +160,7 @@ flowchart TD
 
 ### Hierarchy
 
-1. Theme override: `jardin-beer/archive-beer.php`
+1. Theme override: `jardin-toasts/archive-beer.php`
 2. Theme: `archive-beer.php`
 3. Plugin default: `public/templates/archive-beer.php`
 

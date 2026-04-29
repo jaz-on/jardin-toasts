@@ -108,7 +108,7 @@ function jb_handle_beer_image($image_url, $post_id) {
     
     if (is_wp_error($result)) {
         // Download failed, use placeholder
-        error_log('Jardin Beer: Image download failed - ' . $result->get_error_message());
+        error_log('Jardin Toasts: Image download failed - ' . $result->get_error_message());
         return jb_set_placeholder_image($post_id);
     }
     

@@ -48,7 +48,7 @@ flowchart TD
 function jb_download_image($url) {
     // Validate URL
     if (!filter_var($url, FILTER_VALIDATE_URL)) {
-        return new WP_Error('invalid_url', __('Invalid image URL', 'jardin-beer'));
+        return new WP_Error('invalid_url', __('Invalid image URL', 'jardin-toasts'));
     }
     
     // Download with timeout
@@ -66,7 +66,7 @@ function jb_download_image($url) {
     
     // Validate content type
     if (strpos($content_type, 'image/') === false) {
-        return new WP_Error('invalid_type', __('Not an image', 'jardin-beer'));
+        return new WP_Error('invalid_type', __('Not an image', 'jardin-toasts'));
     }
     
     return [
@@ -122,7 +122,7 @@ function jb_import_image($image_url, $post_id, $args = []) {
     // Download image
     $image_data = jb_download_image($image_url);
     if (is_wp_error($image_data)) {
-        error_log('Jardin Beer: Failed to download image - ' . $image_data->get_error_message());
+        error_log('Jardin Toasts: Failed to download image - ' . $image_data->get_error_message());
         return false;
     }
     
@@ -149,7 +149,7 @@ function jb_import_image($image_url, $post_id, $args = []) {
     $attachment_id = wp_insert_attachment($attachment_data, $file_path, $post_id);
     
     if (is_wp_error($attachment_id)) {
-        error_log('Jardin Beer: Failed to create attachment - ' . $attachment_id->get_error_message());
+        error_log('Jardin Toasts: Failed to create attachment - ' . $attachment_id->get_error_message());
         return false;
     }
     
@@ -252,14 +252,14 @@ if (is_wp_error($image_data)) {
 // Validate file type
 $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 if (!in_array($content_type, $allowed_types)) {
-    error_log('Jardin Beer: Invalid image type - ' . $content_type);
+    error_log('Jardin Toasts: Invalid image type - ' . $content_type);
     return false;
 }
 
 // Validate file size
 $max_size = 5 * 1024 * 1024; // 5MB
 if (strlen($body) > $max_size) {
-    error_log('Jardin Beer: Image too large');
+    error_log('Jardin Toasts: Image too large');
     return false;
 }
 ```
@@ -299,7 +299,7 @@ update_post_meta($attachment_id, '_wp_attachment_image_alt', sanitize_text_field
 
 ```php
 $caption = sprintf(
-    __('Check-in from %s', 'jardin-beer'),
+    __('Check-in from %s', 'jardin-toasts'),
     $checkin_date
 );
 wp_update_post([

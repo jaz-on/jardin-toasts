@@ -2,7 +2,7 @@
 /**
  * Plugin options defaults and Settings API registration.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,7 +17,7 @@ class JB_Settings {
 	/**
 	 * Option group name.
 	 */
-	public const OPTION_GROUP = 'jardin_beer';
+	public const OPTION_GROUP = 'jardin_toasts';
 
 	/**
 	 * Options maintained only by importers / cron / AJAX — never posted from the settings form.

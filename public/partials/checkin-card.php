@@ -2,7 +2,7 @@
 /**
  * Check-in card for archives.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 $classes = get_option( 'jb_microformats_enabled', true ) ? 'jb-card h-entry' : 'jb-card';

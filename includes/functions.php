@@ -1,8 +1,8 @@
 <?php
 /**
- * Global helper functions for Jardin Beer.
+ * Global helper functions for Jardin Toasts.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -48,12 +48,12 @@ function jb_get_default_rating_rules() {
  */
 function jb_get_default_rating_labels() {
 	return array(
-		0 => __( 'Undrinkable', 'jardin-beer' ),
-		1 => __( 'Terrible', 'jardin-beer' ),
-		2 => __( 'Poor', 'jardin-beer' ),
-		3 => __( 'Okay', 'jardin-beer' ),
-		4 => __( 'Good', 'jardin-beer' ),
-		5 => __( 'Excellent', 'jardin-beer' ),
+		0 => __( 'Undrinkable', 'jardin-toasts' ),
+		1 => __( 'Terrible', 'jardin-toasts' ),
+		2 => __( 'Poor', 'jardin-toasts' ),
+		3 => __( 'Okay', 'jardin-toasts' ),
+		4 => __( 'Good', 'jardin-toasts' ),
+		5 => __( 'Excellent', 'jardin-toasts' ),
 	);
 }
 
@@ -242,7 +242,7 @@ function jb_get_log_directory() {
 	if ( ! empty( $upload['error'] ) ) {
 		return false;
 	}
-	$dir = trailingslashit( $upload['basedir'] ) . 'jardin-beer/logs/';
+	$dir = trailingslashit( $upload['basedir'] ) . 'jardin-toasts/logs/';
 	if ( ! wp_mkdir_p( $dir ) ) {
 		return false;
 	}
@@ -459,12 +459,12 @@ function jb_using_action_scheduler() {
 }
 
 /**
- * Action Scheduler group for all Jardin Beer jobs.
+ * Action Scheduler group for all Jardin Toasts jobs.
  *
  * @return string
  */
 function jb_action_scheduler_group() {
-	return 'jardin-beer';
+	return 'jardin-toasts';
 }
 
 /**
@@ -542,14 +542,14 @@ function jb_count_draft_incomplete_checkins() {
 function jb_rescrape_checkin_post( $post_id ) {
 	$post_id = absint( $post_id );
 	if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
-		return new WP_Error( 'forbidden', __( 'You cannot edit this check-in.', 'jardin-beer' ) );
+		return new WP_Error( 'forbidden', __( 'You cannot edit this check-in.', 'jardin-toasts' ) );
 	}
 	if ( get_post_type( $post_id ) !== JB_Post_Type::POST_TYPE ) {
-		return new WP_Error( 'wrong_type', __( 'Not a beer check-in post.', 'jardin-beer' ) );
+		return new WP_Error( 'wrong_type', __( 'Not a beer check-in post.', 'jardin-toasts' ) );
 	}
 	$url = get_post_meta( $post_id, '_jb_checkin_url', true );
 	if ( ! is_string( $url ) || '' === $url || false === strpos( $url, 'untappd.com' ) ) {
-		return new WP_Error( 'no_url', __( 'No valid Untappd check-in URL on this post.', 'jardin-beer' ) );
+		return new WP_Error( 'no_url', __( 'No valid Untappd check-in URL on this post.', 'jardin-toasts' ) );
 	}
 	$cid = get_post_meta( $post_id, '_jb_checkin_id', true );
 	$data = array(
@@ -558,7 +558,7 @@ function jb_rescrape_checkin_post( $post_id ) {
 		'checkin_date' => (string) get_post_meta( $post_id, '_jb_checkin_date', true ),
 	);
 	if ( '' === $data['checkin_id'] ) {
-		return new WP_Error( 'no_id', __( 'Missing check-in ID.', 'jardin-beer' ) );
+		return new WP_Error( 'no_id', __( 'Missing check-in ID.', 'jardin-toasts' ) );
 	}
 	$scraper = new JB_Scraper();
 	$scraped = $scraper->scrape_checkin_url( $url );

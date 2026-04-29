@@ -1,6 +1,6 @@
 <?php
 /**
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -10,7 +10,7 @@ if ( $post_id <= 0 && is_singular( JB_Post_Type::POST_TYPE ) ) {
 	$post_id = get_the_ID();
 }
 if ( $post_id <= 0 || JB_Post_Type::POST_TYPE !== get_post_type( $post_id ) ) {
-	return '<p class="jb-block-placeholder">' . esc_html__( 'Select a check-in or view on a single check-in page.', 'jardin-beer' ) . '</p>';
+	return '<p class="jb-block-placeholder">' . esc_html__( 'Select a check-in or view on a single check-in page.', 'jardin-toasts' ) . '</p>';
 }
 
 $post = get_post( $post_id );

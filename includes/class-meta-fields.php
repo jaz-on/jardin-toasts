@@ -2,7 +2,7 @@
 /**
  * Registers post meta for beer_checkin REST and sanitization.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

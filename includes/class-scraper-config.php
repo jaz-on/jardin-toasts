@@ -2,7 +2,7 @@
 /**
  * Scraper DOM configuration and markup version (bump when Untappd HTML strategy changes).
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

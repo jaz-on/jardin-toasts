@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer uses WordPress actions (hooks) throughout the codebase. This document lists all actions provided by the plugin.
+Jardin Toasts uses WordPress actions (hooks) throughout the codebase. This document lists all actions provided by the plugin.
 
 ## Plugin Lifecycle Hooks
 

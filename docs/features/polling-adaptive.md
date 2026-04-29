@@ -102,7 +102,7 @@ function jb_update_sync_schedule() {
     wp_schedule_event(time(), $schedule, 'jb_rss_sync');
     
     // Log schedule change
-    error_log("Jardin Beer: Sync schedule updated to {$schedule}");
+    error_log("Jardin Toasts: Sync schedule updated to {$schedule}");
 }
 ```
 
@@ -120,7 +120,7 @@ add_filter('cron_schedules', 'jb_add_cron_schedules');
 function jb_add_cron_schedules($schedules) {
     $schedules['sixhourly'] = [
         'interval' => 6 * HOUR_IN_SECONDS,
-        'display' => __('Every 6 Hours', 'jardin-beer'),
+        'display' => __('Every 6 Hours', 'jardin-toasts'),
     ];
     return $schedules;
 }

@@ -1,11 +1,11 @@
-# Plugin WordPress : Jardin Beer
+# Plugin WordPress : Jardin Toasts
 
 ## Spécifications Techniques Complètes
 
 ### Informations du projet
-- **Nom du plugin :** Jardin Beer
-- **Slug WordPress.org :** `jardin-beer`
-- **Display name :** Jardin Beer for Untappd
+- **Nom du plugin :** Jardin Toasts
+- **Slug WordPress.org :** `jardin-toasts`
+- **Display name :** Jardin Toasts for Untappd
 - **Conformité trademark :** ✅ Respect guidelines WordPress.org
 
 ### Contraintes du projet
@@ -112,7 +112,7 @@ Le flux RSS ne contient **PAS** :
 - Retry automatique en cas d'échec réseau (3 tentatives)
 - Si scraping échoue → check-in en draft + notification
 - Email de notification si échec persistant
-- Logs détaillés dans `wp-content/uploads/jardin-beer/logs/`
+- Logs détaillés dans `wp-content/uploads/jardin-toasts/logs/`
 
 ### B. Crawler Historique (manuel par batch avec checkpoints)
 
@@ -236,7 +236,7 @@ ELSE:
 - Dashboard notice : "X check-ins in draft awaiting review"
 - Email digest quotidien si drafts en attente (désactivable)
 - Link direct vers la liste des drafts filtrés
-- Compteur dans menu admin : "Jardin Beer (3)" = 3 drafts
+- Compteur dans menu admin : "Jardin Toasts (3)" = 3 drafts
 
 ---
 
@@ -472,7 +472,7 @@ function jb_assign_taxonomy($post_id, $taxonomy, $term_name) {
         $term = wp_insert_term($term_name, $taxonomy);
         
         if (is_wp_error($term)) {
-            error_log("Jardin Beer: Failed to create term {$term_name}: " . $term->get_error_message());
+            error_log("Jardin Toasts: Failed to create term {$term_name}: " . $term->get_error_message());
             return;
         }
         
@@ -510,7 +510,7 @@ function jb_new_terms_admin_notice() {
     
     printf(
         '<div class="notice notice-info is-dismissible">
-            <p><strong>Jardin Beer:</strong> %d new taxonomy term(s) created during import. 
+            <p><strong>Jardin Toasts:</strong> %d new taxonomy term(s) created during import. 
             <a href="%s">Review and merge duplicates if needed</a></p>
         </div>',
         absint($count),
@@ -576,8 +576,8 @@ function jb_new_terms_admin_notice() {
 ## 3. Structure du Plugin
 
 ```
-jardin-beer/
-├── jardin-beer.php                   # Main plugin file (WordPress.org ready)
+jardin-toasts/
+├── jardin-toasts.php                   # Main plugin file (WordPress.org ready)
 ├── readme.txt                         # WordPress.org readme (required)
 ├── LICENSE                            # GPL v2+ (required)
 ├── composer.json                      # PHP Dependencies (Symfony DomCrawler)
@@ -665,9 +665,9 @@ jardin-beer/
 │       └── stats-dashboard/
 │
 ├── languages/
-│   ├── jardin-beer.pot              # Translation template (generated)
-│   ├── jardin-beer-fr_FR.po         # French translation (optional)
-│   └── jardin-beer-fr_FR.mo         # Compiled French translation
+│   ├── jardin-toasts.pot              # Translation template (generated)
+│   ├── jardin-toasts-fr_FR.po         # French translation (optional)
+│   └── jardin-toasts-fr_FR.mo         # Compiled French translation
 │
 └── tests/                            # Unit tests (optional but recommended)
     ├── bootstrap.php
@@ -749,7 +749,7 @@ jardin-beer/
 
 ## 4. Blocks Gutenberg (optionnels mais recommandés)
 
-### Block 1 : `jardin-beer/checkins-list`
+### Block 1 : `jardin-toasts/checkins-list`
 
 **Paramètres configurables :**
 - Nombre de check-ins à afficher (défaut: 12)
@@ -767,7 +767,7 @@ jardin-beer/
   - Timeline chronologique
   - Masonry (Pinterest-like)
 
-### Block 2 : `jardin-beer/checkin-card`
+### Block 2 : `jardin-toasts/checkin-card`
 
 **Éléments affichés :**
 - Photo de la bière (avec fallback)
@@ -780,7 +780,7 @@ jardin-beer/
 - Lieu (si présent)
 - Lien vers check-in complet
 
-### Block 3 : `jardin-beer/stats-dashboard`
+### Block 3 : `jardin-toasts/stats-dashboard`
 
 **Statistiques calculées :**
 - Total de check-ins
@@ -1041,10 +1041,10 @@ jb_beer_image($post_id, $size = 'medium');
 ### Caching
 ```php
 // Cache des statistiques (1 heure)
-$stats = wp_cache_get('jb_global_stats', 'jardin-beer');
+$stats = wp_cache_get('jb_global_stats', 'jardin-toasts');
 if (false === $stats) {
     $stats = calculate_stats();
-    wp_cache_set('jb_global_stats', $stats, 'jardin-beer', HOUR_IN_SECONDS);
+    wp_cache_set('jb_global_stats', $stats, 'jardin-toasts', HOUR_IN_SECONDS);
 }
 
 // Transients pour données lourdes
@@ -1232,25 +1232,25 @@ if ($attempts > 3) {
 
 ### Full i18n Implementation
 
-**Text Domain : `jardin-beer`**
+**Text Domain : `jardin-toasts`**
 
 **All user-facing strings must be translatable :**
 ```php
 // Single string
-__('Beer Check-ins', 'jardin-beer')
+__('Beer Check-ins', 'jardin-toasts')
 
 // String with output
-_e('Import Historical Check-ins', 'jardin-beer')
+_e('Import Historical Check-ins', 'jardin-toasts')
 
 // String with context
-_x('Brewery', 'taxonomy singular name', 'jardin-beer')
+_x('Brewery', 'taxonomy singular name', 'jardin-toasts')
 
 // Plural forms
-_n('%s check-in', '%s check-ins', $count, 'jardin-beer')
+_n('%s check-in', '%s check-ins', $count, 'jardin-toasts')
 
 // Escaped output
-esc_html__('Rating System', 'jardin-beer')
-esc_attr__('Beer photo', 'jardin-beer')
+esc_html__('Rating System', 'jardin-toasts')
+esc_attr__('Beer photo', 'jardin-toasts')
 ```
 
 **Load text domain in main plugin file :**
@@ -1259,7 +1259,7 @@ add_action('plugins_loaded', 'jb_load_textdomain');
 
 function jb_load_textdomain() {
     load_plugin_textdomain(
-        'jardin-beer',
+        'jardin-toasts',
         false,
         dirname(plugin_basename(__FILE__)) . '/languages/'
     );
@@ -1269,7 +1269,7 @@ function jb_load_textdomain() {
 **Generate .pot file for translators :**
 ```bash
 # Using WP-CLI
-wp i18n make-pot . languages/jardin-beer.pot
+wp i18n make-pot . languages/jardin-toasts.pot
 
 # Or manually via Poedit
 ```
@@ -1277,7 +1277,7 @@ wp i18n make-pot . languages/jardin-beer.pot
 ### WordPress.org Submission Checklist
 
 **✅ Required Files :**
-- `jardin-beer.php` - Main file with standard headers
+- `jardin-toasts.php` - Main file with standard headers
 - `readme.txt` - WordPress.org format (see below)
 - `LICENSE` - GPL v2 or later full text
 
@@ -1292,7 +1292,7 @@ wp i18n make-pot . languages/jardin-beer.pot
 
 **✅ readme.txt Format :**
 ```
-=== Jardin Beer for Untappd ===
+=== Jardin Toasts for Untappd ===
 Contributors: jazon
 Donate link: https://example.com/
 Tags: beer, untappd, checkin, brewery, rating
@@ -1307,13 +1307,13 @@ Import and display your Untappd beer check-ins on your WordPress site.
 
 == Description ==
 
-Jardin Beer allows you to automatically sync your Untappd check-ins to your WordPress site...
+Jardin Toasts allows you to automatically sync your Untappd check-ins to your WordPress site...
 
 == Installation ==
 
-1. Upload the plugin files to `/wp-content/plugins/jardin-beer/`
+1. Upload the plugin files to `/wp-content/plugins/jardin-toasts/`
 2. Activate the plugin through the 'Plugins' screen
-3. Go to Jardin Beer > Settings to configure
+3. Go to Jardin Toasts > Settings to configure
 
 == Frequently Asked Questions ==
 
@@ -1364,7 +1364,7 @@ check_admin_referer('jb_import_action', 'jb_import_nonce');
 
 // Capability check
 if (!current_user_can('manage_options')) {
-    wp_die(__('Insufficient permissions', 'jardin-beer'));
+    wp_die(__('Insufficient permissions', 'jardin-toasts'));
 }
 
 // Use WP HTTP API (not curl)

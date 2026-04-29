@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
-        'name' => 'jardin-beer/jardin-beer',
+        'name' => 'jardin-toasts/jardin-toasts',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'b31184d7c2c3d1aa475468ffdeabede47b685e65',
+        'reference' => 'bd4db9c80d343a3cc6ed5da29529a36aaa3dabf0',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -19,10 +19,10 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
-        'jardin-beer/jardin-beer' => array(
+        'jardin-toasts/jardin-toasts' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'b31184d7c2c3d1aa475468ffdeabede47b685e65',
+            'reference' => 'bd4db9c80d343a3cc6ed5da29529a36aaa3dabf0',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

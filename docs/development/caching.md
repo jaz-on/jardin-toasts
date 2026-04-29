@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer utilise les Transients WordPress pour accélérer les opérations coûteuses (scraping, statistiques, requêtes). Les transients stockent des données temporaires avec une date d’expiration.
+Jardin Toasts utilise les Transients WordPress pour accélérer les opérations coûteuses (scraping, statistiques, requêtes). Les transients stockent des données temporaires avec une date d’expiration.
 
 ## Conventions
 

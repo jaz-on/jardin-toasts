@@ -2,7 +2,7 @@
 /**
  * Untappd RSS feed parsing.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -31,7 +31,7 @@ class JB_RSS_Parser {
 
 		$url = jb_get_rss_feed_url();
 		if ( ! is_string( $url ) || '' === trim( $url ) ) {
-			return new WP_Error( 'no_feed', __( 'RSS feed URL is not configured.', 'jardin-beer' ) );
+			return new WP_Error( 'no_feed', __( 'RSS feed URL is not configured.', 'jardin-toasts' ) );
 		}
 
 		if ( ! function_exists( 'fetch_feed' ) ) {
@@ -251,10 +251,10 @@ class JB_RSS_Parser {
 			return;
 		}
 		jb_send_notification_email(
-			'[Jardin Beer] ' . __( 'RSS sync completed', 'jardin-beer' ),
+			'[Jardin Toasts] ' . __( 'RSS sync completed', 'jardin-toasts' ),
 			sprintf(
 				/* translators: %d: number of check-ins imported */
-				__( 'Imported %d new check-in(s).', 'jardin-beer' ),
+				__( 'Imported %d new check-in(s).', 'jardin-toasts' ),
 				$imported
 			),
 			'sync'

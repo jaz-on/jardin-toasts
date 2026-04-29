@@ -2,7 +2,7 @@
 /**
  * Template tags for themes.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -51,7 +51,7 @@ function jb_the_rating_stars( $post_id = null, $echo = true ) {
 	if ( null === $r ) {
 		return '';
 	}
-	$out = '<span class="jb-stars" aria-label="' . esc_attr( sprintf( /* translators: %d: stars */ __( '%d out of 5 stars', 'jardin-beer' ), $r ) ) . '">';
+	$out = '<span class="jb-stars" aria-label="' . esc_attr( sprintf( /* translators: %d: stars */ __( '%d out of 5 stars', 'jardin-toasts' ), $r ) ) . '">';
 	for ( $i = 1; $i <= 5; $i++ ) {
 		$out .= $i <= $r ? '★' : '☆';
 	}

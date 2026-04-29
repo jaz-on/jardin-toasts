@@ -1,9 +1,9 @@
 ### intégration untappd — analyse, comparaison et plan documentaire
 
-Ce document synthétise l’implémentation Untappd issue du projet Eleventy archivé, la compare à Jardin Beer (WordPress) et définit un plan documentaire avant toute génération de code.
+Ce document synthétise l’implémentation Untappd issue du projet Eleventy archivé, la compare à Jardin Toasts (WordPress) et définit un plan documentaire avant toute génération de code.
 
 #### objectifs
-- Centraliser l’analyse fonctionnelle et technique utile à Jardin Beer.
+- Centraliser l’analyse fonctionnelle et technique utile à Jardin Toasts.
 - Définir clairement le modèle de données cible (contrat interne) et les pipelines d’ingestion.
 - Planifier les mises à jour de la documentation sans modifier le code.
 
@@ -16,8 +16,8 @@ Ce document synthétise l’implémentation Untappd issue du projet Eleventy arc
 - Tests unitaires sur le mapping, la coersion de types, la détection de doublons, etc.
 
 #### comparaison avec beer journal (wordpress)
-- Persistance : Jardin Beer crée un CPT (ex. `beer_checkin`) + taxonomies + métas `_jb_*` (base de données), vs fichiers `.md` en Eleventy.
-- Standards : Jardin Beer doit respecter WPCS, i18n (`jardin-beer`), nonces/capabilities, sanitization/escaping, WP_Query, transients, pagination.
+- Persistance : Jardin Toasts crée un CPT (ex. `beer_checkin`) + taxonomies + métas `_jb_*` (base de données), vs fichiers `.md` en Eleventy.
+- Standards : Jardin Toasts doit respecter WPCS, i18n (`jardin-toasts`), nonces/capabilities, sanitization/escaping, WP_Query, transients, pagination.
 - Orchestration : tâches WP‑Cron/CLI et pages admin natives (WordPress) vs orchestrateur JS.
 
 #### confirmations structurelles (cohérence avec la doc)
@@ -28,7 +28,7 @@ Ce document synthétise l’implémentation Untappd issue du projet Eleventy arc
   - `venue` (non hiérarchique, optionnel) — disponible.
 - Remarque : conserver ces noms (« beer_style », « brewery », « venue ») pour éviter les conflits. Ne pas préfixer les taxonomies en `jb_`.
 
-#### contrat de données interne proposé (Jardin Beer)
+#### contrat de données interne proposé (Jardin Toasts)
 Variables (inspirées de `BeerData`), avant mapping vers WP :
 - Obligatoires : `checkinId` (string), `title` (string), `brewery` (string), `checkinDate` (`YYYY-MM-DD`), `untappdUrl` (string).
 - Optionnelles : `style` (string), `rating` (float 0–5), `abv` (float), `ibu` (int), `beerUrl` (string), `breweryUrl` (string), `labelUrl` (string | local), `servingType` (string), `price` (string), `location` (string), `batch` (string), `brewDate` (`YYYY-MM-DD`), `bestBefore` (`YYYY-MM-DD`), `temperature` (string), `glassware` (string), `personalNotes` (markdown), `pairingSuggestions` (markdown), `availability` (markdown).
@@ -84,8 +84,8 @@ Pour éviter les conflits, les mises à jour ci‑dessous sont proposées. Elles
 8) `docs/features/checklist.md`
    - Ajouter une checklist d’intégration Untappd (clés, caches, exclusions, taxos, médias, i18n, sécurité, performances).
 
-#### normes et sécurité à respecter (rappel Jardin Beer)
-- WPCS, PHPStan min niveau 5, préfixes `jb_`/`JB_`/`_jb_`, i18n (`jardin-beer`).
+#### normes et sécurité à respecter (rappel Jardin Toasts)
+- WPCS, PHPStan min niveau 5, préfixes `jb_`/`JB_`/`_jb_`, i18n (`jardin-toasts`).
 - Sanitization : `sanitize_text_field`, `absint`, `floatval`, `sanitize_email`, `esc_url_raw` (stockage).
 - Escaping : `esc_html`, `esc_attr`, `esc_url`, `wp_kses_post` (sortie).
 - Nonces/capabilities : tous formulaires/actions AJAX, `current_user_can()` pour opérations sensibles.
@@ -93,7 +93,7 @@ Pour éviter les conflits, les mises à jour ci‑dessous sont proposées. Elles
 
 #### décisions validées (intégrées à la doc)
 1) CPT/taxos : `beer_checkin`, taxonomies `beer_style`, `brewery`, `venue` (optionnel) — cohérent avec la documentation actuelle.
-2) Rating : conserver `_jb_rating_raw` et calculer `_jb_rating_rounded` pour l’usage interne Jardin Beer.
+2) Rating : conserver `_jb_rating_raw` et calculer `_jb_rating_rounded` pour l’usage interne Jardin Toasts.
 3) Import historique : parsing HTML autonome côté plugin (préférence : Symfony DomCrawler + CSS Selector, conforme à nos dépendances PHP modernes), CSV optionnel si nécessaire.
 4) Étiquettes (images) : par défaut, téléchargement dans la médiathèque + stockage de l’URL source et hash de déduplication ; option pour ne stocker qu’une URL distante si souhaité.
 5) Publication : statut `draft` par défaut pour tous les imports ; la publication dépendra de la complétude des données et/ou d’une action manuelle.

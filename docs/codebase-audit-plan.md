@@ -1,7 +1,7 @@
-# Plan d'audit et de documentation du codebase Jardin Beer
+# Plan d'audit et de documentation du codebase Jardin Toasts
 
 ## Vue d'ensemble
-Ce plan suit la stratégie "Docs First, Code Second" pour auditer et documenter le plugin WordPress Jardin Beer avant d'écrire du code. L'objectif est de transformer un nouveau dépôt en système documenté et compréhensible.
+Ce plan suit la stratégie "Docs First, Code Second" pour auditer et documenter le plugin WordPress Jardin Toasts avant d'écrire du code. L'objectif est de transformer un nouveau dépôt en système documenté et compréhensible.
 
 **Contexte du projet :**
 - Plugin WordPress pour synchroniser les check-ins Untappd
@@ -43,9 +43,9 @@ Ce plan suit la stratégie "Docs First, Code Second" pour auditer et documenter 
 - Documentation — docstrings sur tous les symboles publics
 - Documentation dans `/docs/**/*.md`
 - Architecture dans `.cursor/rules/*.mdc`
-- Préfixe des fonctions : `jardin_beer_` (ou `jb_` pour les fonctions courtes)
+- Préfixe des fonctions : `jardin_toasts_` (ou `jb_` pour les fonctions courtes)
 - Préfixe des classes : `JB_` (ex: `JB_Importer`, `JB_Scraper`)
-- Text domain : `jardin-beer`
+- Text domain : `jardin-toasts`
 - Support WordPress : 6.0+ minimum
 - Sécurité : sanitization, escaping, nonces, capability checks
 - Internationalisation : toutes les chaînes visibles traduisibles
@@ -299,9 +299,9 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
   - Responsive breakpoints
   - Classes utilitaires
 - [ ] Documenter les Gutenberg blocks (Phase 2) :
-  - `jardin-beer/checkins-list` (paramètres, layouts, filtres)
-  - `jardin-beer/checkin-card` (éléments affichés)
-  - `jardin-beer/stats-dashboard` (statistiques, graphiques)
+  - `jardin-toasts/checkins-list` (paramètres, layouts, filtres)
+  - `jardin-toasts/checkin-card` (éléments affichés)
+  - `jardin-toasts/stats-dashboard` (statistiques, graphiques)
 
 **Fichiers à créer :**
 - `/docs/frontend/templates.md`
@@ -508,7 +508,7 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 
 ### Étape 4.3 : Documentation WordPress.org
 - [ ] Checklist de soumission WordPress.org :
-  - Fichiers requis (jardin-beer.php, readme.txt, LICENSE)
+  - Fichiers requis (jardin-toasts.php, readme.txt, LICENSE)
   - Code requirements (GPL, sanitization, nonces, etc.)
   - Assets (banners, icons, screenshots)
   - Security best practices
@@ -518,7 +518,7 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
   - Icon 256×256px
   - Screenshots (1280×960px recommandé)
 - [ ] Documentation i18n :
-  - Text domain : `jardin-beer`
+  - Text domain : `jardin-toasts`
   - Génération .pot file
   - Structure `/languages/`
   - Chargement text domain
@@ -692,7 +692,7 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 
 ## Notes importantes
 
-### Contexte spécifique au projet Jardin Beer
+### Contexte spécifique au projet Jardin Toasts
 - Plugin WordPress pour synchroniser les check-ins Untappd
 - Pas d'API officielle → scraping nécessaire
 - RSS feed limité (25 derniers check-ins)

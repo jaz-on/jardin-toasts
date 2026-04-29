@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer dependencies: Composer packages, npm packages, and WordPress requirements.
+Jardin Toasts dependencies: Composer packages, npm packages, and WordPress requirements.
 
 ## Composer Dependencies
 

@@ -1,7 +1,7 @@
 ---
 alwaysApply: true
 ---
-# Jardin Beer - Architecture Rules
+# Jardin Toasts - Architecture Rules
 
 ## Conventions WordPress
 
@@ -49,14 +49,14 @@ alwaysApply: true
 - **Prefix**: `jb_` (e.g., `jb_new_terms_notice`, `jb_global_stats`)
 
 ### Text Domain
-- **Text domain**: `jardin-beer` (with hyphen)
+- **Text domain**: `jardin-toasts` (with hyphen)
 - **Usage**: All user-facing strings must be translatable
 - **Examples**:
   ```php
-  __('Beer Check-ins', 'jardin-beer')
-  _e('Import Historical Check-ins', 'jardin-beer')
-  _n('%s check-in', '%s check-ins', $count, 'jardin-beer')
-  esc_html__('Rating System', 'jardin-beer')
+  __('Beer Check-ins', 'jardin-toasts')
+  _e('Import Historical Check-ins', 'jardin-toasts')
+  _n('%s check-in', '%s check-ins', $count, 'jardin-toasts')
+  esc_html__('Rating System', 'jardin-toasts')
   ```
 
 ## Security Standards
@@ -95,30 +95,30 @@ alwaysApply: true
 
 ### Requirements
 - **All user-facing strings**: Must be translatable
-- **Text domain**: Always use `'jardin-beer'`
+- **Text domain**: Always use `'jardin-toasts'`
 - **Context**: Use `_x()` when context is needed
 - **Plurals**: Use `_n()` for plural forms
 
 ### Examples
 ```php
 // Simple string
-echo esc_html__('Beer Check-ins', 'jardin-beer');
+echo esc_html__('Beer Check-ins', 'jardin-toasts');
 
 // String with output
-_e('Import Historical Check-ins', 'jardin-beer');
+_e('Import Historical Check-ins', 'jardin-toasts');
 
 // String with context
-_x('Brewery', 'taxonomy singular name', 'jardin-beer');
+_x('Brewery', 'taxonomy singular name', 'jardin-toasts');
 
 // Plural forms
 printf(
-    _n('%s check-in', '%s check-ins', $count, 'jardin-beer'),
+    _n('%s check-in', '%s check-ins', $count, 'jardin-toasts'),
     number_format_i18n($count)
 );
 
 // Escaped output
-echo esc_html__('Rating System', 'jardin-beer');
-echo esc_attr__('Beer photo', 'jardin-beer');
+echo esc_html__('Rating System', 'jardin-toasts');
+echo esc_attr__('Beer photo', 'jardin-toasts');
 ```
 
 ### Loading Text Domain
@@ -127,7 +127,7 @@ add_action('plugins_loaded', 'jb_load_textdomain');
 
 function jb_load_textdomain() {
     load_plugin_textdomain(
-        'jardin-beer',
+        'jardin-toasts',
         false,
         dirname(plugin_basename(__FILE__)) . '/languages/'
     );
@@ -137,7 +137,7 @@ function jb_load_textdomain() {
 ## File Structure
 
 ### Main Plugin File
-- **Location**: `jardin-beer.php` (root)
+- **Location**: `jardin-toasts.php` (root)
 - **Headers**: Must include WordPress plugin headers
 - **Activation/Deactivation**: Use separate classes
 
@@ -193,14 +193,14 @@ function jb_import_checkin($data) {
     if (empty($data['beer_name'])) {
         return new WP_Error(
             'missing_beer_name',
-            __('Beer name is required', 'jardin-beer')
+            __('Beer name is required', 'jardin-toasts')
         );
     }
     
     // Process...
     
     if ($error) {
-        error_log('Jardin Beer: Import failed - ' . $error_message);
+        error_log('Jardin Toasts: Import failed - ' . $error_message);
         return new WP_Error('import_failed', $error_message);
     }
     
@@ -299,7 +299,7 @@ function jb_display_rating($post_id, $show_label = true, $show_raw = true) {
 ## Summary
 
 - **Prefixes**: `jb_` (functions), `JB_` (classes), `_jb_` (meta keys)
-- **Text domain**: `jardin-beer`
+- **Text domain**: `jardin-toasts`
 - **Security**: Always sanitize input, escape output, use nonces
 - **i18n**: All user-facing strings translatable
 - **Standards**: WordPress Coding Standards (WPCS)

@@ -2,7 +2,7 @@
 /**
  * Single check-in template.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 get_header();
@@ -46,7 +46,7 @@ $mf_content = get_option( 'jb_microformats_enabled', true ) ? 'e-content' : '';
 				if ( is_string( $url ) && '' !== $url ) :
 					?>
 					<p class="jb-untappd-link">
-						<a href="<?php echo esc_url( $url ); ?>" rel="noopener noreferrer" target="_blank"><?php esc_html_e( 'View on Untappd', 'jardin-beer' ); ?></a>
+						<a href="<?php echo esc_url( $url ); ?>" rel="noopener noreferrer" target="_blank"><?php esc_html_e( 'View on Untappd', 'jardin-toasts' ); ?></a>
 					</p>
 				<?php endif; ?>
 			</article>

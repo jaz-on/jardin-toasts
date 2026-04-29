@@ -124,7 +124,7 @@ php --version
 
 S'assurer d'être dans la racine du projet :
 ```bash
-cd /path/to/jardin-beer
+cd /path/to/jardin-toasts
 ```
 
 ## Contribution

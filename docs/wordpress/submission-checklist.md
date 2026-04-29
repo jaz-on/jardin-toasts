@@ -2,13 +2,13 @@
 
 ## Overview
 
-Complete checklist for submitting Jardin Beer to WordPress.org plugin directory.
+Complete checklist for submitting Jardin Toasts to WordPress.org plugin directory.
 
 ## Required Files
 
 ### Main Plugin File
 
-**File**: `jardin-beer.php`
+**File**: `jardin-toasts.php`
 
 **Requirements**:
 - [x] Standard WordPress plugin headers
@@ -22,15 +22,15 @@ Complete checklist for submitting Jardin Beer to WordPress.org plugin directory.
 ```php
 <?php
 /**
- * Plugin Name: Jardin Beer for Untappd
- * Plugin URI: https://wordpress.org/plugins/jardin-beer/
+ * Plugin Name: Jardin Toasts for Untappd
+ * Plugin URI: https://wordpress.org/plugins/jardin-toasts/
  * Description: Import and display your Untappd beer check-ins
  * Version: 1.0.0
  * Author: jazon
  * Author URI: https://example.com/
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: jardin-beer
+ * Text Domain: jardin-toasts
  * Domain Path: /languages
  */
 ```
@@ -190,7 +190,7 @@ Complete checklist for submitting Jardin Beer to WordPress.org plugin directory.
 
 ### Text Domain
 
-- [x] Text domain: `jardin-beer`
+- [x] Text domain: `jardin-toasts`
 - [x] Consistent throughout codebase
 - [x] All user-facing strings translatable
 
@@ -198,7 +198,7 @@ Complete checklist for submitting Jardin Beer to WordPress.org plugin directory.
 
 ### .pot File
 
-**File**: `languages/jardin-beer.pot`
+**File**: `languages/jardin-toasts.pot`
 
 **Requirements**:
 - [x] Generated from codebase
@@ -207,14 +207,14 @@ Complete checklist for submitting Jardin Beer to WordPress.org plugin directory.
 
 **Generation**:
 ```bash
-wp i18n make-pot . languages/jardin-beer.pot
+wp i18n make-pot . languages/jardin-toasts.pot
 ```
 
 ---
 
 ### Language Files
 
-**Structure**: `languages/jardin-beer-{locale}.po`
+**Structure**: `languages/jardin-toasts-{locale}.po`
 
 **Optional**: Include translations if available
 
@@ -317,8 +317,8 @@ wp i18n make-pot . languages/jardin-beer.pot
 ### Required Structure
 
 ```
-jardin-beer/
-├── jardin-beer.php
+jardin-toasts/
+├── jardin-toasts.php
 ├── readme.txt
 ├── LICENSE
 ├── .wordpress-org/

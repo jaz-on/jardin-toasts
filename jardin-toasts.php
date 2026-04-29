@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name:       Jardin Beer for Untappd
- * Plugin URI:        https://github.com/jaz-on/jardin-beer
+ * Plugin Name:       Jardin Toasts for Untappd
+ * Plugin URI:        https://github.com/jaz-on/jardin-toasts
  * Description:       Syncs and displays your Untappd beer check-ins on WordPress with templates and media handling.
  * Version:           1.0.0
  * Requires at least: 6.0
@@ -10,11 +10,11 @@
  * Author URI:        https://jasonrouet.com
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       jardin-beer
- * GitHub Plugin URI: https://github.com/jaz-on/jardin-beer
+ * Text Domain:       jardin-toasts
+ * GitHub Plugin URI: https://github.com/jaz-on/jardin-toasts
  * Primary Branch:    dev
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -25,7 +25,7 @@ define( 'JB_VERSION', '1.0.0' );
 define( 'JB_PLUGIN_FILE', __FILE__ );
 define( 'JB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'JB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'JB_GITHUB_URL', 'https://github.com/jaz-on/jardin-beer' );
+define( 'JB_GITHUB_URL', 'https://github.com/jaz-on/jardin-toasts' );
 define( 'JB_KOFI_URL', 'https://ko-fi.com/jasonrouet' );
 
 // Load before Composer so a stale classmap (paths to removed `* 2.php` files) cannot fatal the site.
@@ -54,7 +54,7 @@ if ( is_readable( $jb_autoload ) ) {
 				return;
 			}
 			echo '<div class="notice notice-error"><p>';
-			echo esc_html__( 'Jardin Beer requires Composer dependencies. Run composer install in the plugin directory.', 'jardin-beer' );
+			echo esc_html__( 'Jardin Toasts requires Composer dependencies. Run composer install in the plugin directory.', 'jardin-toasts' );
 			echo '</p></div>';
 		}
 	);
@@ -68,7 +68,7 @@ if ( is_readable( $jb_autoload ) ) {
  */
 function jb_load_textdomain() {
 	load_plugin_textdomain(
-		'jardin-beer',
+		'jardin-toasts',
 		false,
 		dirname( plugin_basename( __FILE__ ) ) . '/languages'
 	);
@@ -85,6 +85,7 @@ function jb_init_plugin() {
 		return;
 	}
 	JB_Storage_Migration::maybe_migrate();
+	JB_Storage_Migration::maybe_migrate_product_rename();
 	JB_Plugin::instance()->init();
 }
 add_action( 'plugins_loaded', 'jb_init_plugin', 1 );
@@ -110,7 +111,7 @@ function jb_plugin_action_links( $links ) {
 	$settings_link = sprintf(
 		'<a href="%s">%s</a>',
 		esc_url( JB_Admin::get_settings_url() ),
-		esc_html__( 'Settings', 'jardin-beer' )
+		esc_html__( 'Settings', 'jardin-toasts' )
 	);
 	array_unshift( $links, $settings_link );
 	return $links;
@@ -132,12 +133,12 @@ function jb_plugin_row_meta( $plugin_meta, $plugin_file ) {
 		sprintf(
 			'<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
 			esc_url( JB_GITHUB_URL ),
-			esc_html__( 'GitHub', 'jardin-beer' )
+			esc_html__( 'GitHub', 'jardin-toasts' )
 		),
 		sprintf(
 			'<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
 			esc_url( JB_KOFI_URL ),
-			esc_html__( 'Donate', 'jardin-beer' )
+			esc_html__( 'Donate', 'jardin-toasts' )
 		),
 	);
 

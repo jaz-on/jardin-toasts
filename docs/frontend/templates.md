@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer provides theme-agnostic templates that can be overridden by your theme. All templates follow WordPress template hierarchy conventions.
+Jardin Toasts provides theme-agnostic templates that can be overridden by your theme. All templates follow WordPress template hierarchy conventions.
 
 ## Available Templates
 
@@ -106,9 +106,9 @@ Le rendu suivra les mêmes principes (grid/table, filtres), exposé via blocks e
 
 WordPress searches for templates in this order:
 
-1. **Theme Override**: `/wp-content/themes/{theme}/jardin-beer/archive-beer.php`
+1. **Theme Override**: `/wp-content/themes/{theme}/jardin-toasts/archive-beer.php`
 2. **Theme Override**: `/wp-content/themes/{theme}/archive-beer.php`
-3. **Plugin Default**: `/wp-content/plugins/jardin-beer/public/templates/archive-beer.php`
+3. **Plugin Default**: `/wp-content/plugins/jardin-toasts/public/templates/archive-beer.php`
 
 See [Template Hierarchy Documentation](template-hierarchy.md) for details.
 
@@ -289,7 +289,7 @@ Copy template files to your theme:
 
 ```
 /wp-content/themes/{theme}/
-├── jardin-beer/
+├── jardin-toasts/
 │   ├── archive-beer.php
 │   ├── single-beer.php
 │   └── taxonomy-beer-style.php

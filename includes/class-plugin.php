@@ -2,7 +2,7 @@
 /**
  * Main plugin bootstrap.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -1,12 +1,12 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "jardin-beer/brewery-stats",
+	"name": "jardin-toasts/brewery-stats",
 	"title": "Brewery stats",
 	"category": "widgets",
 	"icon": "chart-bar",
 	"description": "Published check-in count for a brewery term.",
-	"textdomain": "jardin-beer",
+	"textdomain": "jardin-toasts",
 	"attributes": {
 		"breweryTermId": {
 			"type": "number",

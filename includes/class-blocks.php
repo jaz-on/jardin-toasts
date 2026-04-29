@@ -2,7 +2,7 @@
 /**
  * Register Gutenberg blocks (dynamic, server-rendered).
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

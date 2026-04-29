@@ -33,7 +33,7 @@ while ($attempt < $max_attempts) {
 }
 
 if (is_wp_error($response)) {
-    error_log('Jardin Beer: Network error after 3 attempts - ' . $response->get_error_message());
+    error_log('Jardin Toasts: Network error after 3 attempts - ' . $response->get_error_message());
     return new WP_Error('network_error', $response->get_error_message());
 }
 ```
@@ -58,7 +58,7 @@ try {
     
     if (empty($rating)) {
         // Log warning
-        error_log('Jardin Beer: Could not extract rating from ' . $url);
+        error_log('Jardin Toasts: Could not extract rating from ' . $url);
         // Save as draft
         return new WP_Error('scraping_failed', 'Rating not found');
     }
@@ -151,10 +151,10 @@ function jb_schedule_retry($checkin_url, $attempt) {
 
 ### Log File Structure
 
-**Location**: `wp-content/uploads/jardin-beer/logs/`
+**Location**: `wp-content/uploads/jardin-toasts/logs/`
 
 **File Format**: Unified log file
-- `jardin-beer-{YYYY-MM-DD}.log`
+- `jardin-toasts-{YYYY-MM-DD}.log`
 
 **Note**: All plugin logs (RSS sync, scraping, imports, errors) are written to the same unified log file. See [Logging Strategy](../development/logging-strategy.md) for details.
 
@@ -200,7 +200,7 @@ function jb_admin_notices() {
     if ($draft_count > 0) {
         printf(
             '<div class="notice notice-warning is-dismissible">
-                <p><strong>Jardin Beer:</strong> %d check-in(s) saved as drafts. 
+                <p><strong>Jardin Toasts:</strong> %d check-in(s) saved as drafts. 
                 <a href="%s">Review drafts</a></p>
             </div>',
             $draft_count,
@@ -229,7 +229,7 @@ function jb_send_notification($type, $data) {
     }
     
     $email = get_option('jb_notification_email', get_option('admin_email'));
-    $subject = sprintf(__('Jardin Beer: %s', 'jardin-beer'), $type);
+    $subject = sprintf(__('Jardin Toasts: %s', 'jardin-toasts'), $type);
     $message = jb_format_notification($type, $data);
     
     wp_mail($email, $subject, $message);
@@ -291,13 +291,13 @@ function jb_send_daily_digest() {
     }
     
     $email = get_option('jb_email_digest_email', get_option('admin_email'));
-    $subject = sprintf(__('Jardin Beer: %d check-in(s) awaiting review', 'jardin-beer'), $draft_count);
+    $subject = sprintf(__('Jardin Toasts: %d check-in(s) awaiting review', 'jardin-toasts'), $draft_count);
     
     // Get breakdown by reason
     $breakdown = jb_get_draft_breakdown();
     
     $message = sprintf(
-        __("You have %d check-in(s) saved as drafts:\n\n", 'jardin-beer'),
+        __("You have %d check-in(s) saved as drafts:\n\n", 'jardin-toasts'),
         $draft_count
     );
     
@@ -305,7 +305,7 @@ function jb_send_daily_digest() {
         $message .= sprintf("- %s: %d\n", jb_get_draft_reason_label($reason), $count);
     }
     
-    $message .= "\n" . __('Review drafts:', 'jardin-beer') . "\n";
+    $message .= "\n" . __('Review drafts:', 'jardin-toasts') . "\n";
     $message .= admin_url('edit.php?post_type=beer&post_status=draft') . "\n";
     
     wp_mail($email, $subject, $message);
@@ -362,13 +362,13 @@ function jb_handle_bulk_retry() {
     check_ajax_referer('jb_retry_nonce', 'nonce');
     
     if (!current_user_can('edit_posts')) {
-        wp_send_json_error(['message' => __('Insufficient permissions', 'jardin-beer')]);
+        wp_send_json_error(['message' => __('Insufficient permissions', 'jardin-toasts')]);
     }
     
     $post_ids = isset($_POST['post_ids']) ? array_map('absint', $_POST['post_ids']) : [];
     
     if (empty($post_ids)) {
-        wp_send_json_error(['message' => __('No check-ins selected', 'jardin-beer')]);
+        wp_send_json_error(['message' => __('No check-ins selected', 'jardin-toasts')]);
     }
     
     $results = [];

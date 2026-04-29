@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer embarque un balisage SEO par défaut:
+Jardin Toasts embarque un balisage SEO par défaut:
 - JSON-LD (Schema.org) de type `Review` avec `itemReviewed` (`Product`)
 - Microformats `h-entry` et `e-content` dans les templates
 

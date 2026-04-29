@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer uses WordPress's native database structure with Custom Post Types, Taxonomies, and Post Meta. No custom tables are created - everything leverages WordPress core functionality.
+Jardin Toasts uses WordPress's native database structure with Custom Post Types, Taxonomies, and Post Meta. No custom tables are created - everything leverages WordPress core functionality.
 
 ## WordPress Core Tables Used
 

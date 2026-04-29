@@ -2,7 +2,7 @@
 /**
  * Front-end: templates, assets, schema.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -54,7 +54,12 @@ class JB_Public {
 		}
 
 		if ( is_post_type_archive( JB_Post_Type::POST_TYPE ) ) {
-			$theme = locate_template( array( 'jardin-beer/archive-beer_checkin.php' ) );
+			$theme = locate_template(
+				array(
+					'jardin-toasts/archive-beer_checkin.php',
+					'jardin-beer/archive-beer_checkin.php',
+				)
+			);
 			if ( $theme ) {
 				return $theme;
 			}
@@ -63,7 +68,12 @@ class JB_Public {
 		}
 
 		if ( is_singular( JB_Post_Type::POST_TYPE ) ) {
-			$theme = locate_template( array( 'jardin-beer/single-beer_checkin.php' ) );
+			$theme = locate_template(
+				array(
+					'jardin-toasts/single-beer_checkin.php',
+					'jardin-beer/single-beer_checkin.php',
+				)
+			);
 			if ( $theme ) {
 				return $theme;
 			}
@@ -74,7 +84,12 @@ class JB_Public {
 		if ( is_tax( JB_Taxonomies::STYLE ) || is_tax( JB_Taxonomies::BREWERY ) || is_tax( JB_Taxonomies::VENUE ) ) {
 			$tax = get_queried_object();
 			if ( $tax && isset( $tax->taxonomy ) ) {
-				$theme = locate_template( array( 'jardin-beer/taxonomy-' . $tax->taxonomy . '.php' ) );
+				$theme = locate_template(
+					array(
+						'jardin-toasts/taxonomy-' . $tax->taxonomy . '.php',
+						'jardin-beer/taxonomy-' . $tax->taxonomy . '.php',
+					)
+				);
 				if ( $theme ) {
 					return $theme;
 				}
@@ -101,7 +116,7 @@ class JB_Public {
 		}
 
 		wp_enqueue_style(
-			'jardin-beer-public',
+			'jardin-toasts-public',
 			JB_PLUGIN_URL . 'public/assets/css/public.css',
 			array(),
 			JB_VERSION

@@ -2,7 +2,7 @@
 /**
  * Download Untappd images into the Media Library.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -27,11 +27,11 @@ class JB_Image_Handler {
 	 */
 	public function import_for_post( $url, $post_id, $title = '' ) {
 		if ( ! get_option( 'jb_import_images', true ) ) {
-			return new WP_Error( 'disabled', __( 'Image import is disabled.', 'jardin-beer' ) );
+			return new WP_Error( 'disabled', __( 'Image import is disabled.', 'jardin-toasts' ) );
 		}
 		$url = esc_url_raw( $url );
 		if ( ! $url ) {
-			return new WP_Error( 'no_url', __( 'No image URL.', 'jardin-beer' ) );
+			return new WP_Error( 'no_url', __( 'No image URL.', 'jardin-toasts' ) );
 		}
 
 		$hash = md5( $url );

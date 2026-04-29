@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer follows WordPress template hierarchy conventions. Templates can be overridden by themes in a specific order of precedence.
+Jardin Toasts follows WordPress template hierarchy conventions. Templates can be overridden by themes in a specific order of precedence.
 
 ## Template Search Order
 
@@ -10,7 +10,7 @@ WordPress searches for templates in this order (first match wins):
 
 ### Archive Templates
 
-1. `jardin-beer/archive-beer.php` (theme)
+1. `jardin-toasts/archive-beer.php` (theme)
 2. `archive-beer.php` (theme)
 3. `archive.php` (theme - fallback)
 4. `index.php` (theme - final fallback)
@@ -18,7 +18,7 @@ WordPress searches for templates in this order (first match wins):
 
 ### Single Templates
 
-1. `jardin-beer/single-beer.php` (theme)
+1. `jardin-toasts/single-beer.php` (theme)
 2. `single-beer.php` (theme)
 3. `single.php` (theme - fallback)
 4. `singular.php` (theme - fallback)
@@ -28,7 +28,7 @@ WordPress searches for templates in this order (first match wins):
 ### Taxonomy Templates
 
 #### Beer Style
-1. `jardin-beer/taxonomy-beer-style.php` (theme)
+1. `jardin-toasts/taxonomy-beer-style.php` (theme)
 2. `taxonomy-beer-style.php` (theme)
 3. `taxonomy.php` (theme - fallback)
 4. `archive.php` (theme - fallback)
@@ -36,7 +36,7 @@ WordPress searches for templates in this order (first match wins):
 6. `public/templates/taxonomy-beer-style.php` (plugin default)
 
 #### Brewery
-1. `jardin-beer/taxonomy-brewery.php` (theme)
+1. `jardin-toasts/taxonomy-brewery.php` (theme)
 2. `taxonomy-brewery.php` (theme)
 3. `taxonomy.php` (theme - fallback)
 4. `archive.php` (theme - fallback)
@@ -44,7 +44,7 @@ WordPress searches for templates in this order (first match wins):
 6. `public/templates/taxonomy-brewery.php` (plugin default)
 
 #### Venue
-1. `jardin-beer/taxonomy-venue.php` (theme)
+1. `jardin-toasts/taxonomy-venue.php` (theme)
 2. `taxonomy-venue.php` (theme)
 3. `taxonomy.php` (theme - fallback)
 4. `archive.php` (theme - fallback)
@@ -55,7 +55,7 @@ WordPress searches for templates in this order (first match wins):
 
 ```
 Theme Directory (Highest Priority)
-├── jardin-beer/
+├── jardin-toasts/
 │   ├── archive-beer.php
 │   ├── single-beer.php
 │   ├── taxonomy-beer-style.php
@@ -103,7 +103,7 @@ $template = apply_filters('jb_checkin_template', $template, $post_id);
 add_filter('jb_checkin_template', function($template, $post_id) {
     // Use custom template for specific check-ins
     if (get_post_meta($post_id, '_jb_rating_rounded', true) >= 4) {
-        return locate_template('jardin-beer/single-featured.php');
+        return locate_template('jardin-toasts/single-featured.php');
     }
     return $template;
 }, 10, 2);
@@ -115,13 +115,13 @@ Partials follow a similar hierarchy:
 
 ### Check-in Card Partial
 
-1. `jardin-beer/partials/checkin-card.php` (theme)
+1. `jardin-toasts/partials/checkin-card.php` (theme)
 2. `partials/checkin-card.php` (theme)
 3. `public/partials/checkin-card.php` (plugin default)
 
 ### Rating Stars Partial
 
-1. `jardin-beer/partials/rating-stars.php` (theme)
+1. `jardin-toasts/partials/rating-stars.php` (theme)
 2. `partials/rating-stars.php` (theme)
 3. `public/partials/rating-stars.php` (plugin default)
 
@@ -139,7 +139,7 @@ Partials follow a similar hierarchy:
 function jb_locate_template($template_name) {
     // Check theme first
     $theme_template = locate_template([
-        "jardin-beer/{$template_name}",
+        "jardin-toasts/{$template_name}",
         $template_name,
     ]);
     
@@ -189,7 +189,7 @@ Organize theme overrides in a dedicated folder:
 
 ```
 /wp-content/themes/{theme}/
-├── jardin-beer/
+├── jardin-toasts/
 │   ├── archive-beer.php
 │   ├── single-beer.php
 │   ├── taxonomy-beer-style.php
@@ -213,11 +213,11 @@ Child themes inherit parent theme templates:
 
 ```
 Child Theme
-└── jardin-beer/
+└── jardin-toasts/
     └── archive-beer.php (overrides parent)
 
 Parent Theme
-└── jardin-beer/
+└── jardin-toasts/
     └── archive-beer.php (overridden by child)
 ```
 

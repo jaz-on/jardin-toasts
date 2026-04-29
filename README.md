@@ -1,4 +1,4 @@
-# Jardin Beer for Untappd
+# Jardin Toasts for Untappd
 
 A WordPress plugin to automatically sync and display your Untappd beer check-ins on your WordPress site.
 
@@ -8,11 +8,11 @@ A WordPress plugin to automatically sync and display your Untappd beer check-ins
 
 **Dependencies:** runtime Composer packages (Symfony DomCrawler and CSS Selector) are **included in the repository** under `vendor/` so installs from Git or [Git Updater](https://git-updater.com/) work without running Composer on the server. HTTP uses WordPress (`wp_remote_get`). For local development (PHPUnit, PHPCS, PHPStan), run `composer install` in the plugin directory to also install dev dependencies.
 
-**Branches:** [`main`](https://github.com/jaz-on/jardin-beer) is the default branch (reference + releases). Day-to-day integration and [Git Updater](https://git-updater.com/) on a dev site typically use the **`dev`** branch.
+**Branches:** [`main`](https://github.com/jaz-on/jardin-toasts) is the default branch (reference + releases). Day-to-day integration and [Git Updater](https://git-updater.com/) on a dev site typically use the **`dev`** branch.
 
 ## Description
 
-Jardin Beer allows you to automatically sync your Untappd check-ins to your WordPress site, creating a beautiful beer journal with ratings, photos, and detailed information about each beer you've tried.
+Jardin Toasts allows you to automatically sync your Untappd check-ins to your WordPress site, creating a beautiful beer journal with ratings, photos, and detailed information about each beer you've tried.
 
 ### Key Features
 
@@ -26,9 +26,9 @@ Jardin Beer allows you to automatically sync your Untappd check-ins to your Word
 
 ## Installation
 
-1. Upload the plugin files to `/wp-content/plugins/jardin-beer/`
+1. Upload the plugin files to `/wp-content/plugins/jardin-toasts/`
 2. Activate the plugin through the 'Plugins' screen
-3. Go to **Jardin Beer** in the admin menu (or **Settings** from the plugin row) and open the **Synchronization** tab to configure your Untappd RSS feed URL
+3. Go to **Jardin Toasts** in the admin menu (or **Settings** from the plugin row) and open the **Synchronization** tab to configure your Untappd RSS feed URL
 4. Start syncing your check-ins!
 
 ## Requirements
@@ -38,20 +38,20 @@ Jardin Beer allows you to automatically sync your Untappd check-ins to your Word
 - **MySQL**: 5.7+ / MariaDB 10.3+
 - **PHP Extensions**: curl (or allow_url_fopen), dom, json, mbstring
 
-**Scheduled sync** prefers **[Action Scheduler](https://actionscheduler.org/)** when it is loaded (standalone plugin or via WooCommerce): recurring RSS sync, log cleanup, and follow-up queue ticks use `as_schedule_*` in the `jardin-beer` group. If Action Scheduler is **not** present, the plugin falls back to **WP-Cron** (`wp_schedule_*`), which is still pseudo-cron on low-traffic sites unless you call `wp-cron.php` from a real system cron (see WordPress docs). Action Scheduler is recommended on production for reliability, retries, and the Tools → Scheduled Actions UI.
+**Scheduled sync** prefers **[Action Scheduler](https://actionscheduler.org/)** when it is loaded (standalone plugin or via WooCommerce): recurring RSS sync, log cleanup, and follow-up queue ticks use `as_schedule_*` in the `jardin-toasts` group. If Action Scheduler is **not** present, the plugin falls back to **WP-Cron** (`wp_schedule_*`), which is still pseudo-cron on low-traffic sites unless you call `wp-cron.php` from a real system cron (see WordPress docs). Action Scheduler is recommended on production for reliability, retries, and the Tools → Scheduled Actions UI.
 
 ## Configuration
 
 ### Initial Setup
 
-1. Go to **Jardin Beer** in the admin menu and open the **Synchronization** tab.
+1. Go to **Jardin Toasts** in the admin menu and open the **Synchronization** tab.
 2. The **RSS feed URL** field is pre-filled with the maintainer’s default Untappd RSS URL as an example; replace it with your own feed from Untappd (Account → RSS) if needed. You can also set `JB_RSS_FEED_URL` in `wp-config.php` to override the default.
 3. Choose your sync frequency (adaptive polling recommended).
 4. Click **Save Settings**.
 
 ### Import Historical Check-ins
 
-1. Go to **Jardin Beer** → **Historical import** tab
+1. Go to **Jardin Toasts** → **Historical import** tab
 2. Enter your Untappd profile URL
 3. Configure batch size and delays
 4. Click "Start Import"
@@ -71,7 +71,7 @@ Complete documentation is available in the `/docs/` directory:
 ## Project Structure
 
 ```
-jardin-beer/
+jardin-toasts/
 ├── includes/          # Core plugin classes
 ├── admin/             # Admin interface
 ├── public/            # Frontend templates and assets
@@ -133,7 +133,7 @@ Contributions are welcome! Please read our [Contributing Guide](docs/development
 This plugin is licensed under the GPL v2 or later.
 
 ```
-Copyright (C) 2025 Jardin Beer Contributors
+Copyright (C) 2025 Jardin Toasts Contributors
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

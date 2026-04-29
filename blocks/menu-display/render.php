@@ -1,6 +1,6 @@
 <?php
 /**
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -9,7 +9,7 @@ $slug = isset( $attributes['venueSlug'] ) ? sanitize_title( (string) $attributes
 $n    = isset( $attributes['postsToShow'] ) ? max( 1, min( 48, absint( $attributes['postsToShow'] ) ) ) : 12;
 
 if ( '' === $slug ) {
-	return '<p class="jb-block-placeholder">' . esc_html__( 'Set a venue slug in the block sidebar.', 'jardin-beer' ) . '</p>';
+	return '<p class="jb-block-placeholder">' . esc_html__( 'Set a venue slug in the block sidebar.', 'jardin-toasts' ) . '</p>';
 }
 
 $q = new WP_Query(
@@ -29,11 +29,11 @@ $q = new WP_Query(
 );
 
 if ( ! $q->have_posts() ) {
-	return '<p class="jb-block-placeholder">' . esc_html__( 'No check-ins for this venue.', 'jardin-beer' ) . '</p>';
+	return '<p class="jb-block-placeholder">' . esc_html__( 'No check-ins for this venue.', 'jardin-toasts' ) . '</p>';
 }
 
 ob_start();
-echo '<div class="jb-menu-display wp-block-jardin-beer-menu-display">';
+echo '<div class="jb-menu-display wp-block-jardin-toasts-menu-display">';
 while ( $q->have_posts() ) {
 	$q->the_post();
 	$partial = JB_PLUGIN_DIR . 'public/partials/checkin-card.php';

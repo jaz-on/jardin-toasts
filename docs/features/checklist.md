@@ -24,7 +24,7 @@
 - [x] Optional index `jb_checkin_meta` on `wp_postmeta` (best-effort) (Unreleased)
 
 ### Admin interface
-- [x] Top-level **Jardin Beer** menu; settings under 5 tabs (query arg `tab`)
+- [x] Top-level **Jardin Toasts** menu; settings under 5 tabs (query arg `tab`)
 - [x] Synchronization + RSS “Run sync now” (AJAX)
 - [x] Historical import controls (discover + import batch) (AJAX)
 - [x] General / Rating / Advanced options
@@ -34,7 +34,7 @@
 
 ### Frontend
 - [x] Default plugin templates: archive, single, taxonomies (`public/templates/`)
-- [x] Theme overrides via `jardin-beer/` in theme (see `public/class-public.php`)
+- [x] Theme overrides via `jardin-toasts/` in theme (see `public/class-public.php`)
 - [x] Template tags: `jb_the_rating_stars`, getters in `public/template-tags.php`
 - [x] Filter `jb_checkin_content`; filter `jb_rating_display` on star markup
 - [x] JSON-LD Review block (option `jb_schema_enabled`)
@@ -50,7 +50,7 @@
 
 ### Security & i18n
 - [x] Sanitization, escaping, capabilities, AJAX nonces on admin actions
-- [x] Text domain `jardin-beer`; stub `languages/jardin-beer.pot` (regenerate with `wp i18n make-pot` when desired)
+- [x] Text domain `jardin-toasts`; stub `languages/jardin-toasts.pot` (regenerate with `wp i18n make-pot` when desired)
 
 ---
 

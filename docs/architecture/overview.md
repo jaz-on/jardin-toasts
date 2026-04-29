@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Jardin Beer is a WordPress plugin that synchronizes Untappd beer check-ins to a WordPress site. Since Untappd doesn't provide an official API, the plugin uses a combination of RSS feeds and HTML scraping to import check-in data.
+Jardin Toasts is a WordPress plugin that synchronizes Untappd beer check-ins to a WordPress site. Since Untappd doesn't provide an official API, the plugin uses a combination of RSS feeds and HTML scraping to import check-in data.
 
 ## System Architecture
 
@@ -16,7 +16,7 @@ The plugin follows a modular architecture with clear separation of concerns:
                             ▲
                             │
 ┌─────────────────────────────────────────────────────────────┐
-│                  Jardin Beer Plugin                        │
+│                  Jardin Toasts Plugin                        │
 │                                                              │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
 │  │   RSS Sync   │  │   Scraper   │  │   Importer   │       │

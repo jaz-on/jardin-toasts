@@ -1,11 +1,11 @@
 {
-	"name": "jardin-beer/jardin-beer",
+	"name": "jardin-toasts/jardin-toasts",
 	"description": "WordPress plugin to sync Untappd beer check-ins",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
 	"authors": [
 		{
-			"name": "Jardin Beer Contributors",
+			"name": "Jardin Toasts Contributors",
 			"email": "contributors@example.com"
 		}
 	],

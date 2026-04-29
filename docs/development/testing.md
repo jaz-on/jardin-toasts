@@ -2,7 +2,7 @@
 
 ## Overview
 
-Testing strategy for Jardin Beer: unit tests, integration tests, and manual testing.
+Testing strategy for Jardin Toasts: unit tests, integration tests, and manual testing.
 
 ## Testing Framework
 
@@ -57,7 +57,7 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 require_once getenv('WP_TESTS_DIR') . '/includes/functions.php';
 
 // Load plugin
-require_once dirname(__DIR__) . '/jardin-beer.php';
+require_once dirname(__DIR__) . '/jardin-toasts.php';
 ```
 
 ---

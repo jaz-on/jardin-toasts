@@ -7,7 +7,7 @@ Mapping of features to core plugin modules and files.
 ## Module Structure
 
 ```
-jardin-beer/
+jardin-toasts/
 ├── includes/          # Core functionality
 ├── admin/             # Admin interface
 ├── public/            # Frontend
@@ -101,7 +101,7 @@ jardin-beer/
 - REST API support
 - Rewrite rules
 - Capabilities
-- Admin menu: CPT and taxonomies nest under `edit.php?post_type=beer_checkin`; **Jardin Beer** is the CPT `menu_name` label.
+- Admin menu: CPT and taxonomies nest under `edit.php?post_type=beer_checkin`; **Jardin Toasts** is the CPT `menu_name` label.
 
 ---
 

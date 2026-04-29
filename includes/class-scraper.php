@@ -2,7 +2,7 @@
 /**
  * HTML scraping for Untappd check-in pages.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 use Symfony\Component\DomCrawler\Crawler;
@@ -30,7 +30,7 @@ class JB_Scraper {
 	public function scrape_checkin_url( $url ) {
 		$url = esc_url_raw( $url );
 		if ( ! $url || false === strpos( $url, 'untappd.com' ) ) {
-			return new WP_Error( 'bad_url', __( 'Invalid Untappd check-in URL.', 'jardin-beer' ) );
+			return new WP_Error( 'bad_url', __( 'Invalid Untappd check-in URL.', 'jardin-toasts' ) );
 		}
 
 		$this->respect_rate_limit( jb_get_scraping_delay_seconds() );
@@ -49,7 +49,7 @@ class JB_Scraper {
 					),
 					'user-agent' => apply_filters(
 						'jb_http_user_agent',
-						'Jardin Beer/' . JB_VERSION . '; ' . home_url( '/' )
+						'Jardin Toasts/' . JB_VERSION . '; ' . home_url( '/' )
 					),
 				)
 			);
@@ -70,7 +70,7 @@ class JB_Scraper {
 		}
 
 		if ( 200 !== $code || ! is_string( $html ) || strlen( $html ) < 500 ) {
-			return new WP_Error( 'fetch_failed', __( 'Could not load check-in page.', 'jardin-beer' ) );
+			return new WP_Error( 'fetch_failed', __( 'Could not load check-in page.', 'jardin-toasts' ) );
 		}
 
 		return $this->parse_html( $html, $url );
@@ -131,7 +131,7 @@ class JB_Scraper {
 		$this->extract_from_regex( $html, $data );
 
 		if ( '' === $data['beer_name'] && '' === $data['brewery_name'] && null === $data['rating_raw'] ) {
-			return new WP_Error( 'parse_empty', __( 'Could not parse check-in data from HTML.', 'jardin-beer' ) );
+			return new WP_Error( 'parse_empty', __( 'Could not parse check-in data from HTML.', 'jardin-toasts' ) );
 		}
 
 		return $data;

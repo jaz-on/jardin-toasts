@@ -264,7 +264,7 @@ Users can customize permalink structure via WordPress settings:
 
 ### Settings Page Structure
 
-**Location**: `Jardin Beer > Settings`
+**Location**: `Jardin Toasts > Settings`
 
 **Tab Navigation**:
 The settings page uses WordPress native tab navigation with 5 tabs:
@@ -280,8 +280,8 @@ The settings page uses WordPress native tab navigation with 5 tabs:
 **WordPress Native Tabs**:
 ```php
 <div class="nav-tab-wrapper">
-    <a href="?page=jardin-beer&tab=sync" class="nav-tab <?php echo $active_tab === 'sync' ? 'nav-tab-active' : ''; ?>">
-        <?php esc_html_e('Synchronization', 'jardin-beer'); ?>
+    <a href="?page=jardin-toasts-settings&tab=sync" class="nav-tab <?php echo $active_tab === 'sync' ? 'nav-tab-active' : ''; ?>">
+        <?php esc_html_e('Synchronization', 'jardin-toasts'); ?>
     </a>
     <!-- ... other tabs ... -->
 </div>
@@ -299,7 +299,7 @@ The settings page uses WordPress native tab navigation with 5 tabs:
 **Implementation**:
 ```php
 <p class="description">
-    <?php esc_html_e('RSS sync runs automatically based on your activity. Active users sync every 6 hours, inactive users sync weekly.', 'jardin-beer'); ?>
+    <?php esc_html_e('RSS sync runs automatically based on your activity. Active users sync every 6 hours, inactive users sync weekly.', 'jardin-toasts'); ?>
 </p>
 ```
 

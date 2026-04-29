@@ -1,12 +1,12 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "jardin-beer/menu-display",
+	"name": "jardin-toasts/menu-display",
 	"title": "Check-ins by venue",
 	"category": "widgets",
 	"icon": "location",
 	"description": "Lists check-ins tagged with a venue term (placeholder until menu taxonomy ships).",
-	"textdomain": "jardin-beer",
+	"textdomain": "jardin-toasts",
 	"attributes": {
 		"venueSlug": {
 			"type": "string",

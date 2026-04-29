@@ -2,7 +2,7 @@
 
 ## Overview
 
-Build process for Jardin Beer: dependencies, compilation, and asset optimization.
+Build process for Jardin Toasts: dependencies, compilation, and asset optimization.
 
 ## Dependencies
 
@@ -115,7 +115,7 @@ npm run build
 ### 5. Generate .pot File
 
 ```bash
-wp i18n make-pot . languages/jardin-beer.pot
+wp i18n make-pot . languages/jardin-toasts.pot
 ```
 
 ---
@@ -137,7 +137,7 @@ npm install
 npm run build
 
 # Generate .pot
-wp i18n make-pot . languages/jardin-beer.pot
+wp i18n make-pot . languages/jardin-toasts.pot
 
 # Run validation
 composer phpcs
@@ -184,7 +184,7 @@ npm run start
 - `blocks/build/` - Compiled blocks
 
 **Languages**:
-- `languages/jardin-beer.pot` - Translation template
+- `languages/jardin-toasts.pot` - Translation template
 
 **Note**: These files should be committed to repository
 

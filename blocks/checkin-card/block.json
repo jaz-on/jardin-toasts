@@ -1,12 +1,12 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "jardin-beer/checkin-card",
+	"name": "jardin-toasts/checkin-card",
 	"title": "Check-in card",
 	"category": "widgets",
 	"icon": "beer",
 	"description": "Single beer check-in card (uses theme/plugin card markup).",
-	"textdomain": "jardin-beer",
+	"textdomain": "jardin-toasts",
 	"attributes": {
 		"postId": {
 			"type": "number",

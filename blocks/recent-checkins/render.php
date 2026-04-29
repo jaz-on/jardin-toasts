@@ -1,6 +1,6 @@
 <?php
 /**
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -19,11 +19,11 @@ $q = new WP_Query(
 );
 
 if ( ! $q->have_posts() ) {
-	return '<p class="jb-block-placeholder">' . esc_html__( 'No check-ins yet.', 'jardin-beer' ) . '</p>';
+	return '<p class="jb-block-placeholder">' . esc_html__( 'No check-ins yet.', 'jardin-toasts' ) . '</p>';
 }
 
 ob_start();
-echo '<div class="jb-recent-checkins wp-block-jardin-beer-recent-checkins">';
+echo '<div class="jb-recent-checkins wp-block-jardin-toasts-recent-checkins">';
 while ( $q->have_posts() ) {
 	$q->the_post();
 	$partial = JB_PLUGIN_DIR . 'public/partials/checkin-card.php';

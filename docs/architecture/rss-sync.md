@@ -81,7 +81,7 @@ add_filter('cron_schedules', 'jb_add_cron_schedules');
 function jb_add_cron_schedules($schedules) {
     $schedules['sixhourly'] = [
         'interval' => 6 * HOUR_IN_SECONDS,
-        'display' => __('Every 6 Hours', 'jardin-beer'),
+        'display' => __('Every 6 Hours', 'jardin-toasts'),
     ];
     return $schedules;
 }
@@ -105,7 +105,7 @@ $last_imported_guid = get_option('jb_last_imported_guid');
 
 if ($latest_guid === $last_imported_guid) {
     // No new check-ins → SKIP (saves resources)
-    error_log('Jardin Beer: No new check-ins, skipping sync');
+    error_log('Jardin Toasts: No new check-ins, skipping sync');
     return;
 }
 
@@ -199,7 +199,7 @@ flowchart TD
 ### Network Errors
 - **Retry Logic**: Up to 3 attempts
 - **Delay**: Exponential backoff (1s, 2s, 4s)
-- **Logging**: All errors logged to `wp-content/uploads/jardin-beer/logs/`
+- **Logging**: All errors logged to `wp-content/uploads/jardin-toasts/logs/`
 
 ### Scraping Failures
 - **Result**: Check-in saved as draft
@@ -219,7 +219,7 @@ flowchart TD
 **Note**: All logs are written to a unified log file. See [Logging Strategy](../development/logging-strategy.md) for details.
 
 ```
-wp-content/uploads/jardin-beer/logs/jardin-beer-{YYYY-MM-DD}.log
+wp-content/uploads/jardin-toasts/logs/jardin-toasts-{YYYY-MM-DD}.log
 ```
 
 ### Log Format

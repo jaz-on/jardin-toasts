@@ -38,7 +38,7 @@ flowchart TD
 
 ### Step 1: Access Import Page
 
-**Location**: `Jardin Beer > Settings > Historical Import`
+**Location**: `Jardin Toasts > Settings > Historical Import`
 
 **Actions**:
 1. User navigates to import page

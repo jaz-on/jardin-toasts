@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Jardin Beer will be documented in this file.
+All notable changes to Jardin Toasts will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -8,16 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- **Branding & identifiers**: repository and plugin bootstrap are **`jardin-beer`** (`jardin-beer.php`). Text domain, Composer package, Action Scheduler group, WP-Cron hooks, block namespace (`jardin-beer/*`), theme override path (`jardin-beer/…`), options/meta prefixes (`jb_` / `_jb_`), PHP symbols (`JB_*` classes, `jb_*` functions), and GitHub URLs now use **jardin-beer** / **Jardin Beer**. Existing sites migrate options, post meta, and block markup once via `JB_Storage_Migration`; legacy `bj_*` cron hooks and `beer-journal` AS group are cleared. **Re-activate** the plugin if WordPress still points at the deleted `beer-journal/beer-journal.php` path.
+- **Branding & identifiers**: canonical product / repository **`jardin-toasts`** (`jardin-toasts.php`, text domain `jardin-toasts`, Composer `jardin-toasts/jardin-toasts`, GitHub `jaz-on/jardin-toasts`, Gutenberg namespace `jardin-toasts/*`, theme overrides under `jardin-toasts/`, Action Scheduler group `jardin-toasts`, uploads log path `jardin-toasts/logs`, log files `jardin-toasts-*.log`). **Legacy (stable for stored data and developer hooks):** option and meta key prefixes `jb_` / `_jb_`, PHP symbols `JB_*` / `jb_*`, and all `jb_*` action/filter hook names. Existing installs: `JB_Storage_Migration::maybe_migrate()` still handles beer-journal / `bj_*` once; `JB_Storage_Migration::maybe_migrate_product_rename()` rewrites saved block/theme path strings from `jardin-beer` to `jardin-toasts`, clears Action Scheduler jobs in the legacy `jardin-beer` group, then recurring work is scheduled under `jardin-toasts`. **Re-activate** the plugin if WordPress still points at the deleted `beer-journal/beer-journal.php` path.
 - **Fallback image** is **on by default** (opt-out); admin copy explains Media Library vs optional `jb_placeholder_attachment_id` filter for external sources (no bundled remote beer-photo API).
 - **Advanced → scraping delay / RSS cap**: values are clamped on save (minimum 1); UI clarifies difference from Synchronization and Historical import pacing; new helper `jb_get_scraping_delay_seconds()` centralizes the delay used by scrapes and queue scheduling.
 
 ### Fixed
-- **Admin menu**: beer style, brewery, and venue taxonomies now use `show_in_menu` with the same top-level slug as the CPT (`edit.php?post_type=beer_checkin`), so **Styles**, **Breweries**, and **Venues** appear as submenus under **Jardin Beer** (they were previously easy to miss when the CPT lived under a custom parent).
-- **Settings persistence**: the Jardin Beer screen uses one `options.php` group but only one tab’s fields were rendered at a time, so saving (e.g. Import or Advanced) **did not POST** the RSS URL and other fields — WordPress then stored `null` for those options. All tab panels are now output in the same form (inactive tabs use the `hidden` attribute). Internal-only options (`jb_import_checkpoint`, RSS sync cursors, etc.) are **no longer** registered with `register_setting()` so they cannot be wiped by a generic save.
+- **Admin menu**: beer style, brewery, and venue taxonomies now use `show_in_menu` with the same top-level slug as the CPT (`edit.php?post_type=beer_checkin`), so **Styles**, **Breweries**, and **Venues** appear as submenus under **Jardin Toasts** (they were previously easy to miss when the CPT lived under a custom parent).
+- **Settings persistence**: the Jardin Toasts screen uses one `options.php` group but only one tab’s fields were rendered at a time, so saving (e.g. Import or Advanced) **did not POST** the RSS URL and other fields — WordPress then stored `null` for those options. All tab panels are now output in the same form (inactive tabs use the `hidden` attribute). Internal-only options (`jb_import_checkpoint`, RSS sync cursors, etc.) are **no longer** registered with `register_setting()` so they cannot be wiped by a generic save.
 - **Historical import → Discover**: profile discovery no longer fails silently when Untappd returns a tiny or empty HTML body (blocked host, HTTP errors, or markup without links). Returns clear `WP_Error` messages; AJAX success distinguishes “0 new because everything is already imported” vs “nothing discovered”.
 - Composer **classmap** referenced Finder duplicate filenames (`class-* 2.php`, `class-public 2.php`) that are not deployed on Linux servers; autoload now targets the canonical files and duplicate copies were removed from the tree.
-- **`jardin-beer.php`** preloads the same four core classes before `vendor/autoload.php` so sites that still ship a stale classmap (or OPcache) do not fatal when `JB_Taxonomies` (etc.) is first used.
+- **`jardin-toasts.php`** preloads the same four core classes before `vendor/autoload.php` so sites that still ship a stale classmap (or OPcache) do not fatal when `JB_Taxonomies` (etc.) is first used.
 - **`jb_parse_username_from_rss_url()`** : regex used `#` as delimiter and unescaped `#` inside the class, which broke `preg_match` (unknown modifier `]`). Switched delimiter to `~`.
 - **Admin (Synchronization / Import / Advanced)** : copy now reflects **Action Scheduler** when loaded, and **WP-Cron** only as the fallback; import “background” option label and RSS cap field wording updated accordingly.
 
@@ -59,7 +59,7 @@ The retained post-MVP backlog (stats, export/import, integrations, admin tax UI,
 - Importer with deduplication by `_jb_checkin_id`, draft posts when rating is missing, `_jb_exclude_sync` respect
 - Image sideload to Media Library with hash-based deduplication
 - Historical import: profile discovery + batched AJAX import with checkpoint option
-- Admin UI under **Jardin Beer** (5 tabs: Sync, Import, General, Rating, Advanced) with logs viewer and manual sync
+- Admin UI under **Jardin Toasts** (5 tabs: Sync, Import, General, Rating, Advanced) with logs viewer and manual sync
 - Frontend templates (archive, single, taxonomies), template tags, optional JSON-LD and microformats
 - File logging under uploads, PHPUnit smoke tests for helpers, `phpunit.xml.dist`
 - `uninstall.php` to remove plugin options
@@ -70,7 +70,7 @@ The retained post-MVP backlog (stats, export/import, integrations, admin tax UI,
 ## [0.1.0] - 2026-04-19
 
 ### Added
-- Minimal installable plugin bootstrap (`jardin-beer.php`): headers, constants, optional Composer autoload, text domain hook
+- Minimal installable plugin bootstrap (`jardin-toasts.php`): headers, constants, optional Composer autoload, text domain hook
 - Git default branch `main` on GitHub; `dev` for day-to-day pushes and Git Updater on the dev site
 - Branch protection on `main`; documentation validation workflow runs on `main` and `dev` when `docs/` or the workflow file changes
 

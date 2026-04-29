@@ -2,7 +2,7 @@
 
 ## Overview
 
-Complete guide to customizing Jardin Beer templates and functionality.
+Complete guide to customizing Jardin Toasts templates and functionality.
 
 ## Template Override
 
@@ -13,7 +13,7 @@ Complete guide to customizing Jardin Beer templates and functionality.
 **Structure**:
 ```
 /wp-content/themes/{theme}/
-├── jardin-beer/
+├── jardin-toasts/
 │   ├── archive-beer.php
 │   ├── single-beer.php
 │   └── partials/

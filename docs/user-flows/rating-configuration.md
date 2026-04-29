@@ -34,11 +34,11 @@ flowchart TD
 
 ### Navigation
 
-**Path**: `Jardin Beer > Settings > Rating System`
+**Path**: `Jardin Toasts > Settings > Rating System`
 
 **Access**:
 1. Go to WordPress admin
-2. Click "Jardin Beer" in menu
+2. Click "Jardin Toasts" in menu
 3. Click "Settings"
 4. Click "Rating System" tab
 

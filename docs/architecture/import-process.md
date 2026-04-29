@@ -61,14 +61,14 @@ function jb_validate_checkin_data($data) {
         if (empty($data[$field])) {
             return new WP_Error(
                 'missing_required_field',
-                sprintf(__('Missing required field: %s', 'jardin-beer'), $field)
+                sprintf(__('Missing required field: %s', 'jardin-toasts'), $field)
             );
         }
     }
     
     // Validate rating range
     if ($data['rating'] < 0 || $data['rating'] > 5) {
-        return new WP_Error('invalid_rating', __('Rating must be between 0 and 5', 'jardin-beer'));
+        return new WP_Error('invalid_rating', __('Rating must be between 0 and 5', 'jardin-toasts'));
     }
     
     return true;
@@ -191,7 +191,7 @@ $post_data = [
 $post_id = wp_insert_post($post_data);
 
 if (is_wp_error($post_id)) {
-    error_log('Jardin Beer: Failed to create post - ' . $post_id->get_error_message());
+    error_log('Jardin Toasts: Failed to create post - ' . $post_id->get_error_message());
     return $post_id;
 }
 ```
@@ -219,7 +219,7 @@ function jb_assign_taxonomy($post_id, $taxonomy, $term_name) {
         $term = wp_insert_term($term_name, $taxonomy);
         
         if (is_wp_error($term)) {
-            error_log('Jardin Beer: Failed to create term - ' . $term->get_error_message());
+            error_log('Jardin Toasts: Failed to create term - ' . $term->get_error_message());
             return;
         }
         
@@ -335,7 +335,7 @@ if (!empty($data['image_url'])) {
     $image_handler = new JB_Image_Handler();
     $attachment_id = $image_handler->import_image($data['image_url'], $post_id, [
         'alt' => sprintf('%s - %s', $data['beer_name'], $data['brewery_name']),
-        'caption' => sprintf(__('Check-in from %s', 'jardin-beer'), $data['date']),
+        'caption' => sprintf(__('Check-in from %s', 'jardin-toasts'), $data['date']),
     ]);
     
     if ($attachment_id) {
@@ -426,7 +426,7 @@ All errors are logged:
 
 ```php
 error_log(sprintf(
-    'Jardin Beer: Import failed for check-in %s - %s',
+    'Jardin Toasts: Import failed for check-in %s - %s',
     $data['checkin_id'],
     $error->get_error_message()
 ));

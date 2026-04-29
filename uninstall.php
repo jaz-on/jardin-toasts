@@ -2,7 +2,7 @@
 /**
  * Uninstall: remove plugin options.
  *
- * @package JardinBeer
+ * @package JardinToasts
  */
 
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
@@ -45,6 +45,7 @@ $defaults = array(
 	'jb_db_index_checkin_v1',
 	'jb_placeholder_toggle_migrated',
 	'jb_storage_migrated_v1',
+	'jb_jardin_toasts_product_rename_v1',
 );
 
 foreach ( $defaults as $key ) {

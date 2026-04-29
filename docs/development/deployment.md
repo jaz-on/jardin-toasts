@@ -2,7 +2,7 @@
 
 ## Overview
 
-Process for deploying Jardin Beer to WordPress.org and production environments.
+Process for deploying Jardin Toasts to WordPress.org and production environments.
 
 ## Pre-Deployment Checklist
 
@@ -48,7 +48,7 @@ Process for deploying Jardin Beer to WordPress.org and production environments.
 
 **Initial Setup**:
 ```bash
-svn co https://plugins.svn.wordpress.org/jardin-beer/trunk jardin-beer-svn
+svn co https://plugins.svn.wordpress.org/jardin-toasts/trunk jardin-toasts-svn
 ```
 
 ---
@@ -57,8 +57,8 @@ svn co https://plugins.svn.wordpress.org/jardin-beer/trunk jardin-beer-svn
 
 **Required Structure**:
 ```
-jardin-beer/
-├── jardin-beer.php
+jardin-toasts/
+├── jardin-toasts.php
 ├── readme.txt
 ├── LICENSE
 ├── .wordpress-org/
@@ -122,7 +122,7 @@ svn ci -m "Tag version 1.0.0"
 ### Update Version
 
 **Files to Update**:
-- `jardin-beer.php` (header)
+- `jardin-toasts.php` (header)
 - `readme.txt` (Stable tag)
 - `CHANGELOG.md`
 - `package.json` (if applicable)
@@ -190,12 +190,12 @@ During development phase, GitHub Updater allows automatic updates from GitHub re
 
 ### Configuration
 
-**Plugin Headers** (in `jardin-beer.php`):
+**Plugin Headers** (in `jardin-toasts.php`):
 ```php
 /**
- * Plugin Name: Jardin Beer
+ * Plugin Name: Jardin Toasts
  * ...
- * GitHub Plugin URI: jaz-on/jardin-beer
+ * GitHub Plugin URI: jaz-on/jardin-toasts
  * GitHub Branch: main
  * Primary Branch: main
  */

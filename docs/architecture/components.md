@@ -2,7 +2,7 @@
 
 ## Component Overview
 
-Jardin Beer is built with a modular architecture. Each component has a specific responsibility and interacts with other components through well-defined interfaces.
+Jardin Toasts is built with a modular architecture. Each component has a specific responsibility and interacts with other components through well-defined interfaces.
 
 ## Core Components
 

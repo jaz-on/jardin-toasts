@@ -2,7 +2,7 @@
 
 ## Overview
 
-Jardin Beer follows WordPress Coding Standards (WPCS) with additional project-specific guidelines.
+Jardin Toasts follows WordPress Coding Standards (WPCS) with additional project-specific guidelines.
 
 ## WordPress Coding Standards
 
@@ -112,7 +112,7 @@ $rating_raw
 /**
  * File: class-importer.php
  * 
- * @package JardinBeer
+ * @package JardinToasts
  * @subpackage Includes
  */
 
@@ -212,7 +212,7 @@ check_admin_referer('jb_action', 'jb_nonce');
 
 ```php
 if (!current_user_can('manage_options')) {
-    wp_die(__('Insufficient permissions', 'jardin-beer'));
+    wp_die(__('Insufficient permissions', 'jardin-toasts'));
 }
 ```
 
@@ -226,19 +226,19 @@ if (!current_user_can('manage_options')) {
 
 ```php
 // Simple
-__('Beer Check-ins', 'jardin-beer')
+__('Beer Check-ins', 'jardin-toasts')
 
 // Echo
-_e('Settings', 'jardin-beer')
+_e('Settings', 'jardin-toasts')
 
 // Escaped
-esc_html__('Rating System', 'jardin-beer')
+esc_html__('Rating System', 'jardin-toasts')
 
 // Plural
-_n('%s check-in', '%s check-ins', $count, 'jardin-beer')
+_n('%s check-in', '%s check-ins', $count, 'jardin-toasts')
 
 // Context
-_x('Brewery', 'taxonomy name', 'jardin-beer')
+_x('Brewery', 'taxonomy name', 'jardin-toasts')
 ```
 
 ---
@@ -283,7 +283,7 @@ $wpdb->prepare(
 **Preferred**:
 ```php
 if ($error) {
-    return new WP_Error('error_code', __('Error message', 'jardin-beer'));
+    return new WP_Error('error_code', __('Error message', 'jardin-toasts'));
 }
 ```
 
@@ -293,7 +293,7 @@ if ($error) {
 
 **Use WordPress Functions**:
 ```php
-error_log('Jardin Beer: Error message');
+error_log('Jardin Toasts: Error message');
 ```
 
 ---

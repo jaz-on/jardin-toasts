@@ -10,7 +10,7 @@
 
 ## Quick Start
 
-This guide will help you get started developing Jardin Beer.
+This guide will help you get started developing Jardin Toasts.
 
 ## Prerequisites
 
@@ -53,7 +53,7 @@ Set up a local WordPress installation and activate the plugin.
 ## Project Structure
 
 ```
-jardin-beer/
+jardin-toasts/
 ├── includes/          # Core plugin classes
 ├── admin/            # Admin interface
 ├── public/            # Frontend templates and assets
@@ -61,7 +61,7 @@ jardin-beer/
 ├── languages/         # Translation files
 ├── tests/             # Unit tests
 ├── docs/              # Documentation
-└── jardin-beer.php   # Main plugin file
+└── jardin-toasts.php   # Main plugin file
 ```
 
 ## Development Order (Phase 1 MVP)
@@ -69,7 +69,7 @@ jardin-beer/
 Follow this order when implementing features:
 
 ### 1. Structure de base
-- [x] Main plugin file (`jardin-beer.php`) — bootstrap, Composer, lifecycle hooks
+- [x] Main plugin file (`jardin-toasts.php`) — bootstrap, Composer, lifecycle hooks
 - [x] Activation/deactivation hooks (`JB_Activator`, `JB_Deactivator`)
 - [x] Custom Post Type registration (`JB_Post_Type`)
 - [x] Taxonomies registration (`JB_Taxonomies`)
@@ -151,12 +151,12 @@ composer run phpcbf
 
 ### Text Domain
 
-Always use `'jardin-beer'` for all translatable strings:
+Always use `'jardin-toasts'` for all translatable strings:
 
 ```php
-__('Beer Check-ins', 'jardin-beer')
-_e('Import Historical Check-ins', 'jardin-beer')
-esc_html__('Rating System', 'jardin-beer')
+__('Beer Check-ins', 'jardin-toasts')
+_e('Import Historical Check-ins', 'jardin-toasts')
+esc_html__('Rating System', 'jardin-toasts')
 ```
 
 ## Testing
