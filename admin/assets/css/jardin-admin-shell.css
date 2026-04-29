@@ -5,7 +5,7 @@
 .jd-admin-wrap,
 .bj-admin-wrap,
 .sj-admin-wrap,
-.fj-admin-wrap {
+.jf-admin-wrap {
 	--jd-admin-accent: var(--wp-admin-theme-color, #2271b1);
 	--jd-admin-accent-dim: color-mix(in srgb, var(--jd-admin-accent) 12%, transparent);
 	--jd-admin-border: #dcdcde;
@@ -17,14 +17,14 @@
 .jd-settings-hero,
 .bj-settings-hero,
 .sj-settings-hero,
-.fj-settings-hero {
+.jf-settings-hero {
 	margin: 0 0 0.5rem;
 }
 
 .jd-settings-hero h1,
 .bj-settings-hero h1,
 .sj-settings-hero h1,
-.fj-settings-hero h1 {
+.jf-settings-hero h1 {
 	font-size: 1.6rem;
 	font-weight: 600;
 	line-height: 1.25;
@@ -35,7 +35,7 @@
 .jd-settings-hero__lead,
 .bj-settings-hero__lead,
 .sj-settings-hero__lead,
-.fj-settings-hero__lead {
+.jf-settings-hero__lead {
 	margin: 0;
 	font-size: 14px;
 	color: var(--jd-admin-muted);
@@ -46,7 +46,7 @@
 .jd-admin-wrap .nav-tab-wrapper.jd-nav-tabs,
 .bj-admin-wrap .nav-tab-wrapper.bj-nav-tabs,
 .sj-admin-wrap .nav-tab-wrapper.sj-nav-tabs,
-.fj-admin-wrap .nav-tab-wrapper.fj-nav-tabs {
+.jf-admin-wrap .nav-tab-wrapper.jf-nav-tabs {
 	margin: 1.25rem 0 0;
 	border-bottom: 1px solid var(--jd-admin-border);
 	padding-top: 0;
@@ -55,14 +55,14 @@
 .jd-tab-panel,
 .bj-tab-panel,
 .sj-tab-panel,
-.fj-tab-panel {
+.jf-tab-panel {
 	margin-top: 1rem;
 }
 
 .jd-tab-intro,
 .bj-tab-intro,
 .sj-tab-intro,
-.fj-tab-intro {
+.jf-tab-intro {
 	margin: 0 0 1.25rem;
 	font-size: 14px;
 	line-height: 1.55;
@@ -73,7 +73,7 @@
 .jd-panel,
 .bj-panel,
 .sj-panel,
-.fj-panel {
+.jf-panel {
 	background: var(--jd-admin-surface);
 	border: 1px solid var(--jd-admin-border);
 	border-radius: 6px;
@@ -85,7 +85,7 @@
 .jd-panel__header,
 .bj-panel__header,
 .sj-panel__header,
-.fj-panel__header {
+.jf-panel__header {
 	padding: 1rem 1.25rem 0.75rem;
 	border-bottom: 1px solid var(--jd-admin-border);
 	background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
@@ -94,7 +94,7 @@
 .jd-panel__title,
 .bj-panel__title,
 .sj-panel__title,
-.fj-panel__title {
+.jf-panel__title {
 	margin: 0;
 	font-size: 14px;
 	font-weight: 600;
@@ -104,7 +104,7 @@
 .jd-panel__summary,
 .bj-panel__summary,
 .sj-panel__summary,
-.fj-panel__summary {
+.jf-panel__summary {
 	margin: 0.5rem 0 0;
 	font-size: 13px;
 	line-height: 1.5;
@@ -115,14 +115,14 @@
 .jd-panel__body,
 .bj-panel__body,
 .sj-panel__body,
-.fj-panel__body {
+.jf-panel__body {
 	padding: 0.5rem 1.25rem 1rem;
 }
 
 .jd-panel__body--inline,
 .bj-panel__body--inline,
 .sj-panel__body--inline,
-.fj-panel__body--inline {
+.jf-panel__body--inline {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -134,14 +134,14 @@
 .jd-panel--actions .jd-panel__body--inline,
 .bj-panel--actions .bj-panel__body--inline,
 .sj-panel--actions .sj-panel__body--inline,
-.fj-panel--actions .fj-panel__body--inline {
+.jf-panel--actions .jf-panel__body--inline {
 	padding-top: 0.75rem;
 }
 
 .jd-panel--notice,
 .bj-panel--notice,
 .sj-panel--notice,
-.fj-panel--notice {
+.jf-panel--notice {
 	border-color: #c3d9ed;
 	background: #f0f6fc;
 	box-shadow: none;
@@ -150,14 +150,14 @@
 .jd-panel--notice .jd-panel__body,
 .bj-panel--notice .bj-panel__body,
 .sj-panel--notice .sj-panel__body,
-.fj-panel--notice .fj-panel__body {
+.jf-panel--notice .jf-panel__body {
 	padding: 1rem 1.25rem;
 }
 
 .jd-panel__notice-text,
 .bj-panel__notice-text,
 .sj-panel__notice-text,
-.fj-panel__notice-text {
+.jf-panel__notice-text {
 	display: flex;
 	gap: 0.5rem;
 	align-items: flex-start;
@@ -170,7 +170,7 @@
 .jd-panel__notice-text .dashicons,
 .bj-panel__notice-text .dashicons,
 .sj-panel__notice-text .dashicons,
-.fj-panel__notice-text .dashicons {
+.jf-panel__notice-text .dashicons {
 	margin-top: 2px;
 	color: var(--jd-admin-accent);
 	flex-shrink: 0;
@@ -179,7 +179,7 @@
 .jd-admin-wrap .form-table th,
 .bj-admin-wrap .form-table th,
 .sj-admin-wrap .form-table th,
-.fj-admin-wrap .form-table th {
+.jf-admin-wrap .form-table th {
 	font-weight: 600;
 	padding-top: 0.85rem;
 	width: 200px;
@@ -188,14 +188,14 @@
 .jd-admin-wrap .form-table td .description,
 .bj-admin-wrap .form-table td .description,
 .sj-admin-wrap .form-table td .description,
-.fj-admin-wrap .form-table td .description {
+.jf-admin-wrap .form-table td .description {
 	margin-top: 0.35rem;
 }
 
 .jd-toggle,
 .bj-toggle,
 .sj-toggle,
-.fj-toggle {
+.jf-toggle {
 	display: inline-flex;
 	align-items: flex-start;
 	gap: 0.5rem;
@@ -205,21 +205,21 @@
 .jd-toggle input[type="checkbox"],
 .bj-toggle input[type="checkbox"],
 .sj-toggle input[type="checkbox"],
-.fj-toggle input[type="checkbox"] {
+.jf-toggle input[type="checkbox"] {
 	margin-top: 3px;
 }
 
 .jd-settings-footer,
 .bj-settings-footer,
 .sj-settings-footer,
-.fj-settings-footer {
+.jf-settings-footer {
 	margin-top: 1.5rem;
 	padding-top: 1rem;
 	border-top: 1px solid var(--jd-admin-border);
 }
 
 /* Overview hub: link cards */
-.fj-admin-overview__grid {
+.jf-admin-overview__grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 	gap: 1rem;
@@ -227,7 +227,7 @@
 	max-width: 960px;
 }
 
-.fj-admin-overview__card {
+.jf-admin-overview__card {
 	display: block;
 	box-sizing: border-box;
 	padding: 1rem 1.25rem;
@@ -240,21 +240,21 @@
 	transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.fj-admin-overview__card:hover,
-.fj-admin-overview__card:focus {
+.jf-admin-overview__card:hover,
+.jf-admin-overview__card:focus {
 	border-color: var(--jd-admin-accent);
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 	color: #1d2327;
 }
 
-.fj-admin-overview__card-title {
+.jf-admin-overview__card-title {
 	margin: 0 0 0.35rem;
 	font-size: 14px;
 	font-weight: 600;
 	line-height: 1.3;
 }
 
-.fj-admin-overview__card-summary {
+.jf-admin-overview__card-summary {
 	margin: 0;
 	font-size: 13px;
 	line-height: 1.45;
