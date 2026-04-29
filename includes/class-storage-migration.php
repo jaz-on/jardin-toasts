@@ -123,11 +123,17 @@ class JB_Storage_Migration {
 		foreach ( self::LEGACY_CRON_HOOKS as $hook ) {
 			wp_clear_scheduled_hook( $hook );
 		}
-		if ( function_exists( 'as_unschedule_all_actions' ) ) {
-			foreach ( array_merge( self::LEGACY_CRON_HOOKS, array( 'jb_rss_sync', 'jb_rss_queue_tick', 'jb_background_import_batch', 'jb_daily_log_cleanup' ) ) as $hook ) {
-				as_unschedule_all_actions( $hook, array(), self::LEGACY_AS_GROUP );
-			}
+		if ( ! function_exists( 'as_unschedule_all_actions' ) ) {
+			return;
 		}
+		$hooks = array_merge( self::LEGACY_CRON_HOOKS, array( 'jb_rss_sync', 'jb_rss_queue_tick', 'jb_background_import_batch', 'jb_daily_log_cleanup' ) );
+		jb_when_action_scheduler_store_ready(
+			static function () use ( $hooks ) {
+				foreach ( $hooks as $hook ) {
+					as_unschedule_all_actions( $hook, array(), self::LEGACY_AS_GROUP );
+				}
+			}
+		);
 	}
 
 	/**

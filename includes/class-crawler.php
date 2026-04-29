@@ -228,7 +228,11 @@ class JB_Crawler {
 		if ( ! empty( $queue ) && 'background' === get_option( 'jb_import_mode', 'manual' ) ) {
 			$delay = time() + max( 60, absint( get_option( 'jb_import_delay', 3 ) ) * 10 );
 			if ( function_exists( 'as_schedule_single_action' ) ) {
-				as_schedule_single_action( $delay, 'jb_background_import_batch', array(), jb_action_scheduler_group() );
+				jb_when_action_scheduler_store_ready(
+					static function () use ( $delay ) {
+						as_schedule_single_action( $delay, 'jb_background_import_batch', array(), jb_action_scheduler_group() );
+					}
+				);
 			} else {
 				wp_schedule_single_event( $delay, 'jb_background_import_batch' );
 			}

@@ -412,10 +412,14 @@ function jb_maybe_schedule_rss_queue_tick() {
 	$group = jb_action_scheduler_group();
 
 	if ( jb_using_action_scheduler() ) {
-		if ( as_next_scheduled_action( 'jb_rss_queue_tick', array(), $group ) ) {
-			return;
-		}
-		as_schedule_single_action( time() + $delay, 'jb_rss_queue_tick', array(), $group );
+		jb_when_action_scheduler_store_ready(
+			static function () use ( $delay, $group ) {
+				if ( as_next_scheduled_action( 'jb_rss_queue_tick', array(), $group ) ) {
+					return;
+				}
+				as_schedule_single_action( time() + $delay, 'jb_rss_queue_tick', array(), $group );
+			}
+		);
 		return;
 	}
 
@@ -423,6 +427,24 @@ function jb_maybe_schedule_rss_queue_tick() {
 		return;
 	}
 	wp_schedule_single_event( time() + $delay, 'jb_rss_queue_tick' );
+}
+
+/**
+ * Run a callback once Action Scheduler has initialized its data store (AS 3.1.6+).
+ * Calling as_* APIs earlier triggers _doing_it_wrong notices.
+ *
+ * @param callable():void $callback Callback using Action Scheduler APIs.
+ * @return void
+ */
+function jb_when_action_scheduler_store_ready( callable $callback ) {
+	if ( ! function_exists( 'as_schedule_recurring_action' ) ) {
+		return;
+	}
+	if ( did_action( 'action_scheduler_init' ) ) {
+		$callback();
+		return;
+	}
+	add_action( 'action_scheduler_init', $callback, 10, 0 );
 }
 
 /**
