@@ -40,6 +40,26 @@ Further detail: [CHANGELOG.md](CHANGELOG.md), [DEVELOPMENT.md](DEVELOPMENT.md), 
 composer install   # dev tools + refresh vendor if needed
 ```
 
+## Release Checklist (branch `dev`)
+
+Before each push used by Git Updater on `dev.jasonrouet.com`, run:
+
+```bash
+composer run release:dev
+```
+
+Then verify and publish:
+
+1. `rg "myclabs/deep-copy|phpunit|phpstan" vendor/composer/autoload_files.php` returns no match.
+2. Commit updated runtime Composer files (`vendor/composer/*` + tracked runtime `vendor/` changes).
+3. Push branch `dev`, then update plugin with Git Updater on staging.
+
+Optional but recommended (one-time per clone): install the local `pre-push` hook that runs these checks automatically and blocks invalid pushes.
+
+```bash
+composer run hooks:install
+```
+
 ## License
 
 GPL-2.0-or-later

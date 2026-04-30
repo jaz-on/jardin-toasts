@@ -51,7 +51,27 @@ foreach ( array(
 
 $jt_autoload = JT_PLUGIN_DIR . 'vendor/autoload.php';
 if ( is_readable( $jt_autoload ) ) {
+	$jt_autoload_files = JT_PLUGIN_DIR . 'vendor/composer/autoload_files.php';
 	try {
+		if ( is_readable( $jt_autoload_files ) ) {
+			$jt_files_to_check = require $jt_autoload_files;
+			if ( is_array( $jt_files_to_check ) ) {
+				foreach ( $jt_files_to_check as $jt_required_file ) {
+					if ( ! is_string( $jt_required_file ) || '' === $jt_required_file ) {
+						continue;
+					}
+					if ( ! is_readable( $jt_required_file ) ) {
+						throw new \RuntimeException(
+							sprintf(
+								/* translators: %s: missing autoload dependency path. */
+								__( 'Missing Composer dependency file: %s', 'jardin-toasts' ),
+								$jt_required_file
+							)
+						);
+					}
+				}
+			}
+		}
 		require_once $jt_autoload;
 		define( 'JT_PLUGIN_RUNTIME_LOADED', true );
 	} catch ( \Throwable $jt_load_error ) {

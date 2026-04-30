@@ -31,9 +31,18 @@ composer install
 composer run phpcs    # coding standard
 composer run phpstan  # static analysis
 composer run test     # PHPUnit
+composer run hooks:install # install local pre-push safety checks
 ```
 
 After a full `composer install`, Git may show changes under `vendor/`; before committing unrelated work, align with what you intend to ship (often `composer update` + commit `composer.lock` and `vendor/` when dependencies change).
+
+For Git Updater deployments from branch `dev`, always refresh runtime dependencies before pushing:
+
+```bash
+composer run release:dev
+```
+
+The installed `pre-push` hook runs this automatically, checks `vendor/composer/autoload_files.php`, and blocks pushes if runtime autoload references missing files or if regenerated `vendor/` changes are not committed.
 
 CI runs **PHP Quality** (`.github/workflows/php-quality.yml`): PHPCS, PHPStan, PHPUnit on pushes/PRs to `main` and `dev` when PHP or Composer files change.
 
