@@ -43,7 +43,7 @@ class JT_Post_Type {
 		$labels = array(
 			'name'               => __( 'Beer check-ins', 'jardin-toasts' ),
 			'singular_name'      => __( 'Beer check-in', 'jardin-toasts' ),
-			'menu_name'          => __( 'Jardin Toasts', 'jardin-toasts' ),
+			'menu_name'          => __( 'Toasts', 'jardin-toasts' ),
 			'all_items'          => __( 'Check-ins', 'jardin-toasts' ),
 			'add_new'            => __( 'Add check-in', 'jardin-toasts' ),
 			'add_new_item'       => __( 'Add new check-in', 'jardin-toasts' ),
