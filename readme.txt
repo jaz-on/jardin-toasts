@@ -5,7 +5,7 @@ Tags: beer, untappd, checkin, brewery, rating, journal, sync
 Requires at least: 6.0
 Tested up to: 6.7
 Stable tag: 0.1.0
-Requires PHP: 8.2
+Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,7 +71,15 @@ Yes! All templates are theme-agnostic and can be overridden by your theme. See t
 
 = What WordPress and PHP versions are required? =
 
-WordPress 6.0+ and PHP 8.2+ are required. The plugin is tested up to WordPress 6.7.
+WordPress 6.0+ and PHP 8.1+ are required. The plugin is tested up to WordPress 6.7.
+
+= Why does this plugin ship a vendor folder (Composer) when others do not? =
+
+It uses Symfony DomCrawler and related libraries to parse Untappd HTML reliably. Those libraries are bundled under vendor/ so you do not need to run Composer on the server, as long as your Git branch or ZIP includes the tracked vendor files (see .gitignore in the repository: only runtime packages are committed).
+
+= I install with Git Updater from GitHub and see an error or a notice about vendor =
+
+Git Updater clones the repository as-is. Use a branch that contains the vendor/ directory from the project, or run `composer install --no-dev` once inside the plugin folder on the server. If PHP is below 8.1, upgrade PHP; the plugin will show a clear admin notice instead of a white screen when possible.
 
 == Screenshots ==
 

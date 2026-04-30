@@ -5,7 +5,7 @@
  * Description:       Syncs and displays your Untappd beer check-ins on WordPress with templates and media handling.
  * Version:           1.0.0
  * Requires at least: 6.0
- * Requires PHP:      8.2
+ * Requires PHP:      8.1
  * Author:            Jason Rouet
  * Author URI:        https://jasonrouet.com
  * License:           GPL-2.0-or-later
@@ -28,6 +28,15 @@ define( 'JT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'JT_GITHUB_URL', 'https://github.com/jaz-on/jardin-toasts' );
 define( 'JT_KOFI_URL', 'https://ko-fi.com/jasonrouet' );
 
+/**
+ * True only after vendor/autoload.php loaded without throwing (Composer platform check, etc.).
+ *
+ * @return bool
+ */
+function jt_runtime_ready() {
+	return defined( 'JT_PLUGIN_RUNTIME_LOADED' ) && JT_PLUGIN_RUNTIME_LOADED;
+}
+
 // Load before Composer so a stale classmap (paths to removed `* 2.php` files) cannot fatal the site.
 foreach ( array(
 	JT_PLUGIN_DIR . 'includes/class-taxonomies.php',
@@ -42,11 +51,27 @@ foreach ( array(
 
 $jt_autoload = JT_PLUGIN_DIR . 'vendor/autoload.php';
 if ( is_readable( $jt_autoload ) ) {
-	require_once $jt_autoload;
-
-	register_activation_hook( __FILE__, array( 'JT_Activator', 'activate' ) );
-	register_deactivation_hook( __FILE__, array( 'JT_Deactivator', 'deactivate' ) );
+	try {
+		require_once $jt_autoload;
+		define( 'JT_PLUGIN_RUNTIME_LOADED', true );
+	} catch ( \Throwable $jt_load_error ) {
+		define( 'JT_PLUGIN_RUNTIME_LOADED', false );
+		add_action(
+			'admin_notices',
+			static function () use ( $jt_load_error ) {
+				if ( ! current_user_can( 'manage_options' ) ) {
+					return;
+				}
+				echo '<div class="notice notice-error"><p>';
+				echo esc_html__( 'Jardin Toasts could not load its PHP dependencies.', 'jardin-toasts' );
+				echo ' ';
+				echo esc_html( $jt_load_error->getMessage() );
+				echo '</p></div>';
+			}
+		);
+	}
 } else {
+	define( 'JT_PLUGIN_RUNTIME_LOADED', false );
 	add_action(
 		'admin_notices',
 		function () {
@@ -54,10 +79,15 @@ if ( is_readable( $jt_autoload ) ) {
 				return;
 			}
 			echo '<div class="notice notice-error"><p>';
-			echo esc_html__( 'Jardin Toasts requires Composer dependencies. Run composer install in the plugin directory.', 'jardin-toasts' );
+			echo esc_html__( 'Jardin Toasts is missing the vendor/ folder (Composer packages). If you install from Git, use a branch or release that includes vendor, or run composer install --no-dev in the plugin directory.', 'jardin-toasts' );
 			echo '</p></div>';
 		}
 	);
+}
+
+if ( jt_runtime_ready() ) {
+	register_activation_hook( __FILE__, array( 'JT_Activator', 'activate' ) );
+	register_deactivation_hook( __FILE__, array( 'JT_Deactivator', 'deactivate' ) );
 }
 
 
@@ -81,7 +111,7 @@ add_action( 'plugins_loaded', 'jt_load_textdomain' );
  * @return void
  */
 function jt_init_plugin() {
-	if ( ! is_readable( JT_PLUGIN_DIR . 'vendor/autoload.php' ) ) {
+	if ( ! jt_runtime_ready() ) {
 		return;
 	}
 	JT_Storage_Migration::maybe_migrate();
@@ -97,6 +127,9 @@ add_action( 'plugins_loaded', 'jt_init_plugin', 1 );
  * @return void
  */
 function jt_register_plugin_list_hooks() {
+	if ( ! jt_runtime_ready() ) {
+		return;
+	}
 	add_filter( 'plugin_action_links_' . plugin_basename( JT_PLUGIN_FILE ), 'jt_plugin_action_links' );
 	add_filter( 'plugin_row_meta', 'jt_plugin_row_meta', 10, 2 );
 }
@@ -109,6 +142,9 @@ add_action( 'admin_init', 'jt_register_plugin_list_hooks' );
  * @return array Modified action links.
  */
 function jt_plugin_action_links( $links ) {
+	if ( ! class_exists( 'JT_Admin', false ) ) {
+		return $links;
+	}
 	$settings_link = sprintf(
 		'<a href="%s">%s</a>',
 		esc_url( JT_Admin::get_settings_url() ),

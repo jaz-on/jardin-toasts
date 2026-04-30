@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b9dafca6e3d7bb659e55e8f1afa44694",
+    "content-hash": "10c4a9700214bc1494d2e2782de20c81",
     "packages": [
         {
             "name": "masterminds/html5",
@@ -215,7 +215,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.36.0",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -274,7 +274,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.36.0"
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.37.0"
             },
             "funding": [
                 {
@@ -298,7 +298,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.36.0",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -359,7 +359,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.36.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.37.0"
             },
             "funding": [
                 {
@@ -1029,11 +1029,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.50",
+            "version": "2.1.54",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d452086fb4cf648c6b2d8cf3b639351f79e4f3e2",
-                "reference": "d452086fb4cf648c6b2d8cf3b639351f79e4f3e2",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8be50c3992107dc837b17da4d140fbbdf9a5c5bd",
+                "reference": "8be50c3992107dc837b17da4d140fbbdf9a5c5bd",
                 "shasum": ""
             },
             "require": {
@@ -1078,7 +1078,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-17T13:10:32+00:00"
+            "time": "2026-04-29T13:31:09+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2728,7 +2728,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.2"
+        "php": ">=8.1"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"
