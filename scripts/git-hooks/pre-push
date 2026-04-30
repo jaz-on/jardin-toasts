@@ -30,10 +30,20 @@ if ! php -r '$files = require "vendor/composer/autoload_files.php"; foreach ($fi
 fi
 rm -f "$TMP_MISSING_FILE"
 
-if [[ -n "$(git status --porcelain -- vendor composer.lock)" ]]; then
+CHANGED_FILES="$(git status --porcelain -- vendor composer.lock | sed 's/^...//')"
+BLOCKING_CHANGES=""
+while IFS= read -r changed_file; do
+	[[ -z "$changed_file" ]] && continue
+	if [[ "$changed_file" == "vendor/composer/installed.php" ]]; then
+		continue
+	fi
+	BLOCKING_CHANGES="${BLOCKING_CHANGES}${changed_file}"$'\n'
+done <<< "$CHANGED_FILES"
+
+if [[ -n "$BLOCKING_CHANGES" ]]; then
 	echo "[pre-push] ERROR: release:dev changed vendor/composer files."
 	echo "[pre-push] Commit those changes before pushing:"
-	echo "  git add vendor composer.lock && git commit -m \"chore: refresh runtime vendor for dev deploy\""
+	echo "$BLOCKING_CHANGES" | sed 's/^/  - /'
 	exit 1
 fi
 
