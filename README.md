@@ -1,6 +1,6 @@
 # jardin-toasts
 
-WordPress plugin: sync **Untappd** check-ins (RSS + optional HTML crawl) into the **`beer_checkin`** CPT with taxonomies (styles, breweries, venues), media import, admin settings, JSON-LD / microformats options, and theme-overridable front templates.
+WordPress plugin: sync **Untappd** check-ins (RSS + optional HTML crawl) into the `**beer_checkin`** CPT with taxonomies (styles, breweries, venues), media import, admin settings, JSON-LD / microformats options, and theme-overridable front templates.
 
 ## Requirements
 
@@ -20,19 +20,21 @@ Runtime **Composer `vendor/`** is committed so Git / [Git Updater](https://git-u
 ## What it does
 
 - RSS for recent items; richer fields via **scraping** (no official Untappd API) — fragile if Untappd changes markup; use only data you may republish. See `docs/legal/scraping-notice.md`.
-- **Branches:** `main` for releases/reference; **`dev`** for integration and Git Updater on staging.
+- **Branches:** `main` for releases/reference; `**dev`** for integration and Git Updater on staging.
 
 Further detail: [CHANGELOG.md](CHANGELOG.md), [DEVELOPMENT.md](DEVELOPMENT.md), and `/docs/` (architecture, schema, hooks, backlog in `docs/todolist-future/TODOLIST.md`).
 
 ## Jardin stack
 
-| Repository | Role |
-|------------|------|
-| [jardin-theme](https://github.com/jaz-on/jardin-theme) | FSE theme |
-| [jardin-events](https://github.com/jaz-on/jardin-events) | Events CPT + blocks |
-| [jardin-scrobbles](https://github.com/jaz-on/jardin-scrobbles) | Last.fm / listens |
-| **jardin-toasts** (this repo) | Untappd check-ins |
+
+| Repository                                                     | Role                           |
+| -------------------------------------------------------------- | ------------------------------ |
+| [jardin-theme](https://github.com/jaz-on/jardin-theme)         | FSE theme                      |
+| [jardin-events](https://github.com/jaz-on/jardin-events)       | Events CPT + blocks            |
+| [jardin-scrobbles](https://github.com/jaz-on/jardin-scrobbles) | Last.fm / listens              |
+| **jardin-toasts** (this repo)                                  | Untappd check-ins              |
 | [jardin-bookmarks](https://github.com/jaz-on/jardin-bookmarks) | Feedbin → favorites / blogroll |
+
 
 ## Development
 
