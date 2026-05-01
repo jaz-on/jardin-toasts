@@ -231,12 +231,12 @@ npm run start
 
 ### GPL Compatibility
 
-**Plugin License**: GPL v2 or later
+**Plugin License**: GPL-2.0-or-later
 
 **Dependencies**:
 - Guzzle: MIT (GPL compatible)
 - Symfony: MIT (GPL compatible)
-- WordPress: GPL v2+ (compatible)
+- WordPress: GPL-2.0-or-later (compatible)
 
 **All dependencies are GPL-compatible**
 

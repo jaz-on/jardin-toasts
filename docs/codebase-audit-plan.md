@@ -93,7 +93,7 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
   - Structure du projet
   - Fonctionnalités principales
   - Contribution
-  - Licence (GPL v2+)
+  - Licence (GPL-2.0-or-later)
   - Liens vers documentation complète
 
 **Fichier à créer :** `/README.md`
@@ -666,7 +666,7 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 - [ ] `/README.md` complet
 - [ ] `/readme.txt` pour WordPress.org
 - [ ] `/CHANGELOG.md`
-- [ ] `/LICENSE` (GPL v2+)
+- [ ] `/LICENSE` (GPL-2.0-or-later)
 
 ### Documentation générée
 - [ ] README principal

@@ -12,7 +12,7 @@ Complete checklist for submitting Jardin Toasts to WordPress.org plugin director
 
 **Requirements**:
 - [x] Standard WordPress plugin headers
-- [x] GPL v2+ license declaration
+- [x] GPL-2.0-or-later license declaration
 - [x] Version number
 - [x] Author information
 - [x] Description
@@ -28,7 +28,7 @@ Complete checklist for submitting Jardin Toasts to WordPress.org plugin director
  * Version: 1.0.0
  * Author: jazon
  * Author URI: https://example.com/
- * License: GPLv2 or later
+ * License: GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: jardin-toasts
  * Domain Path: /languages
@@ -57,7 +57,7 @@ Complete checklist for submitting Jardin Toasts to WordPress.org plugin director
 **File**: `LICENSE`
 
 **Requirements**:
-- [x] Full GPL v2+ license text
+- [x] Full GPL-2.0-or-later license text
 - [x] No modifications to license text
 
 **See**: [LICENSE](../../LICENSE) in project root
@@ -68,7 +68,7 @@ Complete checklist for submitting Jardin Toasts to WordPress.org plugin director
 
 ### GPL License
 
-- [x] GPL v2+ license declared in all PHP files
+- [x] GPL-2.0-or-later license declared in all PHP files
 - [x] License compatible with all dependencies
 - [x] No proprietary code
 

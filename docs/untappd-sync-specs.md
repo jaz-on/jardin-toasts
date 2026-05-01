@@ -579,7 +579,7 @@ function jb_new_terms_admin_notice() {
 jardin-toasts/
 ├── jardin-toasts.php                   # Main plugin file (WordPress.org ready)
 ├── readme.txt                         # WordPress.org readme (required)
-├── LICENSE                            # GPL v2+ (required)
+├── LICENSE                            # GPL-2.0-or-later (required)
 ├── composer.json                      # PHP Dependencies (Symfony DomCrawler)
 ├── package.json                       # npm dependencies (@wordpress/scripts)
 ├── .gitignore                         # Git exclusions
@@ -1279,10 +1279,10 @@ wp i18n make-pot . languages/jardin-toasts.pot
 **✅ Required Files :**
 - `jardin-toasts.php` - Main file with standard headers
 - `readme.txt` - WordPress.org format (see below)
-- `LICENSE` - GPL v2 or later full text
+- `LICENSE` - GPL-2.0-or-later full text
 
 **✅ Code Requirements :**
-- GPL v2+ license declaration in headers
+- GPL-2.0-or-later license declaration in headers
 - No minified/obfuscated code (build files must be excluded from SVN)
 - Proper data sanitization and escaping
 - Nonces for all forms
@@ -1300,7 +1300,7 @@ Requires at least: 6.4
 Tested up to: 6.7
 Stable tag: 1.0.0
 Requires PHP: 8.2
-License: GPLv2 or later
+License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Import and display your Untappd beer check-ins on your WordPress site.
