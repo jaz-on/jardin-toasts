@@ -55,6 +55,18 @@ $tab_intros = array(
 			<div class="jt-tab-panel-body"<?php echo 'sync' !== $tab ? ' hidden' : ''; ?> data-jt-tab="sync">
 				<?php include JT_PLUGIN_DIR . 'admin/views/stats-box.php'; ?>
 
+				<?php if ( wp_script_is( 'jt-admin-dataviews', 'enqueued' ) ) : ?>
+				<div class="jt-panel">
+					<div class="jt-panel__header">
+						<h2 class="jt-panel__title"><?php esc_html_e( 'Sync snapshot (DataViews)', 'jardin-toasts' ); ?></h2>
+						<p class="jt-panel__summary"><?php esc_html_e( 'Read-only table generated from current settings. Built bundle: npm run build in the plugin directory.', 'jardin-toasts' ); ?></p>
+					</div>
+					<div class="jt-panel__body">
+						<div id="jt-sync-dataviews-root" class="jt-sync-dataviews-mount"></div>
+					</div>
+				</div>
+				<?php endif; ?>
+
 				<div class="jt-panel">
 					<div class="jt-panel__header">
 						<h2 class="jt-panel__title"><?php esc_html_e( 'RSS feed & scheduling', 'jardin-toasts' ); ?></h2>

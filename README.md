@@ -17,6 +17,8 @@ Jardin · Untappd : check-ins bière (CPT), synchro et blocs. RSS + crawl HTML o
 
 Runtime **Composer `vendor/`** is committed so Git / [Git Updater](https://git-updater.com/) installs work without `composer install` on the server. For local **PHPUnit / PHPCS / PHPStan**, run `composer install` in the plugin directory.
 
+**Admin DataViews (optional):** run `npm install && npm run build` to generate `build/admin-dataviews.*` for the Sync tab snapshot table — see [`docs/admin-dataviews-spike.md`](docs/admin-dataviews-spike.md).
+
 ## What it does
 
 - RSS for recent items; richer fields via **scraping** (no official Untappd API) — fragile if Untappd changes markup; use only data you may republish. See `docs/legal/scraping-notice.md`.

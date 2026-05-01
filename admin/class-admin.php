@@ -145,6 +145,47 @@ class JT_Admin {
 				),
 			)
 		);
+
+		$dv_asset = JT_PLUGIN_DIR . 'build/admin-dataviews.asset.php';
+		if ( is_readable( $dv_asset ) ) {
+			$dv = require $dv_asset;
+			wp_enqueue_style(
+				'jt-admin-dataviews',
+				JT_PLUGIN_URL . 'build/admin-dataviews.css',
+				array( 'wp-components' ),
+				isset( $dv['version'] ) ? (string) $dv['version'] : JT_VERSION
+			);
+			wp_enqueue_script(
+				'jt-admin-dataviews',
+				JT_PLUGIN_URL . 'build/admin-dataviews.js',
+				array_merge( (array) ( $dv['dependencies'] ?? array() ), array( 'wp-components' ) ),
+				isset( $dv['version'] ) ? (string) $dv['version'] : JT_VERSION,
+				true
+			);
+			wp_localize_script(
+				'jt-admin-dataviews',
+				'jtDataviewsSync',
+				array(
+					'rows' => array(
+						array(
+							'id'    => 'rss',
+							'label' => __( 'RSS feed', 'jardin-toasts' ),
+							'value' => jt_get_rss_feed_url(),
+						),
+						array(
+							'id'    => 'sync',
+							'label' => __( 'Scheduled sync', 'jardin-toasts' ),
+							'value' => JT_Settings::get( 'jt_sync_enabled' ) ? __( 'Enabled', 'jardin-toasts' ) : __( 'Disabled', 'jardin-toasts' ),
+						),
+						array(
+							'id'    => 'queue',
+							'label' => __( 'Background queue', 'jardin-toasts' ),
+							'value' => jt_using_action_scheduler() ? 'Action Scheduler' : 'WP-Cron',
+						),
+					),
+				)
+			);
+		}
 	}
 
 	/**
