@@ -3,7 +3,7 @@
         'name' => 'jardin-toasts/jardin-toasts',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'd7e5c1b0372d79def805c60236d4339dd67303e6',
+        'reference' => '2dff8dbb79ff8b336143659933db4d922f6b3282',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'jardin-toasts/jardin-toasts' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'd7e5c1b0372d79def805c60236d4339dd67303e6',
+            'reference' => '2dff8dbb79ff8b336143659933db4d922f6b3282',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
