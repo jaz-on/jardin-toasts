@@ -44,7 +44,6 @@
 		"phpcbf": "phpcbf --standard=WordPress --extensions=php --ignore=vendor,node_modules .",
 		"phpstan": "phpstan analyse --memory-limit=1G -c phpstan.neon.dist",
 		"test": "phpunit",
-		"hooks:install": "bash scripts/install-git-hooks.sh",
 		"release:dev": [
 			"@composer install --no-dev --optimize-autoloader",
 			"@composer dump-autoload --no-dev --optimize"

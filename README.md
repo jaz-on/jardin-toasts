@@ -59,12 +59,6 @@ Then verify and publish:
 2. Commit updated runtime Composer files (`vendor/composer/*` + tracked runtime `vendor/` changes).
 3. Push branch `dev`, then update plugin with Git Updater on staging.
 
-Optional but recommended (one-time per clone): install the local `pre-push` hook that runs these checks automatically and blocks invalid pushes.
-
-```bash
-composer run hooks:install
-```
-
 ## License
 
 GPL-2.0-or-later — see [LICENSE](LICENSE). Sponsorship: [.github/FUNDING.yml](.github/FUNDING.yml).
