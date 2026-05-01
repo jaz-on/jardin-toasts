@@ -106,11 +106,41 @@ if ( is_readable( $jt_autoload ) ) {
 	);
 }
 
-if ( jt_runtime_ready() ) {
-	register_activation_hook( __FILE__, array( 'JT_Activator', 'activate' ) );
-	register_deactivation_hook( __FILE__, array( 'JT_Deactivator', 'deactivate' ) );
+/**
+ * Run activation after Composer bootstrap; abort if runtime is unusable.
+ *
+ * @return void
+ */
+function jt_plugin_activate(): void {
+	if ( ! jt_runtime_ready() ) {
+		if ( ! function_exists( 'deactivate_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+		deactivate_plugins( plugin_basename( JT_PLUGIN_FILE ), true );
+		wp_die(
+			wp_kses_post(
+				__( 'Jardin Toasts cannot activate because its PHP dependencies did not load. If you installed from Git, run <code>composer install --no-dev</code> in the plugin directory (or use a release that includes <code>vendor/</code>), then activate again.', 'jardin-toasts' )
+			),
+			esc_html__( 'Plugin activation error', 'jardin-toasts' ),
+			array( 'response' => 500, 'back_link' => true )
+		);
+	}
+	JT_Activator::activate();
 }
 
+/**
+ * Clear schedules on deactivate even when Composer failed (plugin may still have been listed active).
+ *
+ * @return void
+ */
+function jt_plugin_deactivate(): void {
+	require_once JT_PLUGIN_DIR . 'includes/functions.php';
+	require_once JT_PLUGIN_DIR . 'includes/class-deactivator.php';
+	JT_Deactivator::deactivate();
+}
+
+register_activation_hook( __FILE__, 'jt_plugin_activate' );
+register_deactivation_hook( __FILE__, 'jt_plugin_deactivate' );
 
 /**
  * Load plugin text domain.
