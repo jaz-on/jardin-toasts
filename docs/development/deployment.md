@@ -19,7 +19,6 @@ Process for deploying Jardin Toasts to WordPress.org and production environments
 ### Documentation
 
 - [ ] README.txt updated
-- [ ] CHANGELOG.md updated
 - [ ] Code documentation complete
 - [ ] User documentation complete
 
@@ -124,7 +123,6 @@ svn ci -m "Tag version 1.0.0"
 **Files to Update**:
 - `jardin-toasts.php` (header)
 - `readme.txt` (Stable tag)
-- `CHANGELOG.md`
 - `package.json` (if applicable)
 
 ---

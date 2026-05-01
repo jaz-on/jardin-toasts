@@ -11,7 +11,7 @@ Complete audit and validation of Jardin Toasts documentation structure, content,
 ### Phase 1: Structure Validation ✅
 - **57 markdown files** verified across 7 categories
 - All required files present and complete
-- Base files validated (README.md, readme.txt, CHANGELOG.md, LICENSE, .gitignore)
+- Base files validated (README.md, readme.txt, LICENSE, .gitignore)
 
 ### Phase 2: Content Validation ✅
 - **API Documentation**: `/docs/api/endpoints.md` exists and documents WordPress native REST API usage

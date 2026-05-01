@@ -1,5 +1,7 @@
 # Plan d'audit et de documentation du codebase Jardin Toasts
 
+> **Avertissement (2026)** : ce document est un **plan de travail / checklist historique**. Pour le dépôt **Jardin Toasts** actuel, ne pas se fier aux préfixes d’exemples `jb_*`, `JB_*`, ou aux noms de hooks `jb_*` ci-dessous : le code et la BDD utilisent **`jt_*`**, **`_jt_*`**, classes **`JT_*`**, hooks cron/AJAX **`jardin_toasts_*`** (voir [`development/legacy-identifiers.md`](development/legacy-identifiers.md) et [`db/options.md`](db/options.md) / [`db/meta-fields.md`](db/meta-fields.md)).
+
 ## Vue d'ensemble
 Ce plan suit la stratégie "Docs First, Code Second" pour auditer et documenter le plugin WordPress Jardin Toasts avant d'écrire du code. L'objectif est de transformer un nouveau dépôt en système documenté et compréhensible.
 
@@ -23,8 +25,8 @@ Ce plan suit la stratégie "Docs First, Code Second" pour auditer et documenter 
 - [ ] Vérifier la structure de base du projet
 - [ ] Initialiser Git si nécessaire
 - [ ] Vérifier les prérequis système :
-  - PHP 8.3
-  - WordPress 6.8
+  - PHP **8.2+** (cible alignée sur `composer.json` / en-tête du plugin ; valider en local sur 8.4+ si possible)
+  - WordPress **6.0+** (en-tête `Requires at least` ; bêta testée 7.0)
   - MySQL 5.7+ / MariaDB 10.3+
   - Extensions PHP : curl, dom, json, mbstring
 
@@ -43,8 +45,8 @@ Ce plan suit la stratégie "Docs First, Code Second" pour auditer et documenter 
 - Documentation — docstrings sur tous les symboles publics
 - Documentation dans `/docs/**/*.md`
 - Architecture dans `.cursor/rules/*.mdc`
-- Préfixe des fonctions : `jardin_toasts_` (ou `jb_` pour les fonctions courtes)
-- Préfixe des classes : `JB_` (ex: `JB_Importer`, `JB_Scraper`)
+- Préfixe des fonctions : **`jt_*`** (helpers), filtres/actions publics souvent **`jardin_toasts_*`** avec alias **`jt_*`** documentés dans `legacy-identifiers.md`
+- Préfixe des classes : **`JT_*`** (ex. `JT_Importer`, `JT_Scraper`) ; identifiants cron/AJAX centralisés dans `Jardin_Toasts_Keys` (`includes/functions.php`)
 - Text domain : `jardin-toasts`
 - Support WordPress : 6.0+ minimum
 - Sécurité : sanitization, escaping, nonces, capability checks
@@ -136,29 +138,27 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 
 #### 2.4 Gestion des Custom Post Types
 - [ ] Documenter `includes/class-post-type.php`
-- [ ] CPT `jb_checkin` (ou `beer_checkin`)
+- [ ] CPT **`beer_checkin`** (`JT_Post_Type::POST_TYPE`)
 - [ ] Configuration (public, REST API, supports, etc.)
 - [ ] Structure du post (title, content, date, featured image)
 
 #### 2.5 Système de taxonomies
 - [ ] Documenter `includes/class-taxonomies.php`
-- [ ] Taxonomie `jb_beer_style` (hiérarchique)
-- [ ] Taxonomie `jb_brewery` (non-hiérarchique)
-- [ ] Taxonomie `jb_venue` (non-hiérarchique, optionnelle)
-- [ ] Auto-création immédiate avec notification admin
+- [ ] Taxonomies enregistrées par `JT_Taxonomies` (slugs réels : `beer_style`, `brewery`, `venue` — voir le fichier)
+- [ ] Auto-création / assignation à l’import
 - [ ] Gestion des doublons et merge
 
 #### 2.6 Gestion des métadonnées
 - [ ] Documenter `includes/class-meta-fields.php`
-- [ ] Identifiants uniques (`_jb_checkin_id`, `_jb_beer_id`, etc.)
-- [ ] Données bière (nom, brasserie, style, ABV, IBU, description)
-- [ ] Données check-in (rating, serving type, date)
-- [ ] Données lieu (venue, city, country, lat/lng)
-- [ ] Données sociales (toasts, comments, badges)
-- [ ] Métadonnées techniques (source, scraped_at, attempts)
+- [ ] Clés canoniques **`_jt_*`** (voir [`db/meta-fields.md`](db/meta-fields.md))
+- [ ] Données bière (nom, brasserie, style, ABV, IBU)
+- [ ] Données check-in (rating raw/rounded, serving type, date)
+- [ ] Données lieu (venue)
+- [ ] Données sociales (toasts, comments)
+- [ ] Métadonnées techniques (source, scraped_at, incomplete_reason)
 
 #### 2.7 Système de notation
-- [ ] Documenter le système de rating double (`_jb_rating_raw`, `_jb_rating_rounded`)
+- [ ] Documenter le système de rating double (`_jt_rating_raw`, `_jt_rating_rounded`)
 - [ ] Règles de mapping par défaut (0-5 stars)
 - [ ] Fonction de mapping personnalisable
 - [ ] Labels personnalisés par niveau
@@ -175,7 +175,7 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 #### 2.9 Cron jobs et scheduling
 - [ ] Documenter `includes/class-action-scheduler.php` (si utilisé)
 - [ ] Polling adaptatif (sixhourly/daily/weekly)
-- [ ] WP-Cron events (`jb_rss_sync`, `jb_background_import_batch`)
+- [ ] WP-Cron / Action Scheduler : hooks **`jardin_toasts_*`** (legacy `jt_*` / `jb_*` nettoyés à la migration — voir `legacy-identifiers.md`)
 - [ ] Checkpoints et reprise après interruption
 
 #### 2.10 Page de réglages admin
@@ -208,39 +208,23 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 **Objectif :** ERD et explications dans `/docs/db/`
 
 - [ ] Analyser les Custom Post Types :
-  - `jb_checkin` (check-ins Untappd)
+  - **`beer_checkin`** (check-ins Untappd)
   - Structure du post (title, content, date, status)
 - [ ] Analyser les taxonomies :
-  - `jb_beer_style` (hiérarchique, slug: `beer-style`)
-  - `jb_brewery` (non-hiérarchique, slug: `brewery`)
-  - `jb_venue` (non-hiérarchique, slug: `venue`)
+  - Slugs réels : **`beer_style`**, **`brewery`**, **`venue`** (voir `includes/class-taxonomies.php`)
 - [ ] Analyser les meta fields (post meta) :
-  - Identifiants : `_jb_checkin_id`, `_jb_beer_id`, `_jb_brewery_id`, `_jb_checkin_url`
-  - Données bière : `_jb_beer_name`, `_jb_brewery_name`, `_jb_beer_style`, `_jb_beer_abv`, `_jb_beer_ibu`, `_jb_beer_description`
-  - Données check-in : `_jb_rating`, `_jb_serving_type`, `_jb_checkin_date`
-  - Données lieu : `_jb_venue_name`, `_jb_venue_city`, `_jb_venue_country`, `_jb_venue_lat`, `_jb_venue_lng`
-  - Données sociales : `_jb_toast_count`, `_jb_comment_count`, `_jb_badges_earned`
-  - Métadonnées techniques : `_jb_source`, `_jb_scraped_at`, `_jb_scraping_attempts`, `_jb_incomplete_reason`
-  - Système de notation : `_jb_rating_raw`, `_jb_rating_rounded`
+  - Liste canonique **`_jt_*`** : voir [`db/meta-fields.md`](db/meta-fields.md) (ne plus lister `_jb_*` comme cible)
 - [ ] Documenter les options WordPress utilisées :
-  - `jb_last_checkin_date`
-  - `jb_last_imported_guid`
-  - `jb_rating_rules`
-  - `jb_rating_labels`
-  - `jb_new_terms_created`
-  - `jb_import_checkpoint`
+  - Préfixe **`jt_*`** : voir [`db/options.md`](db/options.md)
 - [ ] Documenter les transients :
-  - `jb_new_terms_notice`
-  - `jb_global_stats`
-  - `jb_top_breweries`
+  - Cache **`jt_*`** (helpers, scrape, stats) : voir [`db/options.md`](db/options.md) section Transients
 - [ ] Créer un diagramme ERD (Mermaid) avec :
   - Tables WordPress (posts, postmeta, terms, term_taxonomy, term_relationships)
   - Relations entre CPT et taxonomies
   - Meta fields et leurs types
 - [ ] Documenter les relations entre entités
 - [ ] Documenter les index database recommandés :
-  - Index unique sur `_jb_checkin_id`
-  - Index composé sur `post_type` + `post_date`
+  - Index optionnel `jt_checkin_meta` sur `postmeta` (voir `includes/class-db-install.php`, [`db/indexes.md`](db/indexes.md))
 
 **Fichiers à créer :**
 - `/docs/db/schema.md`
@@ -272,19 +256,12 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 - [ ] Documenter le système de templates WordPress :
   - Hiérarchie de templates (thème > plugin)
   - Templates surchargeables
-  - Hooks de customisation (`jb_before_checkins_list`, `jb_after_checkin_card`, etc.)
-  - Filtres (`jb_checkin_template`, `jb_checkin_classes`, `jb_checkin_data`)
+  - Hooks / filtres : préférer les noms **`jardin_toasts_*`** / **`jt_*`** documentés dans [`development/legacy-identifiers.md`](development/legacy-identifiers.md) et [`docs/wordpress/filters.md`](wordpress/filters.md) si à jour
 - [ ] Documenter les partials réutilisables :
   - `public/partials/checkin-card.php`
   - `public/partials/rating-stars.php`
 - [ ] Documenter les template tags disponibles :
-  - `jb_get_checkin_data($post_id)`
-  - `jb_rating_stars($rating, $echo = true)`
-  - `jb_beer_style($post_id, $link = true)`
-  - `jb_brewery_link($post_id)`
-  - `jb_venue_info($post_id)`
-  - `jb_beer_image($post_id, $size = 'medium')`
-  - `jb_display_rating($post_id, $show_label, $show_raw)`
+  - Préfixe **`jt_*`** dans `public/template-tags.php` (ex. `jt_get_checkin_rating_raw`, affichage via filtres `jardin_toasts_rating_display` / `jt_rating_display`)
 - [ ] Documenter les shortcodes (si Phase 2)
 - [ ] Analyser les assets (CSS/JS) :
   - `public/assets/css/public.css`
@@ -455,7 +432,6 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
   - Screenshots
   - Changelog
   - Upgrade Notice
-- [ ] Créer `CHANGELOG.md`
 - [ ] Documenter les hooks WordPress utilisés :
   - Actions : `plugins_loaded`, `init`, `wp_enqueue_scripts`, `admin_notices`, etc.
   - Filtres : `jb_checkin_template`, `jb_checkin_classes`, `jb_checkin_data`, `jb_rating_display`
@@ -471,7 +447,6 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 
 **Fichiers à créer :**
 - `/readme.txt` (format WordPress.org)
-- `/CHANGELOG.md`
 - `/docs/wordpress/hooks.md`
 - `/docs/wordpress/filters.md`
 - `/docs/wordpress/compatibility.md`
@@ -665,7 +640,6 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 - [ ] `.cursor/rules/` avec les règles d'architecture
 - [ ] `/README.md` complet
 - [ ] `/readme.txt` pour WordPress.org
-- [ ] `/CHANGELOG.md`
 - [ ] `/LICENSE` (GPL-2.0-or-later)
 
 ### Documentation générée

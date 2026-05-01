@@ -102,4 +102,4 @@ Ne pas traiter comme livrable v1 ; prioriser et découper en releases au fil de 
 ## Mise à jour de ce document
 
 - Ajouter les sous-tâches et critères d’acceptation au fil des sprints.
-- Les idées **non** retenues (carte, wishlist, PWA, REST, etc.) ne sont **plus** listées ici volontairement ; l’historique éventuel reste dans le git log / anciennes versions du CHANGELOG.
+- Les idées **non** retenues (carte, wishlist, PWA, REST, etc.) ne sont **plus** listées ici volontairement ; l’historique éventuel reste dans le git log.

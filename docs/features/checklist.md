@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Phase 1 (MVP)** is **complete** in code for everything listed in [README.md](../../README.md) under “Phase 1 (MVP) - Version 1.0”. Core shipped items are under **[1.0.0](../../CHANGELOG.md#100---2026-04-20)** in [CHANGELOG.md](../../CHANGELOG.md); follow-up polish (stats box, caching helpers, email notifications, archive grid/table, placeholder image, optional DB index) is recorded under **[Unreleased](../../CHANGELOG.md#unreleased)** until you authorize a new version number.
+**Phase 1 (MVP)** is **complete** in code for everything listed in [README.md](../../README.md). Suivi des évolutions : historique Git (`git log`) et backlog [`../todolist-future/TODOLIST.md`](../todolist-future/TODOLIST.md).
 
 **Phase 2+ (post-MVP)** is tracked only in [`../todolist-future/TODOLIST.md`](../todolist-future/TODOLIST.md) (single backlog).
 

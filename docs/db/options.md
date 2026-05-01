@@ -2,318 +2,138 @@
 
 ## Overview
 
-Jardin Toasts stores configuration and state in WordPress `wp_options` table. All option names are prefixed with `jb_` to avoid conflicts.
+Jardin Toasts stores configuration and state in the WordPress `wp_options` table. **Canonical option names use the prefix `jt_`.** Defaults and sanitization live in [`includes/class-settings.php`](../../includes/class-settings.php) (`JT_Settings::get_defaults()`, `sanitize_value_for_key()`).
 
-## Option Categories
+### Migration depuis beer-journal / `jb_*`
 
-### Synchronization Options
-
-RSS sync configuration and state.
-
-| Option Name | Type | Description | Default |
-|-------------|------|-------------|---------|
-| `jb_rss_feed_url` | string | Untappd RSS feed URL | Maintainer default RSS URL from `jb_get_default_rss_feed_url()` until saved |
-| `jb_sync_enabled` | bool | Whether automatic sync is enabled | `true` |
-| `jb_sync_frequency` | string | Manual frequency override (optional) | `""` |
-| `jb_last_checkin_date` | datetime | Date of last imported check-in | `""` |
-| `jb_last_imported_guid` | string | GUID of last imported check-in | `""` |
-
-**Usage**: 
-- `jb_last_checkin_date`: Used for adaptive polling calculation
-- `jb_last_imported_guid`: Used for GUID comparison optimization
+Les sites mis à jour depuis d’anciennes versions peuvent encore avoir des lignes `bj_*` / `jb_*` jusqu’à la migration. Le flux (options, métas, cron, blocs) est décrit dans **[Identifiants et migration](../development/legacy-identifiers.md)** — ne pas copier d’anciens noms `jb_*` dans du nouveau code.
 
 ---
 
-### Untappd Options
+## Options enregistrées (réglages + défauts)
 
-Integration-specific options (optionnelles selon méthode utilisée).
+Ces clés correspondent à `JT_Settings::get_defaults()` et aux lectures directes cohérentes dans le plugin.
 
-| Option Name | Type | Description | Default |
-|-------------|------|-------------|---------|
-| `jb_untappd_username` | string | Untappd username | `""` |
-| `jb_untappd_rss_key` | string | RSS/API key if required (optional) | `""` |
-| `jb_excluded_checkins` | array | List of check-in IDs to exclude from sync | `[]` |
+### Synchronisation RSS
 
-Notes:
-- `jb_excluded_checkins` complète la méta `_jb_exclude_sync` au niveau post (protection fine).
-- Pour l’import d’images, utiliser l’option existante `jb_import_images`.
+| Option | Type | Description | Défaut |
+|--------|------|-------------|--------|
+| `jt_rss_feed_url` | string | URL du flux RSS Untappd | URL RSS par défaut du mainteneur (`jt_get_default_rss_feed_url()`) |
+| `jt_sync_enabled` | bool | Sync planifiée (cron / Action Scheduler) | `true` |
+| `jt_rss_max_per_run` | int | Plafond d’éléments traités par passe RSS (1–100) | `10` |
+| `jt_last_imported_guid` | string | Dernier GUID vu (optimisation / état) | `""` (interne au flux, pas dans le formulaire) |
+| `jt_last_checkin_date` | string | Dernière date de check-in importée (polling adaptatif) | `""` (interne) |
+| `jt_last_rss_sync_at` | string | Horodatage ISO de la dernière sync RSS réussie | `""` |
 
----
+### Compte Untappd
 
-### Rating System Options
+| Option | Type | Description | Défaut |
+|--------|------|-------------|--------|
+| `jt_untappd_username` | string | Nom d’utilisateur Untappd (affichage / crawl) | `jt_get_default_untappd_username()` |
+| `jt_excluded_checkins` | array | IDs de check-ins exclus de la sync | `[]` (interne + filtrage) |
 
-Rating mapping and label configuration.
+### Système de notation
 
-| Option Name | Type | Description | Default |
-|-------------|------|-------------|---------|
-| `jb_rating_rules` | array | Custom rating mapping rules | `jb_get_default_rating_rules()` |
-| `jb_rating_labels` | array | Custom labels for each rating level | `jb_get_default_rating_labels()` |
-| `jb_rating_rounding_enabled` | bool | Enable rating rounding | `true` |
-| `jb_rating_show_raw_tooltip` | bool | Show original rating in tooltip | `true` |
-| `jb_rating_display_single` | bool | Display labels on single pages | `true` |
-| `jb_rating_display_archive` | bool | Display labels in archive | `false` |
-| `jb_rating_display_list` | bool | Display labels in list view | `false` |
+| Option | Type | Description | Défaut |
+|--------|------|-------------|--------|
+| `jt_rating_rules` | array | Bandes min/max → étoile entière | `jt_get_default_rating_rules()` |
+| `jt_rating_labels` | array | Libellés 0–5 | `jt_get_default_rating_labels()` |
+| `jt_rating_rounding_enabled` | bool | Activer l’arrondi selon les règles | `true` |
 
-**Structure**:
-```php
-// Rating rules
-$jb_rating_rules = [
-    ['min' => 0.0, 'max' => 0.9, 'round' => 0],
-    ['min' => 1.0, 'max' => 1.9, 'round' => 1],
-    // ... etc
-];
+### Import historique / file d’attente
 
-// Rating labels
-$jb_rating_labels = [
-    0 => 'Undrinkable - Not even beer',
-    1 => 'Terrible - Only if there\'s no alternative',
-    // ... etc
-];
-```
+| Option | Type | Description | Défaut |
+|--------|------|-------------|--------|
+| `jt_import_checkpoint` | array | File crawl, état, compteurs | `[]` (interne) |
+| `jt_import_batch_size` | int | Taille de lot | `25` |
+| `jt_import_delay` | int | Délai entre requêtes (secondes) | `3` |
+| `jt_import_mode` | string | `manual` ou `background` | `manual` |
 
----
+### Images et placeholder
 
-### Import Options
+| Option | Type | Description | Défaut |
+|--------|------|-------------|--------|
+| `jt_import_images` | bool | Importer les images dans la médiathèque | `true` |
+| `jt_use_placeholder_image` | bool | Utiliser une image de substitution si échec | `true` |
+| `jt_placeholder_image_id` | int | ID de pièce jointe (médiathèque) | `0` |
 
-Historical import configuration and state.
+### Général / affichage
 
-| Option Name | Type | Description | Default |
-|-------------|------|-------------|---------|
-| `jb_import_checkpoint` | array | Import progress checkpoint | `[]` |
-| `jb_import_batch_size` | int | Number of check-ins per batch | `25` |
-| `jb_import_delay` | int | Delay between requests (seconds) | `3` |
-| `jb_import_mode` | string | Import mode: 'manual' or 'background' | `"manual"` |
+| Option | Type | Description | Défaut |
+|--------|------|-------------|--------|
+| `jt_scraping_delay` | int | Délai minimum entre scrapes (secondes) | `3` |
+| `jt_import_social_data` | bool | Données sociales (toasts, commentaires) | `true` |
+| `jt_import_venues` | bool | Lieux / taxonomie venue | `true` |
+| `jt_archive_layout` | string | `grid` ou `table` | `grid` |
 
-**Checkpoint Structure**:
-```php
-$jb_import_checkpoint = [
-    'current_page' => 3,
-    'total_imported' => 75,
-    'last_checkin_id' => '123456',
-    'started_at' => 1699632000, // Unix timestamp
-];
-```
+### SEO
 
----
+| Option | Type | Description | Défaut |
+|--------|------|-------------|--------|
+| `jt_schema_enabled` | bool | JSON-LD Review / Product | `true` |
+| `jt_microformats_enabled` | bool | Classes microformats (`h-entry`, etc.) | `true` |
 
-### Image Options
+### Notifications
 
-Image import configuration.
+| Option | Type | Description | Défaut |
+|--------|------|-------------|--------|
+| `jt_notify_on_sync` | bool | Email après sync RSS réussie avec imports | `false` |
+| `jt_notify_on_error` | bool | Email sur erreurs (sync, etc.) | `true` |
+| `jt_notification_email` | string | Destinataire (vide = `admin_email`) | `""` |
 
-| Option Name | Type | Description | Default |
-|-------------|------|-------------|---------|
-| `jb_import_images` | bool | Import images to Media Library | `true` |
-| `jb_image_max_width` | int | Maximum image width (px) | `1200` |
-| `jb_image_max_height` | int | Maximum image height (px) | `1200` |
-| `jb_generate_thumbnails` | bool | Generate WordPress thumbnails | `true` |
-| `jb_compress_images` | bool | Compress images (requires plugin) | `false` |
-| `jb_placeholder_image_id` | int | Default placeholder image ID | `0` |
+### Debug
+
+| Option | Type | Description | Défaut |
+|--------|------|-------------|--------|
+| `jt_debug_mode` | bool | Logs niveau DEBUG | `false` |
+| `jt_log_retention_days` | int | Rétention des fichiers `.log` | `30` |
 
 ---
 
-### General Options
+## Options internes (hors formulaire principal)
 
-General plugin configuration.
-
-| Option Name | Type | Description | Default |
-|-------------|------|-------------|---------|
-| `jb_scraping_delay` | int | Delay between scraping requests (seconds) | `3` |
-| `jb_import_social_data` | bool | Import social data (toasts, comments) | `true` |
-| `jb_import_venues` | bool | Import venue data | `true` |
-| `jb_import_badges` | bool | Import badges (Phase 3) | `false` |
-| `jb_deduplication_method` | string | Deduplication method: 'checkin_id' or 'name_date' | `"checkin_id"` |
+| Option | Rôle |
+|--------|------|
+| `jt_rss_sync_queue` | File d’attente persistée pour les imports RSS (voir `includes/functions.php`, `JT_RSS_Parser`). |
+| `jt_db_index_checkin_v1` | État de l’index postmeta optionnel (`JT_DB_Install`) : `ok`, `failed`, ou vide. |
+| `jt_placeholder_toggle_migrated` | Drapeau one-shot pour la bascule placeholder (`JT_Settings::maybe_migrate_placeholder_toggle`). |
+| Drapeaux `jt_*_migrated_v1` / `jardin_toasts_cron_hooks_migrated_v1` | Migrations stockage / cron — voir `legacy-identifiers.md` et `uninstall.php`. |
 
 ---
 
-### SEO Options
+## Transients
 
-Structured data and microformats configuration.
+| Clé effective | Usage |
+|-----------------|--------|
+| `jt_{key}` via `jt_get_cached_data()` | Cache générique (ex. stats, compteur brouillons incomplets). |
+| `jt_last_scrape_ts` | Cadence entre requêtes HTTP de scrape (`JT_Scraper`). |
 
-| Option Name | Type | Description | Default |
-|-------------|------|-------------|---------|
-| `jb_schema_enabled` | bool | Enable Schema.org JSON-LD (Review/Product) | `true` |
-| `jb_microformats_enabled` | bool | Enable microformats in templates (`h-entry`, `e-content`) | `true` |
-
-Notes:
-- These options are enabled by default. They can be disabled in Settings > Advanced.
-- Always escape JSON output and avoid sensitive data.
+Les transients `bj_*` / `jb_*` legacy sont purgés lors des migrations.
 
 ---
 
-### Notification Options
-
-Admin notification settings.
-
-| Option Name | Type | Description | Default |
-|-------------|------|-------------|---------|
-| `jb_notify_on_sync` | bool | Email notification after sync | `false` |
-| `jb_notify_on_error` | bool | Email notification on errors | `true` |
-| `jb_notification_email` | string | Email address for notifications | `get_option('admin_email')` |
-| `jb_new_terms_created` | array | Log of newly created taxonomy terms | `[]` |
-
-**New Terms Structure**:
-```php
-$jb_new_terms_created = [
-    [
-        'taxonomy' => 'beer_style',
-        'term' => 'IPA',
-        'term_id' => 5,
-        'created_at' => '2025-11-10 18:15:00',
-        'source_checkin' => 123,
-    ],
-    // ... more terms
-];
-```
-
----
-
-### Debug Options
-
-Debugging and logging configuration.
-
-| Option Name | Type | Description | Default |
-|-------------|------|-------------|---------|
-| `jb_debug_mode` | bool | Enable detailed logging | `false` |
-| `jb_log_http_requests` | bool | Log HTTP requests | `false` |
-| `jb_log_retention_days` | int | Days to keep logs | `30` |
-
----
-
-### Cache/Transient Options
-
-Temporary data stored in transients (not in `wp_options`, but related).
-
-| Transient Name | Type | Description | Expiration |
-|----------------|------|-------------|------------|
-| `jb_new_terms_notice` | int | Count of new terms (for admin notice) | 1 week |
-| `jb_global_stats` | array | Cached global statistics | 1 hour |
-| `jb_top_breweries` | array | Cached top breweries list | 1 day |
-
-**Usage**: Transients are automatically expired and don't need manual cleanup.
-
----
-
-## Future Options (v1.5)
-
-### Cache Configuration (Option B)
-
-| Option Name | Type | Description | Default |
-|-------------|------|-------------|---------|
-| `jb_cache_enabled` | bool | Enable/disable application-level caching | `true` |
-| `jb_cache_hours` | int | Cache duration in hours (applies to scraping/stats/queries) | `3` |
-
-Notes:
-- MVP uses Option A (automatic, no UI).
-- Option B will provide a simple setting and a “Clear cache” button.
-
----
-
-## Accessing Options
-
-### WordPress Functions
+## Accès en PHP (API WordPress)
 
 ```php
-// Get option
-$rss_url = get_option('jb_rss_feed_url', '');
-
-// Update option
-update_option('jb_rss_feed_url', 'https://untappd.com/rss/user/username');
-
-// Delete option
-delete_option('jb_rss_feed_url');
-
-// Get option with default
-$delay = get_option('jb_scraping_delay', 3);
+$url = get_option( 'jt_rss_feed_url', '' );
+$rules = get_option( 'jt_rating_rules', array() );
+update_option( 'jt_sync_enabled', true, false ); // autoload no si besoin
 ```
 
-### Array Options
+Pour les clés avec défaut centralisé : `JT_Settings::get( 'jt_rss_feed_url' )`.
 
-For array options, WordPress automatically serializes/unserializes:
+---
 
-```php
-// Get array option
-$rules = get_option('jb_rating_rules', []);
+## Désactivation et désinstallation
 
-// Update array option
-update_option('jb_rating_rules', [
-    ['min' => 0.0, 'max' => 0.9, 'round' => 0],
-    // ... etc
-]);
-```
+- **Désactivation** : les options restent (réactivation possible). Les tâches cron / Action Scheduler associées au plugin sont retirées (`JT_Deactivator`).
+- **Désinstallation** : liste explicite des options supprimées dans [`uninstall.php`](../../uninstall.php). Les **posts** `beer_checkin`, médias et logs **ne sont pas** supprimés automatiquement — voir le [README](../../README.md).
 
-## Default Values
+---
 
-### Default Rating Rules
+## Documentation liée
 
-```php
-function jb_get_default_rating_rules() {
-    return [
-        ['min' => 0.0, 'max' => 0.9, 'round' => 0],
-        ['min' => 1.0, 'max' => 1.9, 'round' => 1],
-        ['min' => 2.0, 'max' => 2.9, 'round' => 2],
-        ['min' => 3.0, 'max' => 3.4, 'round' => 3],
-        ['min' => 3.5, 'max' => 4.4, 'round' => 4],
-        ['min' => 4.5, 'max' => 5.0, 'round' => 5],
-    ];
-}
-```
-
-### Default Rating Labels
-
-```php
-function jb_get_default_rating_labels() {
-    return [
-        0 => __('Undrinkable - Not even beer', 'jardin-toasts'),
-        1 => __('Terrible - Only if there\'s no alternative', 'jardin-toasts'),
-        2 => __('Mediocre - Meh, it\'s okay I guess', 'jardin-toasts'),
-        3 => __('Decent - A solid thirst quencher', 'jardin-toasts'),
-        4 => __('Great - Now we\'re talking! A real pleasure', 'jardin-toasts'),
-        5 => __('Exceptional - Buy it with your eyes closed. Masterpiece!', 'jardin-toasts'),
-    ];
-}
-```
-
-## Option Cleanup
-
-### On Plugin Deactivation
-
-Options are preserved on deactivation (user may reactivate).
-
-### On Plugin Uninstall
-
-Options should be deleted on uninstall:
-
-```php
-register_uninstall_hook(__FILE__, 'jb_uninstall');
-
-function jb_uninstall() {
-    // Delete all options
-    delete_option('jb_rss_feed_url');
-    delete_option('jb_sync_enabled');
-    // ... etc
-    
-    // Or use a loop
-    global $wpdb;
-    $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE 'jb_%'");
-}
-```
-
-## Autoload Considerations
-
-Most options should **not** be autoloaded (set `autoload = 'no'`) to reduce database load:
-
-```php
-update_option('jb_rating_rules', $rules, 'no'); // Don't autoload
-```
-
-**Exceptions** (should autoload):
-- `jb_sync_enabled`: Frequently checked
-- `jb_rating_rounding_enabled`: Frequently checked
-
-## Related Documentation
-
-- [Schema Documentation](schema.md)
 - [Meta Fields](meta-fields.md)
+- [Schema](schema.md)
 - [Indexes](indexes.md)
-- [Settings Documentation](../architecture/overview.md)
-
+- [Identifiants et migration](../development/legacy-identifiers.md)

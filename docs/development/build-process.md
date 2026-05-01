@@ -31,7 +31,7 @@ composer install --no-dev
 npm install
 ```
 
-**Purpose**: Gutenberg blocks (version 1.0.0)
+**Purpose**: Gutenberg blocks (aligné sur `package.json`) et bundle **admin DataViews** (`npm run build` → `build/admin-dataviews.*`). Ce dossier `build/` n’est pas versionné : sans build, l’admin reste utilisable ; seul le bloc optionnel de l’onglet Sync (tableau DataViews) est absent.
 
 ---
 

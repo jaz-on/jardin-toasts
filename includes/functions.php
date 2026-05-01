@@ -135,6 +135,21 @@ function jt_get_untappd_username() {
 }
 
 /**
+ * User-Agent for outbound HTTP (scrape, crawl).
+ *
+ * Same filter order as other doubles (`jt_*` then `jardin_toasts_*`).
+ *
+ * @return string
+ */
+function jt_http_user_agent_string() {
+	$default = 'Jardin Toasts/' . JT_VERSION . '; ' . home_url( '/' );
+	return (string) apply_filters(
+		'jardin_toasts_http_user_agent',
+		(string) apply_filters( 'jt_http_user_agent', $default )
+	);
+}
+
+/**
  * Extract Untappd profile username from an RSS feed URL.
  *
  * @param string $url RSS URL.

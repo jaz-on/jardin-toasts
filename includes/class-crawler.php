@@ -52,10 +52,7 @@ class JT_Crawler {
 						'Accept' => 'text/html',
 						'Accept-Language' => 'en-US,en;q=0.9',
 					),
-					'user-agent' => apply_filters(
-						'jt_http_user_agent',
-						'Jardin Toasts/' . JT_VERSION . '; ' . home_url( '/' )
-					),
+					'user-agent' => jt_http_user_agent_string(),
 				)
 			);
 

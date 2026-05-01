@@ -2,216 +2,124 @@
 
 ## Overview
 
-All check-in metadata is stored in WordPress `wp_postmeta` table with keys prefixed with `_jb_`. The leading underscore makes these fields "hidden" in the WordPress admin by default.
+Les métadonnées des check-ins sont stockées dans `wp_postmeta` avec le préfixe **`_jt_`** (underscore initial = champs « cachés » dans l’éditeur classique). L’enregistrement REST et une partie des callbacks de sanitization sont dans [`includes/class-meta-fields.php`](../../includes/class-meta-fields.php) ; l’écriture à l’import dans [`includes/class-importer.php`](../../includes/class-importer.php) (`save_meta()`).
 
-## Meta Field Categories
+### Migration depuis `jb_*` / beer-journal
 
-### Identifiers
-
-Unique identifiers for Untappd entities.
-
-| Meta Key | Type | Description | Example |
-|----------|------|-------------|---------|
-| `_jb_checkin_id` | string | Untappd check-in ID (unique) | `"1527514863"` |
-| `_jb_beer_id` | int | Untappd beer ID | `12345` |
-| `_jb_brewery_id` | int | Untappd brewery ID | `6789` |
-| `_jb_checkin_url` | string | Original Untappd check-in URL | `"https://untappd.com/user/jaz_on/checkin/1527514863"` |
-
-**Usage**: Deduplication, linking back to Untappd, API integration (future).
+Les anciennes clés `_jb_*` sont renommées vers `_jt_*` au chargement du plugin selon **[Identifiants et migration](../development/legacy-identifiers.md)**.
 
 ---
 
-### Beer Data
+## Identifiants
 
-Information about the beer itself.
-
-| Meta Key | Type | Description | Example |
-|----------|------|-------------|---------|
-| `_jb_beer_name` | string | Beer name | `"Meteor Blonde De Garde"` |
-| `_jb_brewery_name` | string | Brewery name | `"Brasserie Meteor"` |
-| `_jb_beer_style` | string | Beer style (redundant with taxonomy, for search) | `"Blonde Ale"` |
-| `_jb_beer_abv` | float | Alcohol by volume percentage | `5.5` |
-| `_jb_beer_ibu` | int | International Bitterness Units | `25` |
-| `_jb_beer_description` | text | Official beer description (long text) | `"A refreshing blonde ale..."` |
-
-**Note**: `_jb_beer_style` is redundant with the `beer_style` taxonomy but stored for easier searching and filtering.
+| Meta Key | Type | Description |
+|----------|------|-------------|
+| `_jt_checkin_id` | string | ID Untappd du check-in (dédoublonnage) |
+| `_jt_checkin_url` | string | URL publique Untappd du check-in |
 
 ---
 
-### Check-in Data
+## Bière et brasserie
 
-Data specific to this check-in instance.
-
-| Meta Key | Type | Description | Example | Required |
-|----------|------|-------------|---------|----------|
-| `_jb_rating_raw` | float | Original Untappd rating (0-5 with decimals) | `4.25` | ✓ |
-| `_jb_rating_rounded` | int | Mapped star rating (0-5 stars) | `4` | ✓ |
-| `_jb_serving_type` | string | Type of serving | `"Draft"`, `"Bottle"`, `"Can"`, `"Cask"` | ○ |
-| `_jb_purchase_venue` | string | Where beer was purchased (if different from consumption venue) | `"Beer Store"` | ○ |
-| `_jb_checkin_date` | datetime | Check-in date (ISO 8601 format) | `"2025-11-10T18:13:18Z"` | ✓ |
-| `_jb_exclude_sync` | string (`'1'`/`''`) | Prevents automatic sync from updating this post | `'1'` | ○ |
-
-**Rating Fields**: Both `_jb_rating_raw` and `_jb_rating_rounded` are stored. The raw rating preserves original data, while rounded is used for display and filtering.
-
-**Note**: There is no `_jb_rating` field. Only `_jb_rating_raw` and `_jb_rating_rounded` are used.
+| Meta Key | Type | Description |
+|----------|------|-------------|
+| `_jt_beer_name` | string | Nom de la bière |
+| `_jt_brewery_name` | string | Nom de la brasserie |
+| `_jt_beer_style` | string | Style (redondant avec la taxonomie si assignée) |
+| `_jt_beer_abv` | number | ABV % |
+| `_jt_beer_ibu` | int | IBU |
 
 ---
 
-### Venue Data
+## Check-in
 
-Location where the beer was consumed.
+| Meta Key | Type | Description |
+|----------|------|-------------|
+| `_jt_rating_raw` | number | Note brute Untappd (0–5) |
+| `_jt_rating_rounded` | int | Niveau étoiles mappé (0–5) |
+| `_jt_serving_type` | string | Type de service (fût, bouteille, etc.) |
+| `_jt_checkin_date` | string | Date du check-in (chaîne stockée) |
+| `_jt_exclude_sync` | string | `1` = ne pas mettre à jour ce post depuis la sync auto |
 
-| Meta Key | Type | Description | Example |
-|----------|------|-------------|---------|
-| `_jb_venue_name` | string | Venue name | `"Home"`, `"The Beer Bar"` |
-| `_jb_venue_city` | string | City name | `"Strasbourg"` |
-| `_jb_venue_country` | string | Country name | `"France"` |
-| `_jb_venue_lat` | float | Latitude (optional, for future map feature) | `48.5734` |
-| `_jb_venue_lng` | float | Longitude (optional, for future map feature) | `7.7521` |
-
-**Note**: Venue coordinates are stored for potential map integration in Phase 3.
+**Remarque** : il n’existe pas de méta `_jt_rating` unique ; seules `_jt_rating_raw` et `_jt_rating_rounded` sont utilisées.
 
 ---
 
-### Social Data
+## Lieu
 
-Social engagement metrics from Untappd.
-
-| Meta Key | Type | Description | Example |
-|----------|------|-------------|---------|
-| `_jb_toast_count` | int | Number of "toasts" (likes) | `12` |
-| `_jb_comment_count` | int | Number of comments | `3` |
-| `_jb_badges_earned` | array | Badges earned (serialized array, Phase 3) | `["badge1", "badge2"]` |
-
-**Note**: `_jb_badges_earned` is stored as serialized array for future badge display feature.
+| Meta Key | Type | Description |
+|----------|------|-------------|
+| `_jt_venue_name` | string | Nom du lieu (consommé avec l’option `jt_import_venues`) |
 
 ---
 
-### Technical Metadata
+## Social (si présent dans les données scrapées)
 
-Internal metadata for import tracking and debugging.
-
-| Meta Key | Type | Description | Example |
-|----------|------|-------------|---------|
-| `_jb_source` | string | Import source | `"rss"` or `"crawler"` |
-| `_jb_scraped_at` | datetime | Last scraping attempt timestamp | `"2025-11-10 18:15:00"` |
-| `_jb_scraping_attempts` | int | Number of scraping attempts | `1`, `2`, `3` |
-| `_jb_incomplete_reason` | string | Reason for draft status | `"missing_rating"`, `"missing_beer_name"` |
-
-**Draft Reasons**:
-- `missing_rating`: Rating not found during scraping
-- `missing_beer_name`: Beer name not found
-- `missing_brewery_name`: Brewery name not found
-- `scraping_failed`: Scraping failed after 3 attempts
+| Meta Key | Type | Description |
+|----------|------|-------------|
+| `_jt_toast_count` | int | Nombre de toasts |
+| `_jt_comment_count` | int | Nombre de commentaires |
 
 ---
 
-## Image Metadata
+## Technique / import
 
-For featured images (attachments), additional meta fields are stored:
-
-| Meta Key | Type | Description | Example |
-|----------|------|-------------|---------|
-| `_jb_image_hash` | string | MD5 hash of image URL (for duplicate detection) | `"a1b2c3d4e5f6..."` |
-| `_jb_image_source_url` | string | Original Untappd image URL | `"https://images.untp.beer/..."` |
-
-**Note**: These are stored on the attachment post, not the check-in post.
+| Meta Key | Type | Description |
+|----------|------|-------------|
+| `_jt_source` | string | `rss` ou `crawler` |
+| `_jt_scraped_at` | string | Horodatage ISO du dernier scrape |
+| `_jt_incomplete_reason` | string | Raison brouillon (`missing_rating`, `missing_beer_name`, etc.) |
 
 ---
 
-## Accessing Meta Fields
+## Métas sur les **pièces jointes** (images)
 
-### WordPress Functions
+| Meta Key | Description |
+|----------|-------------|
+| `_jt_image_hash` | MD5 de l’URL source (dédoublonnage) |
+| `_jt_image_source_url` | URL Untappd d’origine |
+
+Ces clés sont sur la pièce jointe, pas sur le post check-in.
+
+---
+
+## Accès en PHP
 
 ```php
-// Get single meta field
-$rating = get_post_meta($post_id, '_jb_rating_raw', true);
-
-// Get all meta fields (prefixed)
-$all_meta = get_post_meta($post_id);
-
-// Update meta field
-update_post_meta($post_id, '_jb_rating_raw', 4.25);
-
-// Delete meta field
-delete_post_meta($post_id, '_jb_rating_raw');
+$rating = get_post_meta( $post_id, '_jt_rating_raw', true );
+update_post_meta( $post_id, '_jt_beer_name', sanitize_text_field( $name ) );
 ```
 
-### Query by Meta Field
+### Requête par note arrondie
 
 ```php
-// Get check-ins with 4+ star rating
-$args = [
-    'post_type' => 'beer',
-    'meta_query' => [
-        [
-            'key' => '_jb_rating_rounded',
-            'value' => 4,
-            'compare' => '>=',
-        ],
-    ],
-];
-$checkins = get_posts($args);
+$args = array(
+	'post_type'      => 'beer_checkin',
+	'posts_per_page' => 10,
+	'meta_query'     => array(
+		array(
+			'key'     => '_jt_rating_rounded',
+			'value'   => 4,
+			'compare' => '>=',
+			'type'    => 'NUMERIC',
+		),
+	),
+);
 ```
 
-### Helper Functions
+Le CPT public est `beer_checkin` (voir `JT_Post_Type::POST_TYPE`).
 
-```php
-// Get all check-in data
-function jb_get_checkin_data($post_id) {
-    return [
-        'checkin_id' => get_post_meta($post_id, '_jb_checkin_id', true),
-        'beer_name' => get_post_meta($post_id, '_jb_beer_name', true),
-        'brewery_name' => get_post_meta($post_id, '_jb_brewery_name', true),
-        'rating_raw' => get_post_meta($post_id, '_jb_rating_raw', true),
-        'rating_rounded' => get_post_meta($post_id, '_jb_rating_rounded', true),
-        // ... etc
-    ];
-}
-```
+---
 
-## Data Types
+## Champs requis pour un post **publié**
 
-### Strings
-- Stored as `VARCHAR` or `TEXT` in database
-- Sanitized with `sanitize_text_field()` before storage
-- Escaped with `esc_html()` or `esc_attr()` on output
+L’importeur définit le statut `publish` lorsque bière, brasserie et note brute sont présents ; sinon `draft` avec `_jt_incomplete_reason`. Voir `JT_Importer::import_checkin_data()`.
 
-### Numbers
-- **Integers**: Stored as strings, cast with `absint()` or `intval()`
-- **Floats**: Stored as strings, cast with `floatval()`
-- **Decimals**: Stored as strings (e.g., `"4.25"`)
+---
 
-### Dates
-- Stored as `DATETIME` strings (MySQL format: `"2025-11-10 18:13:18"`)
-- ISO 8601 format for `_jb_checkin_date`: `"2025-11-10T18:13:18Z"`
+## Documentation liée
 
-### Arrays
-- Stored as serialized strings (e.g., `_jb_badges_earned`)
-- Use `maybe_unserialize()` when retrieving
-
-## Validation
-
-### Required Fields for Publication
-- `_jb_checkin_id`: Must be unique
-- `_jb_beer_name`: Must not be empty
-- `_jb_brewery_name`: Must not be empty
-- `_jb_rating_raw`: Must be between 0 and 5
-- `_jb_rating_rounded`: Must be between 0 and 5
-- `_jb_checkin_date`: Must be valid date
-
-### Optional Fields
-All other fields are optional and don't prevent publication.
-
-## Indexing
-
-See [Indexes Documentation](indexes.md) for recommended database indexes on meta fields.
-
-## Related Documentation
-
-- [Schema Documentation](schema.md)
-- [ERD Diagram](erd.md)
 - [Options](options.md)
+- [Schema](schema.md)
 - [Indexes](indexes.md)
-- [Import Process](../architecture/import-process.md)
-
+- [Identifiants et migration](../development/legacy-identifiers.md)

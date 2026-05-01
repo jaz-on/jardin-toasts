@@ -5,8 +5,8 @@
 	"license": "GPL-2.0-or-later",
 	"authors": [
 		{
-			"name": "Jardin Toasts Contributors",
-			"email": "contributors@example.com"
+			"name": "Jason Rouet",
+			"homepage": "https://jasonrouet.com"
 		}
 	],
 	"require": {

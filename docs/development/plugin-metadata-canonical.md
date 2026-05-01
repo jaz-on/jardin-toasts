@@ -29,3 +29,7 @@ Ordre cible : `Plugin Name`, `Plugin URI`, `Description`, `Version`, `Requires a
 
 - Valeur dans l’en-tête : **`main`** pour que les installs par défaut depuis GitHub suivent la branche stable.
 - Pour un site de dev qui suit **`dev`**, configurer la branche dans l’admin Git Updater (pas besoin de `Primary Branch: dev` dans le dépôt).
+
+### Exceptions par dépôt
+
+- **Jardin Toasts** ([`jardin-toasts.php`](../../jardin-toasts.php)) : l’en-tête utilise volontairement **`Primary Branch: dev`** afin que les installs Git Updater par défaut sur l’environnement de développement suivent la branche d’intégration. Pour un site qui doit suivre **`main`**, régler la branche dans l’admin Git Updater plutôt que de changer le dépôt. Les autres plugins de l’org peuvent rester sur la règle **`main`** ci-dessus.

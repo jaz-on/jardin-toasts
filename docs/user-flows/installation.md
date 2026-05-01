@@ -37,6 +37,8 @@ flowchart TD
 1. Upload plugin files to `/wp-content/plugins/jardin-toasts/`
 2. WordPress detects plugin
 
+**Désinstallation** : la suppression de l’extension retire les options du plugin et les tâches cron associées ; les posts check-in, médias et journaux ne sont pas effacés automatiquement (voir le [README](../../README.md) section *Uninstall*).
+
 ---
 
 ### Step 2: Plugin Activation

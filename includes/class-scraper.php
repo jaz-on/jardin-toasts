@@ -47,10 +47,7 @@ class JT_Scraper {
 					'headers' => array(
 						'Accept' => 'text/html,application/xhtml+xml',
 					),
-					'user-agent' => apply_filters(
-						'jt_http_user_agent',
-						'Jardin Toasts/' . JT_VERSION . '; ' . home_url( '/' )
-					),
+					'user-agent' => jt_http_user_agent_string(),
 				)
 			);
 

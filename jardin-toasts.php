@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'JT_VERSION', '1.0.0' );
+define( 'JT_VERSION', '0.1.0' );
 define( 'JT_PLUGIN_FILE', __FILE__ );
 define( 'JT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'JT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
