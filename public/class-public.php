@@ -163,7 +163,7 @@ class JT_Public {
 			);
 		}
 
-		$data = apply_filters( 'jt_schema_review_data', $data, $post_id );
+		$data = apply_filters( 'jardin_toasts_schema_review_data', apply_filters( 'jt_schema_review_data', $data, $post_id ), $post_id );
 
 		echo '<script type="application/ld+json">' . wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . '</script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}

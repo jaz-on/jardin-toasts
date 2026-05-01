@@ -22,16 +22,7 @@ class JT_Deactivator {
 	public static function deactivate() {
 		$group          = function_exists( 'jt_action_scheduler_group' ) ? jt_action_scheduler_group() : 'jardin-toasts';
 		$legacy_groups  = array( 'beer-journal', 'jardin-beer' );
-		$hooks        = array(
-			'jt_rss_sync',
-			'jt_rss_queue_tick',
-			'jt_background_import_batch',
-			'jt_daily_log_cleanup',
-			'jb_rss_sync',
-			'jb_rss_queue_tick',
-			'jb_background_import_batch',
-			'jb_daily_log_cleanup',
-		);
+		$hooks        = Jardin_Toasts_Keys::all_teardown_cron_hooks();
 		$legacy_hooks = array( 'bj_rss_sync', 'bj_rss_queue_tick', 'bj_background_import_batch', 'bj_daily_log_cleanup' );
 		if ( function_exists( 'as_unschedule_all_actions' ) ) {
 			jt_when_action_scheduler_store_ready(
@@ -54,6 +45,7 @@ class JT_Deactivator {
 			wp_clear_scheduled_hook( $hook );
 		}
 		flush_rewrite_rules();
+		do_action( 'jardin_toasts_plugin_deactivated' );
 		do_action( 'jt_plugin_deactivated' );
 	}
 }

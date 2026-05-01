@@ -12,7 +12,7 @@
 		$.post(
 			jtAdmin.ajaxUrl,
 			{
-				action: 'jt_sync_now',
+				action: jtAdmin.ajaxSyncNow,
 				nonce: jtAdmin.nonce,
 			}
 		)
@@ -40,7 +40,7 @@
 		$.post(
 			jtAdmin.ajaxUrl,
 			{
-				action: 'jt_crawl_discover',
+				action: jtAdmin.ajaxCrawlDiscover,
 				nonce: jtAdmin.nonce,
 				username: username,
 				max_pages: maxPages,
@@ -68,7 +68,7 @@
 		$.post(
 			jtAdmin.ajaxUrl,
 			{
-				action: 'jt_crawl_batch',
+				action: jtAdmin.ajaxCrawlBatch,
 				nonce: jtAdmin.nonce,
 			}
 		)

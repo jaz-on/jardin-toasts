@@ -37,7 +37,12 @@ class JT_Crawler {
 			}
 
 			$url = $this->profile_page_url( $username, $page );
-			$url = apply_filters( 'jt_crawler_profile_url', $url, $username, $page );
+			$url = apply_filters(
+				'jardin_toasts_crawler_profile_url',
+				apply_filters( 'jt_crawler_profile_url', $url, $username, $page ),
+				$username,
+				$page
+			);
 
 			$response = wp_remote_get(
 				$url,
@@ -230,11 +235,11 @@ class JT_Crawler {
 			if ( function_exists( 'as_schedule_single_action' ) ) {
 				jt_when_action_scheduler_store_ready(
 					static function () use ( $delay ) {
-						as_schedule_single_action( $delay, 'jt_background_import_batch', array(), jt_action_scheduler_group() );
+						as_schedule_single_action( $delay, Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH, array(), jt_action_scheduler_group() );
 					}
 				);
 			} else {
-				wp_schedule_single_event( $delay, 'jt_background_import_batch' );
+				wp_schedule_single_event( $delay, Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH );
 			}
 		}
 	}

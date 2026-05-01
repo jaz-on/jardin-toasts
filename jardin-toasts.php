@@ -165,6 +165,9 @@ function jt_init_plugin() {
 	if ( ! jt_runtime_ready() ) {
 		return;
 	}
+	if ( class_exists( 'Jardin_Toasts_Keys', false ) ) {
+		Jardin_Toasts_Keys::maybe_migrate_cron_hook_names();
+	}
 	JT_Storage_Migration::maybe_migrate();
 	JT_Storage_Migration::maybe_migrate_jb_prefix_storage_to_jt();
 	JT_Storage_Migration::maybe_migrate_product_rename();

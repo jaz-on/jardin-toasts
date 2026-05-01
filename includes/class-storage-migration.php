@@ -48,16 +48,7 @@ class JT_Storage_Migration {
 	 * @return string[]
 	 */
 	private static function rss_hook_names() {
-		return array(
-			'jt_rss_sync',
-			'jt_rss_queue_tick',
-			'jt_background_import_batch',
-			'jt_daily_log_cleanup',
-			'jb_rss_sync',
-			'jb_rss_queue_tick',
-			'jb_background_import_batch',
-			'jb_daily_log_cleanup',
-		);
+		return Jardin_Toasts_Keys::legacy_jt_and_jb_rss_hooks();
 	}
 
 	/**

@@ -28,6 +28,9 @@ class JT_Admin {
 		add_action( 'admin_init', array( $this, 'maybe_redirect_legacy_settings_url' ) );
 		add_action( 'admin_menu', array( $this, 'register_settings_submenu' ), 100 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_action( 'wp_ajax_' . Jardin_Toasts_Keys::AJAX_SYNC_NOW, array( $this, 'ajax_sync_now' ) );
+		add_action( 'wp_ajax_' . Jardin_Toasts_Keys::AJAX_CRAWL_DISCOVER, array( $this, 'ajax_crawl_discover' ) );
+		add_action( 'wp_ajax_' . Jardin_Toasts_Keys::AJAX_CRAWL_BATCH, array( $this, 'ajax_crawl_batch' ) );
 		add_action( 'wp_ajax_jt_sync_now', array( $this, 'ajax_sync_now' ) );
 		add_action( 'wp_ajax_jt_crawl_discover', array( $this, 'ajax_crawl_discover' ) );
 		add_action( 'wp_ajax_jt_crawl_batch', array( $this, 'ajax_crawl_batch' ) );
@@ -131,7 +134,10 @@ class JT_Admin {
 			'jtAdmin',
 			array(
 				'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
-				'nonce'             => wp_create_nonce( 'jt_admin' ),
+				'nonce'             => wp_create_nonce( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX ),
+				'ajaxSyncNow'       => Jardin_Toasts_Keys::AJAX_SYNC_NOW,
+				'ajaxCrawlDiscover' => Jardin_Toasts_Keys::AJAX_CRAWL_DISCOVER,
+				'ajaxCrawlBatch'    => Jardin_Toasts_Keys::AJAX_CRAWL_BATCH,
 				'rssUsername'       => jt_parse_username_from_rss_url( jt_get_rss_feed_url() ),
 				'placeholderId'     => $placeholder_id,
 				'placeholderThumb' => $placeholder_thumb ? $placeholder_thumb : '',
@@ -218,7 +224,7 @@ class JT_Admin {
 	 * @return void
 	 */
 	public function ajax_sync_now() {
-		check_ajax_referer( 'jt_admin', 'nonce' );
+		check_ajax_referer( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX, 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ), 403 );
 		}
@@ -242,7 +248,7 @@ class JT_Admin {
 	 * @return void
 	 */
 	public function ajax_crawl_discover() {
-		check_ajax_referer( 'jt_admin', 'nonce' );
+		check_ajax_referer( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX, 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ), 403 );
 		}
@@ -313,7 +319,7 @@ class JT_Admin {
 	 * @return void
 	 */
 	public function ajax_crawl_batch() {
-		check_ajax_referer( 'jt_admin', 'nonce' );
+		check_ajax_referer( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX, 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ), 403 );
 		}
@@ -377,7 +383,7 @@ class JT_Admin {
 	 * @return array<string, string>
 	 */
 	public function beer_checkin_bulk_actions( $actions ) {
-		$actions['jt_bulk_rescrape'] = __( 'Re-scrape from Untappd', 'jardin-toasts' );
+		$actions[ Jardin_Toasts_Keys::BULK_RESCRAPE ] = __( 'Re-scrape from Untappd', 'jardin-toasts' );
 		return $actions;
 	}
 
@@ -390,10 +396,13 @@ class JT_Admin {
 	 * @return string
 	 */
 	public function handle_beer_checkin_bulk( $redirect_url, $action, $post_ids ) {
-		if ( 'jt_bulk_rescrape' !== $action || ! is_array( $post_ids ) ) {
+		if ( ! is_array( $post_ids ) || ! in_array( $action, array( Jardin_Toasts_Keys::BULK_RESCRAPE, 'jt_bulk_rescrape' ), true ) ) {
 			return $redirect_url;
 		}
-		$cap   = (int) apply_filters( 'jt_bulk_rescrape_max_per_request', 5 );
+		$cap = (int) apply_filters(
+			'jardin_toasts_bulk_rescrape_max_per_request',
+			(int) apply_filters( 'jt_bulk_rescrape_max_per_request', 5 )
+		);
 		$cap   = max( 1, min( 25, $cap ) );
 		$done  = 0;
 		$total = count( $post_ids );
@@ -412,9 +421,9 @@ class JT_Admin {
 		}
 		return add_query_arg(
 			array(
-				'jt_rescraped'      => $done,
-				'jt_rescrape_total' => $total,
-				'jt_rescrape_cap'   => $cap,
+				'jardin_toasts_rescraped'      => $done,
+				'jardin_toasts_rescrape_total' => $total,
+				'jardin_toasts_rescrape_cap'   => $cap,
 			),
 			$redirect_url
 		);
@@ -426,16 +435,23 @@ class JT_Admin {
 	 * @return void
 	 */
 	public function bulk_rescrape_admin_notice() {
-		if ( ! isset( $_GET['jt_rescraped'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- admin notice display only.
+		if ( isset( $_GET['jardin_toasts_rescraped'] ) ) {
+			$done  = absint( wp_unslash( $_GET['jardin_toasts_rescraped'] ) );
+			$total = isset( $_GET['jardin_toasts_rescrape_total'] ) ? absint( wp_unslash( $_GET['jardin_toasts_rescrape_total'] ) ) : $done;
+			$cap   = isset( $_GET['jardin_toasts_rescrape_cap'] ) ? absint( wp_unslash( $_GET['jardin_toasts_rescrape_cap'] ) ) : 5;
+		} elseif ( isset( $_GET['jt_rescraped'] ) ) {
+			$done  = absint( wp_unslash( $_GET['jt_rescraped'] ) );
+			$total = isset( $_GET['jt_rescrape_total'] ) ? absint( wp_unslash( $_GET['jt_rescrape_total'] ) ) : $done;
+			$cap   = isset( $_GET['jt_rescrape_cap'] ) ? absint( wp_unslash( $_GET['jt_rescrape_cap'] ) ) : 5;
+		} else {
 			return;
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		if ( ! $screen || 'edit-beer_checkin' !== $screen->id ) {
 			return;
 		}
-		$done = absint( wp_unslash( $_GET['jt_rescraped'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$total = isset( $_GET['jt_rescrape_total'] ) ? absint( wp_unslash( $_GET['jt_rescrape_total'] ) ) : $done; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$cap   = isset( $_GET['jt_rescrape_cap'] ) ? absint( wp_unslash( $_GET['jt_rescrape_cap'] ) ) : 5; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( $total > $cap && $done === $cap ) {
 			echo '<div class="notice notice-warning is-dismissible"><p>';
 			echo esc_html(

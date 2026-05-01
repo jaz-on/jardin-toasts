@@ -49,6 +49,7 @@ $defaults = array(
 	'jt_product_paths_migrated_v1',
 	'jb_storage_migrated_v1',
 	'jb_jardin_toasts_product_rename_v1',
+	'jardin_toasts_cron_hooks_migrated_v1',
 );
 
 foreach ( $defaults as $key ) {
@@ -70,6 +71,10 @@ if ( is_array( $legacy_opts ) ) {
 }
 
 $hooks = array(
+	'jardin_toasts_rss_sync',
+	'jardin_toasts_rss_queue_tick',
+	'jardin_toasts_background_import_batch',
+	'jardin_toasts_daily_log_cleanup',
 	'jt_rss_sync',
 	'jt_rss_queue_tick',
 	'jt_background_import_batch',

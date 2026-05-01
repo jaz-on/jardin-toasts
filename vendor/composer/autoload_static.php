@@ -71,6 +71,7 @@ class ComposerStaticInit9655599cbf609db15f57185486ff93bd
         'JT_Settings' => __DIR__ . '/../..' . '/includes/class-settings.php',
         'JT_Storage_Migration' => __DIR__ . '/../..' . '/includes/class-storage-migration.php',
         'JT_Taxonomies' => __DIR__ . '/../..' . '/includes/class-taxonomies.php',
+        'Jardin_Toasts_Keys' => __DIR__ . '/../..' . '/includes/functions.php',
         'Masterminds\\HTML5' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5.php',
         'Masterminds\\HTML5\\Elements' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Elements.php',
         'Masterminds\\HTML5\\Entities' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Entities.php',

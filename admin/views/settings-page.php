@@ -312,7 +312,7 @@ $tab_intros = array(
 										<input name="jt_use_placeholder_image" type="checkbox" value="1" id="jt_use_placeholder_image" <?php checked( $jt_use_ph ); ?> />
 										<span><?php esc_html_e( 'Use a fallback image when Untappd download fails (on by default). Uncheck to leave the post without a featured image.', 'jardin-toasts' ); ?></span>
 									</label>
-									<p class="description"><?php esc_html_e( 'Pick a generic beer or logo from your Media Library (no attachment ID to type). There is no built-in remote beer-photo API (keys, licensing, reliability); you can wire Open Food Facts, Wikimedia, or your own source in PHP with the jt_placeholder_attachment_id filter, returning a Media Library attachment ID you created.', 'jardin-toasts' ); ?></p>
+									<p class="description"><?php esc_html_e( 'Pick a generic beer or logo from your Media Library (no attachment ID to type). There is no built-in remote beer-photo API (keys, licensing, reliability); you can wire Open Food Facts, Wikimedia, or your own source in PHP with the jardin_toasts_placeholder_attachment_id filter (jt_placeholder_attachment_id is still fired for backward compatibility), returning a Media Library attachment ID you created.', 'jardin-toasts' ); ?></p>
 									<div class="jt-placeholder-picker" id="jt-placeholder-picker" style="<?php echo $jt_use_ph ? '' : 'display:none;'; ?>">
 										<input type="hidden" name="jt_placeholder_image_id" id="jt_placeholder_image_id" value="<?php echo esc_attr( (string) (int) JT_Settings::get( 'jt_placeholder_image_id' ) ); ?>" />
 										<p class="jt-placeholder-picker__actions">
@@ -356,7 +356,7 @@ $tab_intros = array(
 				<div class="jt-panel">
 					<div class="jt-panel__header">
 						<h2 class="jt-panel__title"><?php esc_html_e( 'Star mapping', 'jardin-toasts' ); ?></h2>
-						<p class="jt-panel__summary"><?php esc_html_e( 'Map Untappd’s 0–5 raw score into whole stars. Rules are tested in order; the first matching min/max band wins. The jt_rating_rules filter can still override in code.', 'jardin-toasts' ); ?></p>
+						<p class="jt-panel__summary"><?php esc_html_e( 'Map Untappd’s 0–5 raw score into whole stars. Rules are tested in order; the first matching min/max band wins. The jardin_toasts_rating_rules filter (jt_rating_rules is still fired for backward compatibility) can override in code.', 'jardin-toasts' ); ?></p>
 					</div>
 					<div class="jt-panel__body">
 						<table class="form-table" role="presentation">

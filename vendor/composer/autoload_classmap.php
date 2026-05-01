@@ -27,6 +27,7 @@ return array(
     'JT_Settings' => $baseDir . '/includes/class-settings.php',
     'JT_Storage_Migration' => $baseDir . '/includes/class-storage-migration.php',
     'JT_Taxonomies' => $baseDir . '/includes/class-taxonomies.php',
+    'Jardin_Toasts_Keys' => $baseDir . '/includes/functions.php',
     'Masterminds\\HTML5' => $vendorDir . '/masterminds/html5/src/HTML5.php',
     'Masterminds\\HTML5\\Elements' => $vendorDir . '/masterminds/html5/src/HTML5/Elements.php',
     'Masterminds\\HTML5\\Entities' => $vendorDir . '/masterminds/html5/src/HTML5/Entities.php',

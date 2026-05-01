@@ -34,7 +34,7 @@ class JT_Scraper_Config {
 			'venue'   => array( '.venue-name', '.top-location' ),
 			'photo'   => array( '.photo img', '.label img' ),
 		);
-		$filtered = apply_filters( 'jt_scraper_dom_selectors', $selectors );
+		$filtered = apply_filters( 'jardin_toasts_scraper_dom_selectors', apply_filters( 'jt_scraper_dom_selectors', $selectors ) );
 		return is_array( $filtered ) ? $filtered : $selectors;
 	}
 }

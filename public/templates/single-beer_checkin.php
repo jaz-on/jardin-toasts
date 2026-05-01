@@ -36,7 +36,7 @@ $mf_content = get_option( 'jt_microformats_enabled', true ) ? 'e-content' : '';
 				<div class="entry-content <?php echo esc_attr( $mf_content ); ?>">
 					<?php
 					$raw = get_post_field( 'post_content', get_the_ID() );
-					$raw = apply_filters( 'jt_checkin_content', $raw );
+					$raw = apply_filters( 'jardin_toasts_checkin_content', apply_filters( 'jt_checkin_content', $raw ) );
 					echo apply_filters( 'the_content', $raw ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					?>
 				</div>

@@ -56,7 +56,7 @@ function jt_the_rating_stars( $post_id = null, $echo = true ) {
 		$out .= $i <= $r ? '★' : '☆';
 	}
 	$out .= '</span>';
-	$out = apply_filters( 'jt_rating_display', $out, $post_id, $r );
+	$out = apply_filters( 'jardin_toasts_rating_display', apply_filters( 'jt_rating_display', $out, $post_id, $r ), $post_id, $r );
 	if ( $echo ) {
 		echo $out; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	} else {

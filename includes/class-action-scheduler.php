@@ -21,10 +21,10 @@ class JT_Action_Scheduler {
 	 */
 	public function register() {
 		add_filter( 'cron_schedules', array( $this, 'add_cron_schedules' ) );
-		add_action( 'jt_rss_sync', array( $this, 'run_rss_sync' ) );
-		add_action( 'jt_rss_queue_tick', array( $this, 'run_rss_queue_tick' ) );
-		add_action( 'jt_background_import_batch', array( $this, 'run_background_import_batch' ) );
-		add_action( 'jt_daily_log_cleanup', array( $this, 'run_log_cleanup' ) );
+		add_action( Jardin_Toasts_Keys::HOOK_RSS_SYNC, array( $this, 'run_rss_sync' ) );
+		add_action( Jardin_Toasts_Keys::HOOK_RSS_QUEUE_TICK, array( $this, 'run_rss_queue_tick' ) );
+		add_action( Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH, array( $this, 'run_background_import_batch' ) );
+		add_action( Jardin_Toasts_Keys::HOOK_DAILY_LOG_CLEANUP, array( $this, 'run_log_cleanup' ) );
 		add_action( 'init', array( $this, 'maybe_schedule_events' ), 30 );
 	}
 
@@ -81,11 +81,11 @@ class JT_Action_Scheduler {
 			return;
 		}
 
-		if ( ! wp_next_scheduled( 'jt_rss_sync' ) ) {
+		if ( ! wp_next_scheduled( Jardin_Toasts_Keys::HOOK_RSS_SYNC ) ) {
 			$this->reschedule_adaptive_wp_cron();
 		}
-		if ( ! wp_next_scheduled( 'jt_daily_log_cleanup' ) ) {
-			wp_schedule_event( time() + DAY_IN_SECONDS, 'daily', 'jt_daily_log_cleanup' );
+		if ( ! wp_next_scheduled( Jardin_Toasts_Keys::HOOK_DAILY_LOG_CLEANUP ) ) {
+			wp_schedule_event( time() + DAY_IN_SECONDS, 'daily', Jardin_Toasts_Keys::HOOK_DAILY_LOG_CLEANUP );
 		}
 	}
 
@@ -97,23 +97,22 @@ class JT_Action_Scheduler {
 	private function maybe_schedule_events_action_scheduler() {
 		$group = jt_action_scheduler_group();
 
-		// One-time migration off WP-Cron.
-		wp_clear_scheduled_hook( 'jt_rss_sync' );
-		wp_clear_scheduled_hook( 'jt_daily_log_cleanup' );
-		wp_clear_scheduled_hook( 'jt_rss_queue_tick' );
-		wp_clear_scheduled_hook( 'jt_background_import_batch' );
+		// One-time-style cleanup: drop WP-Cron rows for legacy `jt_*` names when AS owns scheduling.
+		foreach ( Jardin_Toasts_Keys::legacy_jt_cron_hooks() as $h ) {
+			wp_clear_scheduled_hook( $h );
+		}
 
 		jt_when_action_scheduler_store_ready(
 			function () use ( $group ) {
-				if ( ! as_next_scheduled_action( 'jt_rss_sync', array(), $group ) ) {
+				if ( ! as_next_scheduled_action( Jardin_Toasts_Keys::HOOK_RSS_SYNC, array(), $group ) ) {
 					$recurrence = self::get_adaptive_recurrence();
 					$interval   = self::recurrence_interval_seconds( $recurrence );
-					as_schedule_recurring_action( time() + MINUTE_IN_SECONDS, $interval, 'jt_rss_sync', array(), $group );
+					as_schedule_recurring_action( time() + MINUTE_IN_SECONDS, $interval, Jardin_Toasts_Keys::HOOK_RSS_SYNC, array(), $group );
 					JT_Logger::info( 'RSS sync scheduled via Action Scheduler, interval seconds: ' . (string) $interval );
 				}
 
-				if ( ! as_next_scheduled_action( 'jt_daily_log_cleanup', array(), $group ) ) {
-					as_schedule_recurring_action( time() + DAY_IN_SECONDS, DAY_IN_SECONDS, 'jt_daily_log_cleanup', array(), $group );
+				if ( ! as_next_scheduled_action( Jardin_Toasts_Keys::HOOK_DAILY_LOG_CLEANUP, array(), $group ) ) {
+					as_schedule_recurring_action( time() + DAY_IN_SECONDS, DAY_IN_SECONDS, Jardin_Toasts_Keys::HOOK_DAILY_LOG_CLEANUP, array(), $group );
 				}
 			}
 		);
@@ -149,9 +148,9 @@ class JT_Action_Scheduler {
 	 * @return void
 	 */
 	private function reschedule_adaptive_wp_cron() {
-		wp_clear_scheduled_hook( 'jt_rss_sync' );
+		wp_clear_scheduled_hook( Jardin_Toasts_Keys::HOOK_RSS_SYNC );
 		$recurrence = self::get_adaptive_recurrence();
-		wp_schedule_event( time() + MINUTE_IN_SECONDS, $recurrence, 'jt_rss_sync' );
+		wp_schedule_event( time() + MINUTE_IN_SECONDS, $recurrence, Jardin_Toasts_Keys::HOOK_RSS_SYNC );
 		JT_Logger::info( 'RSS sync scheduled with recurrence: ' . $recurrence );
 	}
 
@@ -166,8 +165,8 @@ class JT_Action_Scheduler {
 			$interval = self::recurrence_interval_seconds( self::get_adaptive_recurrence() );
 			jt_when_action_scheduler_store_ready(
 				function () use ( $group, $interval ) {
-					as_unschedule_all_actions( 'jt_rss_sync', array(), $group );
-					as_schedule_recurring_action( time() + MINUTE_IN_SECONDS, $interval, 'jt_rss_sync', array(), $group );
+					as_unschedule_all_actions( Jardin_Toasts_Keys::HOOK_RSS_SYNC, array(), $group );
+					as_schedule_recurring_action( time() + MINUTE_IN_SECONDS, $interval, Jardin_Toasts_Keys::HOOK_RSS_SYNC, array(), $group );
 					JT_Logger::info( 'RSS sync rescheduled via Action Scheduler, interval seconds: ' . (string) $interval );
 				}
 			);
@@ -241,7 +240,7 @@ class JT_Action_Scheduler {
 		if ( 0 === $days ) {
 			return;
 		}
-		$cutoff = time() - ( $days * DAY_IN_SECONDS );
+		$cutoff     = time() - ( $days * DAY_IN_SECONDS );
 		$toast_logs = glob( $dir . 'jardin-toasts-*.log' );
 		$legacy_logs = glob( $dir . 'jardin-beer-*.log' );
 		$files       = array_merge(

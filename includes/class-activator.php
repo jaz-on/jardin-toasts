@@ -24,6 +24,7 @@ class JT_Activator {
 		JT_Settings::ensure_defaults();
 		JT_DB_Install::maybe_add_indexes();
 		flush_rewrite_rules();
+		do_action( 'jardin_toasts_plugin_activated' );
 		do_action( 'jt_plugin_activated' );
 	}
 }

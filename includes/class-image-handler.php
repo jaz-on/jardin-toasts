@@ -23,7 +23,7 @@ class JT_Image_Handler {
 	 * @return int|WP_Error Attachment ID or error.
 	 *
 	 * When sideload fails and placeholders are enabled, uses the saved attachment ID, then the
-	 * `jt_placeholder_attachment_id` filter so extensions can return another attachment (e.g. from an API).
+	 * `jardin_toasts_placeholder_attachment_id` / `jt_placeholder_attachment_id` filters so extensions can return another attachment (e.g. from an API).
 	 */
 	public function import_for_post( $url, $post_id, $title = '' ) {
 		if ( ! get_option( 'jt_import_images', true ) ) {
@@ -51,7 +51,13 @@ class JT_Image_Handler {
 				return $att_id;
 			}
 			$placeholder = absint( JT_Settings::get( 'jt_placeholder_image_id' ) );
-			$placeholder = (int) apply_filters( 'jt_placeholder_attachment_id', $placeholder, $post_id, $url, (string) $title );
+			$placeholder = (int) apply_filters(
+				'jardin_toasts_placeholder_attachment_id',
+				(int) apply_filters( 'jt_placeholder_attachment_id', $placeholder, $post_id, $url, (string) $title ),
+				$post_id,
+				$url,
+				(string) $title
+			);
 			if ( $placeholder && wp_attachment_is_image( $placeholder ) ) {
 				set_post_thumbnail( $post_id, $placeholder );
 				JT_Logger::info( 'Image sideload failed; using placeholder attachment ' . (string) $placeholder );

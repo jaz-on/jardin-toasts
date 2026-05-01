@@ -117,6 +117,7 @@ class JT_Importer {
 			$postarr['ID'] = $existing;
 		}
 
+		do_action( 'jardin_toasts_before_checkin_import', $data );
 		do_action( 'jt_before_checkin_import', $data );
 
 		$post_id = wp_insert_post( wp_slash( $postarr ), true );
@@ -143,6 +144,7 @@ class JT_Importer {
 			}
 		}
 
+		do_action( 'jardin_toasts_after_checkin_imported', $post_id, $data );
 		do_action( 'jt_after_checkin_imported', $post_id, $data );
 
 		jt_invalidate_stats_cache();
