@@ -266,7 +266,7 @@ function jb_display_rating($post_id, $show_label = true, $show_raw = true) {
 
 ### WordPress
 - **Minimum**: 6.0
-- **Tested up to**: 6.7
+- **Tested up to**: 7.0
 - **Future**: Keep compatibility with latest
 
 ### PHP

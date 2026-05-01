@@ -4,8 +4,8 @@ Jardin · Untappd : check-ins bière (CPT), synchro et blocs. RSS + crawl HTML o
 
 ## Requirements
 
-- WordPress **6.0+**
-- PHP **8.2+**; extensions: curl or `allow_url_fopen`, dom, json, mbstring
+- WordPress **6.0+** (extension déclarée **testée jusqu’à 7.0** ; valider sur votre bêta)
+- PHP **8.2+** (valider localement sous **8.4**) ; extensions : curl ou `allow_url_fopen`, dom, json, mbstring
 - MySQL **5.7+** / MariaDB **10.3+**
 - Recommended: [Action Scheduler](https://actionscheduler.org/) for reliable scheduled sync; otherwise WP-Cron
 

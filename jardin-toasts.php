@@ -5,7 +5,8 @@
  * Description:       Jardin · Untappd : check-ins bière (CPT), synchro et blocs.
  * Version:           0.1.0
  * Requires at least: 6.0
- * Requires PHP:      8.1
+ * Tested up to:      7.0
+ * Requires PHP:      8.2
  * Author:            Jason Rouet
  * Author URI:        https://jasonrouet.com
  * License:           GPL-2.0-or-later
