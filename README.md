@@ -1,6 +1,6 @@
 # jardin-toasts
 
-WordPress plugin: sync **Untappd** check-ins (RSS + optional HTML crawl) into the **`beer_checkin`** CPT with taxonomies (styles, breweries, venues), media import, admin settings, JSON-LD / microformats options, and theme-overridable front templates.
+Jardin · Untappd : check-ins bière (CPT), synchro et blocs. RSS + crawl HTML optionnel vers **`beer_checkin`**, taxonomies (styles, brasseries, lieux), médias, réglages admin, JSON-LD / microformats, gabarits surchargeables par le thème.
 
 ## Requirements
 

@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Jardin Toasts
  * Plugin URI:        https://github.com/jaz-on/jardin-toasts
- * Description:       Syncs and displays your Untappd beer check-ins on WordPress with templates and media handling.
+ * Description:       Jardin · Untappd : check-ins bière (CPT), synchro et blocs.
  * Version:           0.1.0
  * Requires at least: 6.0
  * Requires PHP:      8.1
