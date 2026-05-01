@@ -28,13 +28,13 @@ Further detail: [CHANGELOG.md](CHANGELOG.md) and `/docs/` (architecture, schema,
 
 | Repository | Role |
 |------------|------|
-| [jardin-theme](https://github.com/jaz-on/jardin-theme) | FSE theme |
-| [jardin-projects](https://github.com/jaz-on/jardin-projects) | Projects CPT + GitHub changelog |
-| [jardin-events](https://github.com/jaz-on/jardin-events) | Events CPT + blocks |
+| [jardin-theme](https://github.com/jaz-on/jardin-theme) | FSE theme, templates, patterns |
+| [jardin-projects](https://github.com/jaz-on/jardin-projects) | `project` CPT, GitHub changelog sync, project blocks |
+| [jardin-events](https://github.com/jaz-on/jardin-events) | `event` CPT, archive, Query Loop helpers, event blocks |
 | [jardin-updates](https://github.com/jaz-on/jardin-updates) | `now` CPT, hub / permaliens, migrations |
-| [jardin-scrobbles](https://github.com/jaz-on/jardin-scrobbles) | Last.fm → listens |
-| **jardin-toasts** (this repo) | Untappd check-ins |
-| [jardin-bookmarks](https://github.com/jaz-on/jardin-bookmarks) | Feedbin → favorites / blogroll |
+| [jardin-scrobbles](https://github.com/jaz-on/jardin-scrobbles) | Last.fm → `listen` CPT, `/listens/`, player blocks |
+| **jardin-toasts** (this repo) | Untappd RSS + import → `beer_checkin` CPT |
+| [jardin-bookmarks](https://github.com/jaz-on/jardin-bookmarks) | Feedbin → `favorite` / `blogroll` CPTs, blogroll block |
 
 
 ## Development
