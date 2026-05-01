@@ -31,6 +31,7 @@ Further detail: [CHANGELOG.md](CHANGELOG.md) and `/docs/` (architecture, schema,
 | [jardin-theme](https://github.com/jaz-on/jardin-theme) | FSE theme |
 | [jardin-projects](https://github.com/jaz-on/jardin-projects) | Projects CPT + GitHub changelog |
 | [jardin-events](https://github.com/jaz-on/jardin-events) | Events CPT + blocks |
+| [jardin-updates](https://github.com/jaz-on/jardin-updates) | `now` CPT, hub / permaliens, migrations |
 | [jardin-scrobbles](https://github.com/jaz-on/jardin-scrobbles) | Last.fm → listens |
 | **jardin-toasts** (this repo) | Untappd check-ins |
 | [jardin-bookmarks](https://github.com/jaz-on/jardin-bookmarks) | Feedbin → favorites / blogroll |
