@@ -26,13 +26,13 @@ Further detail: [CHANGELOG.md](CHANGELOG.md) and `/docs/` (architecture, schema,
 
 ## Jardin stack
 
-
-| Repository                                                     | Role                           |
-| -------------------------------------------------------------- | ------------------------------ |
-| [jardin-theme](https://github.com/jaz-on/jardin-theme)         | FSE theme                      |
-| [jardin-events](https://github.com/jaz-on/jardin-events)       | Events CPT + blocks            |
-| [jardin-scrobbles](https://github.com/jaz-on/jardin-scrobbles) | Last.fm / listens              |
-| **jardin-toasts** (this repo)                                  | Untappd check-ins              |
+| Repository | Role |
+|------------|------|
+| [jardin-theme](https://github.com/jaz-on/jardin-theme) | FSE theme |
+| [jardin-projects](https://github.com/jaz-on/jardin-projects) | Projects CPT + GitHub changelog |
+| [jardin-events](https://github.com/jaz-on/jardin-events) | Events CPT + blocks |
+| [jardin-scrobbles](https://github.com/jaz-on/jardin-scrobbles) | Last.fm → listens |
+| **jardin-toasts** (this repo) | Untappd check-ins |
 | [jardin-bookmarks](https://github.com/jaz-on/jardin-bookmarks) | Feedbin → favorites / blogroll |
 
 
@@ -64,4 +64,4 @@ composer run hooks:install
 
 ## License
 
-GPL-2.0-or-later
+GPL-2.0-or-later — see [LICENSE](LICENSE). Sponsorship: [.github/FUNDING.yml](.github/FUNDING.yml).
