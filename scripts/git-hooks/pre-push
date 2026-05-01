@@ -47,4 +47,22 @@ if [[ -n "$BLOCKING_CHANGES" ]]; then
 	exit 1
 fi
 
+# `composer dump-autoload` refreshes the root package Git reference in installed.php even
+# when runtime deps are unchanged, leaving a pointless dirty tree after push. If that is
+# the only change under vendor/composer, drop it so the working tree matches HEAD again.
+COMPOSER_DIRTY="$(git status --porcelain -- vendor/composer 2>/dev/null || true)"
+if [[ -n "$COMPOSER_DIRTY" ]]; then
+	COMPOSER_DIRTY_LINES="$(printf '%s\n' "$COMPOSER_DIRTY" | sed '/^$/d' | wc -l | tr -d ' ')"
+	if [[ "$COMPOSER_DIRTY_LINES" == "1" ]]; then
+		ONLY_FILE="$(printf '%s\n' "$COMPOSER_DIRTY" | awk '{print $2}')"
+		if [[ "$ONLY_FILE" == "vendor/composer/installed.php" ]]; then
+			if git restore --source=HEAD --worktree vendor/composer/installed.php 2>/dev/null; then
+				echo "[pre-push] Restored vendor/composer/installed.php to HEAD (Composer ref noise only)."
+			elif git checkout HEAD -- vendor/composer/installed.php 2>/dev/null; then
+				echo "[pre-push] Restored vendor/composer/installed.php to HEAD (Composer ref noise only)."
+			fi
+		fi
+	fi
+fi
+
 echo "[pre-push] OK: runtime vendor is consistent."
