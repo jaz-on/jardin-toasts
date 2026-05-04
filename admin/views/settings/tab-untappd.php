@@ -36,17 +36,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 											<button type="button" class="button button-secondary" id="jt-use-rss-username"><?php esc_html_e( 'Use username from RSS feed', 'jardin-toasts' ); ?></button>
 										<?php endif; ?>
 									</p>
-									<p class="description"><?php esc_html_e( 'Profile slug only (e.g. jaz_on), not the full URL. Used for historical discovery and scraping; it should match the user segment in your RSS URL (untappd.com/rss/user/…).', 'jardin-toasts' ); ?></p>
+									<p class="description"><?php esc_html_e( 'Profile slug only (e.g. jaz_on), not the full URL. Should match the user segment in your RSS URL (untappd.com/rss/user/…). Optional reference for your records; full history is imported via CSV export.', 'jardin-toasts' ); ?></p>
 									<?php if ( '' !== $rss_username ) : ?>
 										<p class="description"><?php echo esc_html( sprintf( /* translators: %s: username */ __( 'Detected from your saved RSS URL: %s', 'jardin-toasts' ), $rss_username ) ); ?></p>
 									<?php endif; ?>
-								</td>
-							</tr>
-							<tr>
-								<th scope="row"><label for="jt_untappd_session_cookie"><?php esc_html_e( 'Session cookie (optional)', 'jardin-toasts' ); ?></label></th>
-								<td>
-									<textarea name="jt_untappd_session_cookie" id="jt_untappd_session_cookie" class="large-text code" rows="3" autocomplete="off" spellcheck="false" placeholder="<?php esc_attr_e( 'name=value; name2=value2 …', 'jardin-toasts' ); ?>"><?php echo esc_textarea( (string) JT_Settings::get( 'jt_untappd_session_cookie' ) ); ?></textarea>
-									<p class="description"><?php esc_html_e( 'While logged in on untappd.com, copy the full Cookie header value from DevTools → Network → select the HTML document request for your profile (untappd.com/user/…), not a static asset. Cloudflare’s cf_clearance is often bound to your IP: if WordPress runs on another host, the same string may be rejected — in that case run a test request from the server (SSH + curl) or accept that only the shallow public crawl + RSS applies. When this field is set, discovery uses the same “Show more” pagination as the site. Treat it like a password.', 'jardin-toasts' ); ?></p>
 								</td>
 							</tr>
 						</table>
@@ -55,17 +48,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				<div class="jt-panel jt-panel--actions">
 					<div class="jt-panel__header">
-						<h2 class="jt-panel__title"><?php esc_html_e( 'Test connections', 'jardin-toasts' ); ?></h2>
-						<p class="jt-panel__summary"><?php esc_html_e( 'Save your feed and username first, then run each test to confirm WordPress can reach Untappd over RSS and over the profile HTML (anonymous, or with your session cookie if you saved one).', 'jardin-toasts' ); ?></p>
+						<h2 class="jt-panel__title"><?php esc_html_e( 'Test connection', 'jardin-toasts' ); ?></h2>
+						<p class="jt-panel__summary"><?php esc_html_e( 'Save your feed URL first, then verify WordPress can read the RSS feed.', 'jardin-toasts' ); ?></p>
 					</div>
 					<div class="jt-panel__body jt-panel__body--inline">
 						<p class="jt-test-row">
 							<button type="button" class="button button-secondary" id="jt-test-rss"><?php esc_html_e( 'Test RSS feed', 'jardin-toasts' ); ?></button>
 							<span id="jt-test-rss-result" class="jt-test-result" aria-live="polite"></span>
-						</p>
-						<p class="jt-test-row">
-							<button type="button" class="button button-secondary" id="jt-test-profile"><?php esc_html_e( 'Test public profile', 'jardin-toasts' ); ?></button>
-							<span id="jt-test-profile-result" class="jt-test-result" aria-live="polite"></span>
 						</p>
 					</div>
 				</div>

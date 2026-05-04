@@ -52,74 +52,6 @@
 			} );
 	} );
 
-	$( document ).on( 'click', '#jt-discover', function () {
-		var $btn = $( this );
-		var username = $( '#jt_untappd_username' ).val();
-		var maxPages = $( '#jt-discover-max-pages' ).val() || 10;
-		$btn.prop( 'disabled', true );
-		setStatus( '#jt-import-status', jtAdmin.i18n.working );
-		$.post(
-			jtAdmin.ajaxUrl,
-			{
-				action: jtAdmin.ajaxCrawlDiscover,
-				nonce: jtAdmin.nonce,
-				username: username,
-				max_pages: maxPages,
-			}
-		)
-			.done( function ( res ) {
-				if ( res.success ) {
-					setStatus( '#jt-import-status', res.data.message );
-				} else {
-					setStatus( '#jt-import-status', res.data && res.data.message ? res.data.message : 'Error' );
-				}
-			} )
-			.fail( function ( xhr ) {
-				setStatus( '#jt-import-status', ajaxFailMessage( xhr, 'Request failed.' ) );
-			} )
-			.always( function () {
-				$btn.prop( 'disabled', false );
-			} );
-	} );
-
-	$( document ).on( 'click', '#jt-import-batch', function () {
-		var $btn = $( this );
-		$btn.prop( 'disabled', true );
-		setStatus( '#jt-import-status', jtAdmin.i18n.working );
-		$.post(
-			jtAdmin.ajaxUrl,
-			{
-				action: jtAdmin.ajaxCrawlBatch,
-				nonce: jtAdmin.nonce,
-			}
-		)
-			.done( function ( res ) {
-				if ( res.success ) {
-					var d = res.data;
-					setStatus(
-						'#jt-import-status',
-						'Imported ' +
-							d.imported +
-							'. Remaining: ' +
-							d.remaining +
-							'. Total: ' +
-							d.total_imported
-					);
-					if ( d.done ) {
-						setStatus( '#jt-import-status', 'Import complete.' );
-					}
-				} else {
-					setStatus( '#jt-import-status', res.data && res.data.message ? res.data.message : 'Error' );
-				}
-			} )
-			.fail( function ( xhr ) {
-				setStatus( '#jt-import-status', ajaxFailMessage( xhr, 'Request failed.' ) );
-			} )
-			.always( function () {
-				$btn.prop( 'disabled', false );
-			} );
-	} );
-
 	$( document ).on( 'click', '#jt-import-gdpr-csv', function () {
 		var $btn = $( this );
 		var input = document.getElementById( 'jt-gdpr-csv-file' );
@@ -218,7 +150,6 @@
 	}
 
 	bindConnectionTest( '#jt-test-rss', '#jt-test-rss-result', 'ajaxTestRss' );
-	bindConnectionTest( '#jt-test-profile', '#jt-test-profile-result', 'ajaxTestProfile' );
 
 	var $phToggle = $( '#jt_use_placeholder_image' );
 	var $phPicker = $( '#jt-placeholder-picker' );

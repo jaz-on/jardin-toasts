@@ -39,6 +39,7 @@ class JT_Plugin {
 	 * @return void
 	 */
 	public function init() {
+		jt_maybe_remove_scraper_artifacts();
 		add_action( 'init', array( 'JT_DB_Install', 'maybe_add_indexes' ), 1 );
 
 		$post_type = new JT_Post_Type();

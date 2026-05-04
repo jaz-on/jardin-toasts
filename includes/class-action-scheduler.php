@@ -23,7 +23,6 @@ class JT_Action_Scheduler {
 		add_filter( 'cron_schedules', array( $this, 'add_cron_schedules' ) );
 		add_action( Jardin_Toasts_Keys::HOOK_RSS_SYNC, array( $this, 'run_rss_sync' ) );
 		add_action( Jardin_Toasts_Keys::HOOK_RSS_QUEUE_TICK, array( $this, 'run_rss_queue_tick' ) );
-		add_action( Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH, array( $this, 'run_background_import_batch' ) );
 		add_action( Jardin_Toasts_Keys::HOOK_DAILY_LOG_CLEANUP, array( $this, 'run_log_cleanup' ) );
 		add_action( 'init', array( $this, 'maybe_schedule_events' ), 30 );
 	}
@@ -214,16 +213,6 @@ class JT_Action_Scheduler {
 		if ( is_wp_error( $result ) ) {
 			JT_Logger::error( 'RSS queue tick failed: ' . $result->get_error_message() );
 		}
-	}
-
-	/**
-	 * Background import batch.
-	 *
-	 * @return void
-	 */
-	public function run_background_import_batch() {
-		$crawler = new JT_Crawler();
-		$crawler->process_next_batch();
 	}
 
 	/**

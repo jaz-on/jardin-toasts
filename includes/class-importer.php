@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class JT_Importer {
 
 	/**
-	 * Import a single row from RSS discovery (scrapes check-in page).
+	 * Import a single row from the public RSS feed (no HTML fetch; fields come from the feed only).
 	 *
 	 * @param array<string,mixed> $row Row data.
 	 * @return int|WP_Error Post ID or error.
@@ -26,25 +26,15 @@ class JT_Importer {
 			return new WP_Error( 'no_url', __( 'Missing check-in URL.', 'jardin-toasts' ) );
 		}
 
-		$scraper = new JT_Scraper();
-		$scraped = $scraper->scrape_checkin_url( $url );
-		$merged  = $row;
-
-		if ( ! is_wp_error( $scraped ) ) {
-			$merged = array_merge( $row, $scraped );
-		} else {
-			JT_Logger::warning( 'Scrape failed for ' . $url . ': ' . $scraped->get_error_message() );
-		}
-
-		$merged['source'] = 'rss';
-		return $this->import_checkin_data( $merged, 'rss' );
+		$row['source'] = 'rss';
+		return $this->import_checkin_data( $row, 'rss' );
 	}
 
 	/**
-	 * Import using fully merged data (e.g. historical crawler).
+	 * Import using fully merged data (e.g. CSV archive export).
 	 *
 	 * @param array<string,mixed> $data Normalized data.
-	 * @param string                $source rss|crawler.
+	 * @param string                $source rss|gdpr_csv|archive_csv|….
 	 * @return int|WP_Error
 	 */
 	public function import_checkin_data( array $data, $source = 'rss' ) {

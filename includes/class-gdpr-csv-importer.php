@@ -1,6 +1,6 @@
 <?php
 /**
- * Import check-ins from Untappd GDPR / “export my data” CSV attachments.
+ * Import check-ins from Untappd data-export CSV (privacy / GDPR bundle, Insider archive, etc.).
  *
  * Column names vary slightly by export; we map common synonyms to the importer payload.
  *

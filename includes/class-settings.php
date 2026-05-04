@@ -31,9 +31,6 @@ class JT_Settings {
 		'jt_last_imported_guid',
 		'jt_last_rss_sync_at',
 		'jt_excluded_checkins',
-		'jt_import_checkpoint',
-		// jt_import_mode: legacy option, not exposed in UI; continuation uses WP-Cron or Action Scheduler.
-		'jt_import_mode',
 	);
 
 	/**
@@ -73,17 +70,11 @@ class JT_Settings {
 			'jt_last_checkin_date'      => '',
 			'jt_last_imported_guid'     => '',
 			'jt_untappd_username'       => jt_get_default_untappd_username(),
-			'jt_untappd_session_cookie' => '',
 			'jt_excluded_checkins'      => array(),
 			'jt_rating_rules'           => jt_get_default_rating_rules(),
 			'jt_rating_labels'          => jt_get_default_rating_labels(),
 			'jt_rating_rounding_enabled' => true,
-			'jt_import_checkpoint'      => array(),
-			'jt_import_batch_size'      => 25,
-			'jt_import_delay'           => 3,
-			'jt_import_mode'            => 'manual',
 			'jt_import_images'          => true,
-			'jt_scraping_delay'         => 3,
 			'jt_rss_max_per_run'        => 10,
 			'jt_schema_enabled'         => true,
 			'jt_microformats_enabled'   => true,
@@ -159,12 +150,8 @@ class JT_Settings {
 			case 'jt_notify_on_error':
 			case 'jt_use_placeholder_image':
 				return (bool) $value;
-			case 'jt_import_batch_size':
-			case 'jt_import_delay':
 			case 'jt_log_retention_days':
 				return absint( $value );
-			case 'jt_scraping_delay':
-				return max( 1, absint( $value ) );
 			case 'jt_rss_max_per_run':
 				return max( 1, min( 100, absint( $value ) ) );
 			case 'jt_excluded_checkins':
@@ -173,24 +160,8 @@ class JT_Settings {
 				return self::sanitize_rating_rules_value( $value );
 			case 'jt_rating_labels':
 				return self::sanitize_rating_labels_value( $value );
-			case 'jt_import_checkpoint':
-				return is_array( $value ) ? $value : array();
 			case 'jt_untappd_username':
 				return sanitize_user( (string) $value, true );
-			case 'jt_untappd_session_cookie':
-				$s = wp_unslash( (string) $value );
-				$s = str_replace( array( "\r", "\n", "\0" ), '', $s );
-				if ( preg_match( '/^cookie:\s*/i', $s ) ) {
-					$s = trim( (string) preg_replace( '/^cookie:\s*/i', '', $s ) );
-				}
-				$max = 12000;
-				if ( strlen( $s ) > $max ) {
-					$s = substr( $s, 0, $max );
-				}
-				return $s;
-			case 'jt_import_mode':
-				$v = sanitize_text_field( (string) $value );
-				return in_array( $v, array( 'manual', 'background' ), true ) ? $v : 'manual';
 			case 'jt_archive_layout':
 				$v = sanitize_text_field( (string) $value );
 				return in_array( $v, array( 'grid', 'table' ), true ) ? $v : 'grid';

@@ -20,14 +20,13 @@ $tabs     = array(
 );
 
 $tab_intros = array(
-	'untappd'  => __( 'Your RSS URL and profile username identify the same Untappd account. RSS discovers new check-ins; the public profile is used for historical backfill and for scraping full details.', 'jardin-toasts' ),
-	'sync'     => __( 'Background jobs pull recent check-ins from RSS and can drain the historical import queue. Use “Run sync now” for an immediate RSS run, discover / import batches for older check-ins, or import a GDPR data-export CSV for a full history.', 'jardin-toasts' ),
+	'untappd'  => __( 'Your RSS URL and username identify the same Untappd account. RSS brings in recent check-ins; a CSV data export (privacy request or Insider archive) is used for full history and complete fields.', 'jardin-toasts' ),
+	'sync'     => __( 'Scheduled sync reads the public RSS feed. For your complete journal, import the check-ins CSV from Untappd’s data export.', 'jardin-toasts' ),
 	'display'  => __( 'Control how archives look, what gets stored with each check-in, and how ratings map to stars on the front of your site.', 'jardin-toasts' ),
-	'advanced' => __( 'Fine-tune scraping pace, structured data, notifications, and troubleshooting logs.', 'jardin-toasts' ),
+	'advanced' => __( 'Fine-tune RSS import limits, structured data, notifications, and troubleshooting logs.', 'jardin-toasts' ),
 );
 
 $rss_username = jt_parse_username_from_rss_url( jt_get_rss_feed_url() );
-extract( jt_settings_importer_choice_lists(), EXTR_SKIP );
 ?>
 <div class="wrap jt-admin-wrap">
 	<div class="jt-settings-hero">

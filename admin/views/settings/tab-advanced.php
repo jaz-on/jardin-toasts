@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings tab: Advanced (scraping, SEO, logs).
+ * Settings tab: Advanced (RSS limits, SEO, logs).
  *
  * @package JardinToasts
  *
@@ -15,24 +15,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				<div class="jt-panel">
 					<div class="jt-panel__header">
-						<h2 class="jt-panel__title"><?php esc_html_e( 'Scraping & performance', 'jardin-toasts' ); ?></h2>
-						<p class="jt-panel__summary"><?php esc_html_e( 'These settings throttle how aggressively the plugin hits Untappd when it downloads check-in HTML (RSS sync, “Run sync now”, and historical import). They are separate from the Untappd account tab (feed URL and username) and from Import & sync → “Pause between requests”, which spaces discovery and import requests.', 'jardin-toasts' ); ?></p>
+						<h2 class="jt-panel__title"><?php esc_html_e( 'RSS sync limits', 'jardin-toasts' ); ?></h2>
+						<p class="jt-panel__summary"><?php esc_html_e( 'Caps how many new feed items each scheduled run turns into posts. Extra items stay in a queue and are processed by follow-up cron events.', 'jardin-toasts' ); ?></p>
 					</div>
 					<div class="jt-panel__body">
 						<table class="form-table" role="presentation">
 							<tr>
-								<th scope="row"><label for="jt_scraping_delay"><?php esc_html_e( 'Scraping delay', 'jardin-toasts' ); ?></label></th>
-								<td>
-									<input name="jt_scraping_delay" id="jt_scraping_delay" type="number" min="1" class="small-text" value="<?php echo esc_attr( (string) (int) JT_Settings::get( 'jt_scraping_delay' ) ); ?>" />
-									<span class="description"><?php esc_html_e( 'seconds', 'jardin-toasts' ); ?></span>
-									<p class="description"><?php esc_html_e( 'Minimum 1 second (values below 1 are saved as 1). Higher values are gentler; lower values are faster but easier to rate-limit.', 'jardin-toasts' ); ?></p>
-								</td>
-							</tr>
-							<tr>
 								<th scope="row"><label for="jt_rss_max_per_run"><?php esc_html_e( 'RSS imports per scheduled sync', 'jardin-toasts' ); ?></label></th>
 								<td>
 									<input name="jt_rss_max_per_run" id="jt_rss_max_per_run" type="number" min="1" max="100" class="small-text" value="<?php echo esc_attr( (string) (int) JT_Settings::get( 'jt_rss_max_per_run' ) ); ?>" />
-									<p class="description"><?php esc_html_e( 'Minimum 1 per run (values below 1 are saved as 1). Each automatic sync scrapes at most this many new check-ins; the rest stay in a queue and are processed by follow-up events. “Run sync now” uses a higher limit.', 'jardin-toasts' ); ?></p>
+									<p class="description"><?php esc_html_e( 'Minimum 1 per run (values below 1 are saved as 1). “Run sync now” uses a higher limit.', 'jardin-toasts' ); ?></p>
 								</td>
 							</tr>
 						</table>
@@ -42,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<div class="jt-panel">
 					<div class="jt-panel__header">
 						<h2 class="jt-panel__title"><?php esc_html_e( 'Sync health', 'jardin-toasts' ); ?></h2>
-						<p class="jt-panel__summary"><?php esc_html_e( 'Quick signals when diagnosing RSS backlog or failed scrapes.', 'jardin-toasts' ); ?></p>
+						<p class="jt-panel__summary"><?php esc_html_e( 'Quick signals when diagnosing RSS backlog or incomplete drafts (often RSS items without a rating).', 'jardin-toasts' ); ?></p>
 					</div>
 					<div class="jt-panel__body">
 						<ul class="jt-sync-health-list">
@@ -53,10 +45,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<li>
 								<strong><?php esc_html_e( 'Draft check-ins needing data', 'jardin-toasts' ); ?>:</strong>
 								<?php echo esc_html( number_format_i18n( jt_count_draft_incomplete_checkins() ) ); ?>
-							</li>
-							<li>
-								<strong><?php esc_html_e( 'Scraper markup version', 'jardin-toasts' ); ?>:</strong>
-								<?php echo esc_html( (string) (int) JT_Scraper_Config::MARKUP_VERSION ); ?>
 							</li>
 						</ul>
 						<p class="description"><?php esc_html_e( 'Recent log lines appear below under “Log file (today)”. Enable debug logging for more detail.', 'jardin-toasts' ); ?></p>
@@ -98,7 +86,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<div class="jt-panel__body">
 						<p class="jt-panel__notice-text">
 							<span class="dashicons dashicons-info" aria-hidden="true"></span>
-							<?php esc_html_e( 'Jardin Toasts reads public Untappd RSS and HTML only. Untappd may change pages at any time. You are responsible for complying with Untappd’s terms and for content you republish. See docs/legal/scraping-notice.md in the plugin.', 'jardin-toasts' ); ?>
+							<?php esc_html_e( 'Jardin Toasts reads your public Untappd RSS feed and imports check-in CSVs you provide from Untappd’s data export. You are responsible for complying with Untappd’s terms and for content you republish.', 'jardin-toasts' ); ?>
 						</p>
 					</div>
 				</div>

@@ -51,6 +51,7 @@ $defaults = array(
 	'jb_storage_migrated_v1',
 	'jb_jardin_toasts_product_rename_v1',
 	'jardin_toasts_cron_hooks_migrated_v1',
+	'jardin_toasts_no_scraper_v1',
 );
 
 foreach ( $defaults as $key ) {

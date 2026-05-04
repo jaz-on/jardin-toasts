@@ -113,7 +113,7 @@ function jt_get_rss_feed_url() {
 }
 
 /**
- * Default Untappd profile username (historical import / examples).
+ * Default Untappd profile username (examples / convenience field).
  *
  * @return string
  */
@@ -135,258 +135,7 @@ function jt_get_untappd_username() {
 }
 
 /**
- * Optional Untappd browser session cookie string for authenticated HTML scraping.
- *
- * Paste the raw `Cookie` header value from DevTools (Application → Cookies, or Network
- * request headers) while logged in on untappd.com. Do not commit this value.
- *
- * @return string
- */
-function jt_get_untappd_session_cookie() {
-	$raw = class_exists( 'JT_Settings' ) ? JT_Settings::get( 'jt_untappd_session_cookie' ) : (string) get_option( 'jt_untappd_session_cookie', '' );
-	if ( ! is_string( $raw ) ) {
-		return '';
-	}
-	$raw = trim( $raw );
-	if ( '' === $raw ) {
-		return '';
-	}
-	if ( preg_match( '/^cookie:\s*/i', $raw ) ) {
-		$raw = trim( (string) preg_replace( '/^cookie:\s*/i', '', $raw ) );
-	}
-	return $raw;
-}
-
-/**
- * HTTP headers for Untappd HTML requests (profile, more_feed, check-in pages).
- *
- * @param string $referer_url Full Referer URL, or empty to omit.
- * @return array<string, string>
- */
-function jt_untappd_http_headers( $referer_url = '' ) {
-	$headers = array(
-		'Accept'          => 'text/html',
-		'Accept-Language' => 'en-US,en;q=0.9',
-	);
-	if ( is_string( $referer_url ) && '' !== $referer_url ) {
-		$headers['Referer'] = $referer_url;
-	}
-	$cookie = jt_get_untappd_session_cookie();
-	if ( '' !== $cookie ) {
-		$headers['Cookie'] = $cookie;
-	}
-	return (array) apply_filters(
-		'jardin_toasts_untappd_http_headers',
-		apply_filters( 'jt_untappd_http_headers', $headers, $referer_url ),
-		$referer_url
-	);
-}
-
-/**
- * User-Agent for Untappd when a session cookie is used (plugin UA is often blocked).
- *
- * @return string
- */
-function jt_untappd_outbound_user_agent() {
-	$default = jt_http_user_agent_string();
-	if ( '' === jt_get_untappd_session_cookie() ) {
-		return $default;
-	}
-	$browser = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0';
-	return (string) apply_filters(
-		'jardin_toasts_untappd_session_user_agent',
-		apply_filters( 'jt_untappd_session_user_agent', $browser, $default ),
-		$default
-	);
-}
-
-/**
- * Whether HTML looks like a Cloudflare challenge or block page.
- *
- * @param string $html Response body.
- * @return bool
- */
-function jt_untappd_html_looks_like_cloudflare_challenge( $html ) {
-	if ( ! is_string( $html ) || '' === $html ) {
-		return false;
-	}
-	$h = strtolower( $html );
-	return str_contains( $h, 'cf-browser-verification' )
-		|| str_contains( $h, 'cf-challenge' )
-		|| str_contains( $h, 'just a moment' )
-		|| str_contains( $h, 'attention required' )
-		|| str_contains( $h, 'enable javascript and cookies' );
-}
-
-/**
- * GET Untappd with session cookie, without following redirects (more_feed returns 303 to home when rejected).
- *
- * @param string $url     Full URL.
- * @param string $referer Referer header (profile URL).
- * @return string|WP_Error Body on 200, error otherwise.
- */
-function jt_untappd_remote_get_with_session( $url, $referer ) {
-	$response = wp_remote_get(
-		$url,
-		array(
-			'timeout'     => 25,
-			'redirection' => 0,
-			'headers'     => jt_untappd_http_headers( $referer ),
-			'user-agent'  => jt_untappd_outbound_user_agent(),
-		)
-	);
-	if ( is_wp_error( $response ) ) {
-		return $response;
-	}
-	$code = wp_remote_retrieve_response_code( $response );
-	if ( $code >= 300 && $code < 400 ) {
-		$loc = wp_remote_retrieve_header( $response, 'location' );
-		$loc = is_string( $loc ) ? $loc : '';
-		return new WP_Error(
-			'untappd_session_redirect',
-			sprintf(
-				/* translators: 1: HTTP status code, 2: Location header or "none" */
-				__( 'Untappd returned HTTP %1$d (redirect) instead of the activity feed — the session cookie is not accepted for this request. Location: %2$s. Common causes: cookie copied from another machine, expired login, or Cloudflare token (cf_clearance) tied to a different IP than your WordPress server.', 'jardin-toasts' ),
-				(int) $code,
-				'' !== $loc ? $loc : __( '(none)', 'jardin-toasts' )
-			)
-		);
-	}
-	if ( 200 !== (int) $code ) {
-		return new WP_Error(
-			'untappd_session_http',
-			sprintf(
-				/* translators: %d: HTTP status */
-				__( 'Untappd returned HTTP %d for the authenticated request.', 'jardin-toasts' ),
-				(int) $code
-			)
-		);
-	}
-	$body = wp_remote_retrieve_body( $response );
-	if ( ! is_string( $body ) ) {
-		return new WP_Error( 'untappd_session_body', __( 'Empty response body from Untappd.', 'jardin-toasts' ) );
-	}
-	if ( jt_untappd_html_looks_like_cloudflare_challenge( $body ) ) {
-		return new WP_Error(
-			'untappd_session_cf',
-			__( 'Untappd returned a Cloudflare challenge page instead of your profile. Your host’s outbound IP must pass Cloudflare the same way your browser does; a cookie copied from your laptop often fails on a remote server.', 'jardin-toasts' )
-		);
-	}
-	return $body;
-}
-
-/**
- * Queue a short notice appended to the next “Discover check-ins” AJAX success message.
- *
- * @param string $message User-facing text.
- * @return void
- */
-function jt_set_discover_session_notice( $message ) {
-	$s = is_string( $message ) ? trim( $message ) : '';
-	if ( '' === $s ) {
-		return;
-	}
-	$prev = get_transient( 'jt_discover_session_notice' );
-	if ( is_string( $prev ) && '' !== $prev ) {
-		$s = trim( $prev . ' ' . $s );
-	}
-	set_transient( 'jt_discover_session_notice', $s, 2 * MINUTE_IN_SECONDS );
-}
-
-/**
- * Consume a pending discover notice (single use).
- *
- * @return string
- */
-function jt_take_discover_session_notice() {
-	$v = get_transient( 'jt_discover_session_notice' );
-	delete_transient( 'jt_discover_session_notice' );
-	return is_string( $v ) ? $v : '';
-}
-
-/**
- * Normalized batch size / crawl delay choices for the settings UI.
- *
- * @return array{batch_current:int,delay_current:int,batch_choices:array<int,string>,delay_choices:array<int,string>}
- */
-function jt_settings_importer_choice_lists() {
-	$batch_current = (int) JT_Settings::get( 'jt_import_batch_size' );
-	$delay_current = (int) JT_Settings::get( 'jt_import_delay' );
-	$batch_choices = array(
-		10  => __( '10 check-ins — small steps', 'jardin-toasts' ),
-		15  => __( '15 check-ins — light', 'jardin-toasts' ),
-		25  => __( '25 check-ins — balanced (recommended)', 'jardin-toasts' ),
-		40  => __( '40 check-ins — fewer clicks', 'jardin-toasts' ),
-		50  => __( '50 check-ins — large (may time out)', 'jardin-toasts' ),
-	);
-	$delay_choices = array(
-		0 => __( 'No pause (fast hosts only)', 'jardin-toasts' ),
-		1 => __( '1 second between requests', 'jardin-toasts' ),
-		2 => __( '2 seconds — gentle', 'jardin-toasts' ),
-		3 => __( '3 seconds — polite (default)', 'jardin-toasts' ),
-		5 => __( '5 seconds — very safe', 'jardin-toasts' ),
-		8 => __( '8 seconds — slowest', 'jardin-toasts' ),
-	);
-	if ( ! array_key_exists( $batch_current, $batch_choices ) ) {
-		$batch_choices[ $batch_current ] = sprintf(
-			/* translators: %d: number of check-ins */
-			__( '%d check-ins (current)', 'jardin-toasts' ),
-			$batch_current
-		);
-		ksort( $batch_choices, SORT_NUMERIC );
-	}
-	if ( ! array_key_exists( $delay_current, $delay_choices ) ) {
-		$delay_choices[ $delay_current ] = sprintf(
-			/* translators: %d: seconds */
-			__( '%d seconds (current)', 'jardin-toasts' ),
-			$delay_current
-		);
-		ksort( $delay_choices, SORT_NUMERIC );
-	}
-	return compact( 'batch_current', 'delay_current', 'batch_choices', 'delay_choices' );
-}
-
-/**
- * Check-in IDs from the configured Untappd RSS feed (for discovery merge).
- *
- * Untappd’s public profile HTML only exposes a few recent check-ins; the RSS feed
- * lists more items (~25) without signing in.
- *
- * @return list<string>
- */
-function jt_discovery_feed_checkin_ids() {
-	$url = jt_get_rss_feed_url();
-	if ( ! is_string( $url ) || '' === trim( $url ) ) {
-		return array();
-	}
-	if ( ! function_exists( 'fetch_feed' ) ) {
-		require_once ABSPATH . WPINC . '/feed.php';
-	}
-	$feed = fetch_feed( $url );
-	if ( is_wp_error( $feed ) ) {
-		JT_Logger::warning( 'Discovery: RSS feed not readable — ' . $feed->get_error_message() );
-		return array();
-	}
-	$items = $feed->get_items( 0, 50 );
-	if ( empty( $items ) ) {
-		return array();
-	}
-	$out = array();
-	foreach ( $items as $item ) {
-		$link = $item->get_link();
-		if ( ! is_string( $link ) || '' === $link ) {
-			continue;
-		}
-		$cid = jt_parse_checkin_id_from_url( $link );
-		if ( $cid ) {
-			$out[ (string) $cid ] = true;
-		}
-	}
-	return array_keys( $out );
-}
-
-/**
- * User-Agent for outbound HTTP (scrape, crawl).
+ * User-Agent for outbound HTTP (optional media and integrations).
  *
  * Same filter order as other doubles (`jt_*` then `jardin_toasts_*`).
  *
@@ -590,7 +339,7 @@ function jt_get_post_ids_by_checkin_ids( array $checkin_ids ) {
 }
 
 /**
- * Max RSS import attempts per cron run (scrapes + posts). Manual sync uses a higher cap via filter.
+ * Max RSS import attempts per cron run. Manual sync uses a higher cap via filter.
  *
  * @param bool $manual True when triggered from admin AJAX.
  * @return int
@@ -603,18 +352,6 @@ function jt_get_rss_sync_max_per_run( $manual = false ) {
 	$n = class_exists( 'JT_Settings' ) ? (int) JT_Settings::get( 'jt_rss_max_per_run' ) : absint( get_option( 'jt_rss_max_per_run', 10 ) );
 	$n = max( 1, min( 100, $n ) );
 	return (int) apply_filters( 'jardin_toasts_rss_max_per_run', apply_filters( 'jt_rss_max_per_run', $n ) );
-}
-
-/**
- * Pause (seconds) between Untappd HTTP requests during HTML scraping (RSS sync paths and check-in scrapes).
- * Minimum 1. Distinct from Historical import → “Pause between requests”, which only applies to admin-driven batches.
- *
- * @return int
- */
-function jt_get_scraping_delay_seconds() {
-	$d = class_exists( 'JT_Settings' ) ? (int) JT_Settings::get( 'jt_scraping_delay' ) : absint( get_option( 'jt_scraping_delay', 3 ) );
-	$d = max( 1, $d );
-	return (int) apply_filters( 'jardin_toasts_scraping_delay_seconds', apply_filters( 'jt_scraping_delay_seconds', $d ) );
 }
 
 /**
@@ -680,7 +417,11 @@ function jt_maybe_schedule_rss_queue_tick() {
 	if ( empty( $q ) ) {
 		return;
 	}
-	$delay = max( 60, jt_get_scraping_delay_seconds() );
+	$delay = (int) apply_filters(
+		'jardin_toasts_rss_queue_tick_delay_seconds',
+		apply_filters( 'jt_rss_queue_tick_delay_seconds', 60 )
+	);
+	$delay = max( 30, $delay );
 	$group = jt_action_scheduler_group();
 
 	if ( jt_using_action_scheduler() ) {
@@ -699,49 +440,6 @@ function jt_maybe_schedule_rss_queue_tick() {
 		return;
 	}
 	wp_schedule_single_event( time() + $delay, Jardin_Toasts_Keys::HOOK_RSS_QUEUE_TICK );
-}
-
-/**
- * (Re)schedule a single background historical-import batch at a concrete Unix time.
- *
- * @param int $run_at Unix timestamp when {@see Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH} should run.
- * @return void
- */
-function jt_schedule_background_import_batch_at( $run_at ) {
-	$run_at = absint( $run_at );
-	$group  = jt_action_scheduler_group();
-
-	if ( jt_using_action_scheduler() ) {
-		jt_when_action_scheduler_store_ready(
-			static function () use ( $run_at, $group ) {
-				if ( function_exists( 'as_unschedule_all_actions' ) ) {
-					as_unschedule_all_actions( Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH, array(), $group );
-				}
-				as_schedule_single_action( $run_at, Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH, array(), $group );
-			}
-		);
-		return;
-	}
-
-	wp_clear_scheduled_hook( Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH );
-	wp_schedule_single_event( $run_at, Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH );
-}
-
-/**
- * Queue a background import batch if the historical import checkpoint still has check-ins.
- *
- * @param int|null $delay_seconds Seconds from now until the run; null uses the default polite spacing between batches.
- * @return void
- */
-function jt_maybe_schedule_background_import_batch( $delay_seconds = null ) {
-	$cp = get_option( 'jt_import_checkpoint', array() );
-	if ( ! is_array( $cp ) || empty( $cp['queue'] ) || ! is_array( $cp['queue'] ) ) {
-		return;
-	}
-	$offset = null === $delay_seconds
-		? max( 60, absint( get_option( 'jt_import_delay', 3 ) ) * 10 )
-		: max( 5, absint( $delay_seconds ) );
-	jt_schedule_background_import_batch_at( time() + $offset );
 }
 
 /**
@@ -814,7 +512,7 @@ function jt_invalidate_stats_cache() {
 }
 
 /**
- * Approximate count of draft check-ins missing scraped data (cached briefly).
+ * Approximate count of draft check-ins missing required import fields (cached briefly).
  *
  * @return int
  */
@@ -846,45 +544,6 @@ function jt_count_draft_incomplete_checkins() {
 		},
 		15 * MINUTE_IN_SECONDS
 	);
-}
-
-/**
- * Re-fetch Untappd HTML for an existing check-in post and update meta/content.
- *
- * @param int $post_id Post ID.
- * @return int|WP_Error Post ID on success.
- */
-function jt_rescrape_checkin_post( $post_id ) {
-	$post_id = absint( $post_id );
-	if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
-		return new WP_Error( 'forbidden', __( 'You cannot edit this check-in.', 'jardin-toasts' ) );
-	}
-	if ( get_post_type( $post_id ) !== JT_Post_Type::POST_TYPE ) {
-		return new WP_Error( 'wrong_type', __( 'Not a beer check-in post.', 'jardin-toasts' ) );
-	}
-	$url = get_post_meta( $post_id, '_jt_checkin_url', true );
-	if ( ! is_string( $url ) || '' === $url || false === strpos( $url, 'untappd.com' ) ) {
-		return new WP_Error( 'no_url', __( 'No valid Untappd check-in URL on this post.', 'jardin-toasts' ) );
-	}
-	$cid = get_post_meta( $post_id, '_jt_checkin_id', true );
-	$data = array(
-		'checkin_id'   => is_string( $cid ) && '' !== $cid ? $cid : (string) jt_parse_checkin_id_from_url( $url ),
-		'checkin_url'  => esc_url_raw( $url ),
-		'checkin_date' => (string) get_post_meta( $post_id, '_jt_checkin_date', true ),
-	);
-	if ( '' === $data['checkin_id'] ) {
-		return new WP_Error( 'no_id', __( 'Missing check-in ID.', 'jardin-toasts' ) );
-	}
-	$scraper = new JT_Scraper();
-	$scraped = $scraper->scrape_checkin_url( $url );
-	if ( ! is_wp_error( $scraped ) ) {
-		$data = array_merge( $data, $scraped );
-	} else {
-		JT_Logger::warning( 'Re-scrape failed for post ' . $post_id . ': ' . $scraped->get_error_message() );
-		return $scraped;
-	}
-	$importer = new JT_Importer();
-	return $importer->import_checkin_data( $data, 'rss' );
 }
 
 /**
@@ -952,6 +611,34 @@ function jt_get_archive_layout() {
 }
 
 /**
+ * One-time cleanup after HTML scraping / profile crawl removal (queue + scheduled batches).
+ *
+ * @return void
+ */
+function jt_maybe_remove_scraper_artifacts() {
+	if ( get_option( 'jardin_toasts_no_scraper_v1', '' ) === '1' ) {
+		return;
+	}
+
+	delete_option( 'jt_import_checkpoint' );
+	wp_clear_scheduled_hook( Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH );
+
+	if ( function_exists( 'as_unschedule_all_actions' ) && function_exists( 'jt_when_action_scheduler_store_ready' ) ) {
+		jt_when_action_scheduler_store_ready(
+			static function () {
+				$hook = Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH;
+				$groups = array( jt_action_scheduler_group(), 'beer-journal', 'jardin-beer' );
+				foreach ( $groups as $group ) {
+					as_unschedule_all_actions( $hook, array(), $group );
+				}
+			}
+		);
+	}
+
+	update_option( 'jardin_toasts_no_scraper_v1', '1', false );
+}
+
+/**
  * Canonical public identifiers (cron, AJAX, nonces) and legacy `jt_*` cron cleanup.
  */
 final class Jardin_Toasts_Keys {
@@ -966,13 +653,8 @@ final class Jardin_Toasts_Keys {
 	public const HOOK_DAILY_LOG_CLEANUP = 'jardin_toasts_daily_log_cleanup';
 
 	public const AJAX_SYNC_NOW = 'jardin_toasts_sync_now';
-	public const AJAX_CRAWL_DISCOVER = 'jardin_toasts_crawl_discover';
-	public const AJAX_CRAWL_BATCH = 'jardin_toasts_crawl_batch';
 	public const AJAX_TEST_RSS = 'jardin_toasts_test_rss';
-	public const AJAX_TEST_PROFILE = 'jardin_toasts_test_profile';
 	public const AJAX_IMPORT_GDPR_CSV = 'jardin_toasts_import_gdpr_csv';
-
-	public const BULK_RESCRAPE = 'jardin_toasts_bulk_rescrape';
 
 	/**
 	 * @return list<string>

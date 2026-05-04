@@ -255,12 +255,11 @@ function jb_display_rating($post_id, $show_label = true, $show_raw = true) {
 ## Dependencies
 
 ### Composer
-- **Symfony DomCrawler**: HTML parsing
-- **Symfony CSS Selector**: CSS selector support (required by DomCrawler)
+- **Production**: PHP only (no Symfony / HTML crawler — check-ins come from RSS + user-provided CSV export).
 
 ### WordPress
 - **SimplePie**: RSS parsing (built-in)
-- **WP_HTTP** (`wp_remote_get`, etc.): All outbound HTTP for scraping and crawlers
+- **WP_HTTP** (`wp_remote_get`, etc.): Images and integrations when needed — not used to scrape Untappd check-in HTML.
 
 ## Version Compatibility
 

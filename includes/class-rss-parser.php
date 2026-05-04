@@ -15,6 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class JT_RSS_Parser {
 
 	/**
+	 * Bumps when RSS row shape or import behaviour changes (log diagnostics only).
+	 */
+	private const RSS_IMPORT_FORMAT_VERSION = 1;
+
+	/**
 	 * Fetch feed and import new check-ins (and drain persisted queue first).
 	 *
 	 * @param JT_Importer          $importer Importer instance.
@@ -130,10 +135,10 @@ class JT_RSS_Parser {
 		$depth_after = count( jt_get_rss_sync_queue() );
 		JT_Logger::info(
 			sprintf(
-				'RSS sync: imported %1$d this run; queue depth %2$d (markup v%3$d).',
+				'RSS sync: imported %1$d this run; queue depth %2$d (rss row format v%3$d).',
 				$imported,
 				$depth_after,
-				JT_Scraper_Config::MARKUP_VERSION
+				self::RSS_IMPORT_FORMAT_VERSION
 			)
 		);
 
