@@ -58,7 +58,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<h2 class="jt-panel__title"><?php esc_html_e( 'Test connections', 'jardin-toasts' ); ?></h2>
 						<p class="jt-panel__summary"><?php esc_html_e( 'Save your feed and username first, then run each test to confirm WordPress can reach Untappd over RSS and over the profile HTML (anonymous, or with your session cookie if you saved one).', 'jardin-toasts' ); ?></p>
 					</div>
-					<div class="jt-panel__body jt-panel__body--test-inline">
+					<div class="jt-panel__body jt-panel__body--inline">
 						<p class="jt-test-row">
 							<button type="button" class="button button-secondary" id="jt-test-rss"><?php esc_html_e( 'Test RSS feed', 'jardin-toasts' ); ?></button>
 							<span id="jt-test-rss-result" class="jt-test-result" aria-live="polite"></span>
