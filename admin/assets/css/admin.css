@@ -199,6 +199,18 @@
 	min-height: 1.25em;
 }
 
+/* Untappd “Test connections”: block stack so shell flex utilities cannot lay rows side-by-side. */
+.jt-panel__body--test-stack {
+	display: block;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+}
+
+.jt-panel__body--test-stack > .jt-test-row + .jt-test-row {
+	margin-top: 0.75rem;
+}
+
+/* Legacy class kept if an older template still outputs it. */
 .jt-panel__body--test-row {
 	display: flex;
 	flex-direction: column;
@@ -206,7 +218,6 @@
 	gap: 0.75rem;
 }
 
-/* Beat shared shell `.jt-panel__body--inline` (row flex) when both classes are used. */
 .jt-panel__body--inline.jt-panel__body--test-row {
 	flex-direction: column;
 	align-items: flex-start;
@@ -218,6 +229,21 @@
 	flex-wrap: wrap;
 	align-items: center;
 	gap: 0.5rem 0.75rem;
+}
+
+/* Neutral secondary buttons (admin colour scheme can paint all .button with accent). */
+.jt-admin-wrap .jt-panel__body--test-stack .button.button-secondary {
+	color: #2c3338;
+	border-color: #dcdcde;
+	background: #f6f7f7;
+	box-shadow: 0 1px 0 #f6f7f7;
+}
+
+.jt-admin-wrap .jt-panel__body--test-stack .button.button-secondary:hover,
+.jt-admin-wrap .jt-panel__body--test-stack .button.button-secondary:focus {
+	color: #0a4b78;
+	border-color: #0a4b78;
+	background: #f0f0f1;
 }
 
 .jt-test-result.jt-test-ok {
