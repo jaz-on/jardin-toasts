@@ -448,6 +448,49 @@ function jt_maybe_schedule_rss_queue_tick() {
 }
 
 /**
+ * (Re)schedule a single background historical-import batch at a concrete Unix time.
+ *
+ * @param int $run_at Unix timestamp when {@see Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH} should run.
+ * @return void
+ */
+function jt_schedule_background_import_batch_at( $run_at ) {
+	$run_at = absint( $run_at );
+	$group  = jt_action_scheduler_group();
+
+	if ( jt_using_action_scheduler() ) {
+		jt_when_action_scheduler_store_ready(
+			static function () use ( $run_at, $group ) {
+				if ( function_exists( 'as_unschedule_all_actions' ) ) {
+					as_unschedule_all_actions( Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH, array(), $group );
+				}
+				as_schedule_single_action( $run_at, Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH, array(), $group );
+			}
+		);
+		return;
+	}
+
+	wp_clear_scheduled_hook( Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH );
+	wp_schedule_single_event( $run_at, Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH );
+}
+
+/**
+ * Queue a background import batch if the historical import checkpoint still has check-ins.
+ *
+ * @param int|null $delay_seconds Seconds from now until the run; null uses the default polite spacing between batches.
+ * @return void
+ */
+function jt_maybe_schedule_background_import_batch( $delay_seconds = null ) {
+	$cp = get_option( 'jt_import_checkpoint', array() );
+	if ( ! is_array( $cp ) || empty( $cp['queue'] ) || ! is_array( $cp['queue'] ) ) {
+		return;
+	}
+	$offset = null === $delay_seconds
+		? max( 60, absint( get_option( 'jt_import_delay', 3 ) ) * 10 )
+		: max( 5, absint( $delay_seconds ) );
+	jt_schedule_background_import_batch_at( time() + $offset );
+}
+
+/**
  * Run a callback once Action Scheduler has initialized its data store (AS 3.1.6+).
  * Calling as_* APIs earlier triggers _doing_it_wrong notices.
  *
@@ -671,6 +714,8 @@ final class Jardin_Toasts_Keys {
 	public const AJAX_SYNC_NOW = 'jardin_toasts_sync_now';
 	public const AJAX_CRAWL_DISCOVER = 'jardin_toasts_crawl_discover';
 	public const AJAX_CRAWL_BATCH = 'jardin_toasts_crawl_batch';
+	public const AJAX_TEST_RSS = 'jardin_toasts_test_rss';
+	public const AJAX_TEST_PROFILE = 'jardin_toasts_test_profile';
 
 	public const BULK_RESCRAPE = 'jardin_toasts_bulk_rescrape';
 

@@ -99,6 +99,56 @@
 			} );
 	} );
 
+	function setTestResult( $out, msg, ok ) {
+		$out.text( msg );
+		$out.removeClass( 'jt-test-ok jt-test-fail' );
+		if ( ok === true ) {
+			$out.addClass( 'jt-test-ok' );
+		} else if ( ok === false ) {
+			$out.addClass( 'jt-test-fail' );
+		}
+	}
+
+	function bindConnectionTest( btnSel, outSel, actionKey ) {
+		$( document ).on( 'click', btnSel, function () {
+			var $btn = $( this );
+			var $out = $( outSel );
+			if ( ! $btn.length || ! $out.length ) {
+				return;
+			}
+			$btn.prop( 'disabled', true );
+			setTestResult( $out, jtAdmin.i18n.testing, null );
+			$.post( jtAdmin.ajaxUrl, {
+				action: jtAdmin[ actionKey ],
+				nonce: jtAdmin.nonce,
+			} )
+				.done( function ( res ) {
+					if ( res.success ) {
+						setTestResult(
+							$out,
+							res.data && res.data.message ? res.data.message : jtAdmin.i18n.done,
+							true
+						);
+					} else {
+						setTestResult(
+							$out,
+							res.data && res.data.message ? res.data.message : 'Error',
+							false
+						);
+					}
+				} )
+				.fail( function () {
+					setTestResult( $out, jtAdmin.i18n.networkError, false );
+				} )
+				.always( function () {
+					$btn.prop( 'disabled', false );
+				} );
+		} );
+	}
+
+	bindConnectionTest( '#jt-test-rss', '#jt-test-rss-result', 'ajaxTestRss' );
+	bindConnectionTest( '#jt-test-profile', '#jt-test-profile-result', 'ajaxTestProfile' );
+
 	var $phToggle = $( '#jt_use_placeholder_image' );
 	var $phPicker = $( '#jt-placeholder-picker' );
 	var $phId = $( '#jt_placeholder_image_id' );

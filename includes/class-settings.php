@@ -32,6 +32,8 @@ class JT_Settings {
 		'jt_last_rss_sync_at',
 		'jt_excluded_checkins',
 		'jt_import_checkpoint',
+		// jt_import_mode: legacy option, not exposed in UI; continuation uses WP-Cron or Action Scheduler.
+		'jt_import_mode',
 	);
 
 	/**

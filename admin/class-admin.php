@@ -31,6 +31,8 @@ class JT_Admin {
 		add_action( 'wp_ajax_' . Jardin_Toasts_Keys::AJAX_SYNC_NOW, array( $this, 'ajax_sync_now' ) );
 		add_action( 'wp_ajax_' . Jardin_Toasts_Keys::AJAX_CRAWL_DISCOVER, array( $this, 'ajax_crawl_discover' ) );
 		add_action( 'wp_ajax_' . Jardin_Toasts_Keys::AJAX_CRAWL_BATCH, array( $this, 'ajax_crawl_batch' ) );
+		add_action( 'wp_ajax_' . Jardin_Toasts_Keys::AJAX_TEST_RSS, array( $this, 'ajax_test_rss' ) );
+		add_action( 'wp_ajax_' . Jardin_Toasts_Keys::AJAX_TEST_PROFILE, array( $this, 'ajax_test_profile' ) );
 		add_action( 'wp_ajax_jt_sync_now', array( $this, 'ajax_sync_now' ) );
 		add_action( 'wp_ajax_jt_crawl_discover', array( $this, 'ajax_crawl_discover' ) );
 		add_action( 'wp_ajax_jt_crawl_batch', array( $this, 'ajax_crawl_batch' ) );
@@ -61,9 +63,18 @@ class JT_Admin {
 		}
 		$dest = self::get_settings_url();
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
-		if ( $tab ) {
+		$raw_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+		if ( $raw_tab ) {
+			$legacy_tabs = array(
+				'import'  => 'sync',
+				'general' => 'display',
+				'rating'  => 'display',
+			);
+			$tab = isset( $legacy_tabs[ $raw_tab ] ) ? $legacy_tabs[ $raw_tab ] : $raw_tab;
 			$dest = add_query_arg( 'tab', $tab, $dest );
+			if ( 'rating' === $raw_tab ) {
+				$dest .= '#jt-ratings-section';
+			}
 		}
 		wp_safe_redirect( $dest );
 		exit;
@@ -135,9 +146,11 @@ class JT_Admin {
 			array(
 				'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
 				'nonce'             => wp_create_nonce( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX ),
-				'ajaxSyncNow'       => Jardin_Toasts_Keys::AJAX_SYNC_NOW,
-				'ajaxCrawlDiscover' => Jardin_Toasts_Keys::AJAX_CRAWL_DISCOVER,
-				'ajaxCrawlBatch'    => Jardin_Toasts_Keys::AJAX_CRAWL_BATCH,
+				'ajaxSyncNow'        => Jardin_Toasts_Keys::AJAX_SYNC_NOW,
+				'ajaxCrawlDiscover'  => Jardin_Toasts_Keys::AJAX_CRAWL_DISCOVER,
+				'ajaxCrawlBatch'     => Jardin_Toasts_Keys::AJAX_CRAWL_BATCH,
+				'ajaxTestRss'        => Jardin_Toasts_Keys::AJAX_TEST_RSS,
+				'ajaxTestProfile'    => Jardin_Toasts_Keys::AJAX_TEST_PROFILE,
 				'rssUsername'       => jt_parse_username_from_rss_url( jt_get_rss_feed_url() ),
 				'placeholderId'     => $placeholder_id,
 				'placeholderThumb' => $placeholder_thumb ? $placeholder_thumb : '',
@@ -148,6 +161,8 @@ class JT_Admin {
 					'chooseImage'    => __( 'Choose image', 'jardin-toasts' ),
 					'replaceImage'   => __( 'Replace image', 'jardin-toasts' ),
 					'removeImage'    => __( 'Remove', 'jardin-toasts' ),
+					'testing'        => __( 'Testing…', 'jardin-toasts' ),
+					'networkError'   => __( 'Network error.', 'jardin-toasts' ),
 				),
 			)
 		);
@@ -204,10 +219,33 @@ class JT_Admin {
 			return;
 		}
 
-		$tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'sync'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$allowed = array( 'sync', 'import', 'general', 'rating', 'advanced' );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$tab_req = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+		$legacy_map = array(
+			'import'  => 'sync',
+			'general' => 'display',
+			'rating'  => 'display',
+		);
+		if ( $tab_req && isset( $legacy_map[ $tab_req ] ) ) {
+			$params = array(
+				'page' => self::SETTINGS_PAGE_SLUG,
+				'tab'  => $legacy_map[ $tab_req ],
+			);
+			if ( isset( $_GET['settings-updated'] ) ) {
+				$params['settings-updated'] = 'true';
+			}
+			$dest = add_query_arg( $params, admin_url( 'admin.php' ) );
+			if ( 'rating' === $tab_req ) {
+				$dest .= '#jt-ratings-section';
+			}
+			wp_safe_redirect( $dest );
+			exit;
+		}
+
+		$tab = $tab_req ? $tab_req : 'untappd'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$allowed = array( 'untappd', 'sync', 'display', 'advanced' );
 		if ( ! in_array( $tab, $allowed, true ) ) {
-			$tab = 'sync';
+			$tab = 'untappd';
 		}
 
 		if ( isset( $_GET['settings-updated'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -302,6 +340,15 @@ class JT_Admin {
 				$queued,
 				$discovered
 			);
+			$message .= ' ';
+			$message .= jt_using_action_scheduler()
+				? __( 'Imports will continue in the background via Action Scheduler.', 'jardin-toasts' )
+				: __( 'Imports will continue in the background via WP-Cron.', 'jardin-toasts' );
+		}
+
+		if ( $queued > 0 ) {
+			$first_delay = max( 30, absint( get_option( 'jt_import_delay', 3 ) ) * 5 );
+			jt_maybe_schedule_background_import_batch( $first_delay );
 		}
 
 		wp_send_json_success(
@@ -366,12 +413,116 @@ class JT_Admin {
 		$cp['last_run']       = time();
 		update_option( 'jt_import_checkpoint', $cp, false );
 
+		if ( ! empty( $queue ) ) {
+			jt_maybe_schedule_background_import_batch();
+		}
+
 		wp_send_json_success(
 			array(
 				'imported'     => $imported,
 				'remaining'    => count( $queue ),
 				'total_imported' => $cp['total_imported'],
 				'done'         => empty( $queue ),
+			)
+		);
+	}
+
+	/**
+	 * AJAX: verify saved RSS feed is readable.
+	 *
+	 * @return void
+	 */
+	public function ajax_test_rss() {
+		check_ajax_referer( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX, 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ), 403 );
+		}
+		$url = jt_get_rss_feed_url();
+		if ( ! is_string( $url ) || '' === trim( $url ) ) {
+			wp_send_json_error( array( 'message' => __( 'Save an RSS feed URL first.', 'jardin-toasts' ) ), 400 );
+		}
+		if ( ! function_exists( 'fetch_feed' ) ) {
+			require_once ABSPATH . WPINC . '/feed.php';
+		}
+		$feed = fetch_feed( $url );
+		if ( is_wp_error( $feed ) ) {
+			wp_send_json_error( array( 'message' => $feed->get_error_message() ), 500 );
+		}
+		$n = $feed->get_item_quantity();
+		wp_send_json_success(
+			array(
+				'message' => sprintf(
+					/* translators: %d: number of items in the feed snapshot */
+					__( 'RSS OK: %d item(s) in this fetch (Untappd may cap the list).', 'jardin-toasts' ),
+					$n
+				),
+			)
+		);
+	}
+
+	/**
+	 * AJAX: verify public profile HTML is reachable (scraping path).
+	 *
+	 * @return void
+	 */
+	public function ajax_test_profile() {
+		check_ajax_referer( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX, 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ), 403 );
+		}
+		$user = jt_get_untappd_username();
+		if ( ! is_string( $user ) || '' === $user ) {
+			wp_send_json_error( array( 'message' => __( 'Save an Untappd username first.', 'jardin-toasts' ) ), 400 );
+		}
+		$url = 'https://untappd.com/user/' . rawurlencode( $user );
+		$response = wp_remote_get(
+			$url,
+			array(
+				'timeout'    => 25,
+				'user-agent' => jt_http_user_agent_string(),
+				'headers'    => array(
+					'Accept'          => 'text/html',
+					'Accept-Language' => 'en-US,en;q=0.9',
+				),
+			)
+		);
+		if ( is_wp_error( $response ) ) {
+			wp_send_json_error( array( 'message' => $response->get_error_message() ), 500 );
+		}
+		$code = wp_remote_retrieve_response_code( $response );
+		$html = wp_remote_retrieve_body( $response );
+		$len  = is_string( $html ) ? strlen( $html ) : 0;
+		if ( $len < 200 ) {
+			wp_send_json_error(
+				array(
+					'message' => sprintf(
+						/* translators: 1: HTTP status code, 2: response size in bytes */
+						__( 'Profile response too small (HTTP %1$d, %2$d bytes).', 'jardin-toasts' ),
+						(int) $code,
+						$len
+					),
+				),
+				500
+			);
+		}
+		$slug = sanitize_user( $user, true );
+		$has_links = $slug && preg_match( '#\/user\/' . preg_quote( $slug, '#' ) . '\/checkin\/\d+#i', $html );
+		if ( ! $has_links ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Profile loaded but no check-in links matched. Untappd markup may have changed, or the username does not match this HTML.', 'jardin-toasts' ),
+				),
+				500
+			);
+		}
+		wp_send_json_success(
+			array(
+				'message' => sprintf(
+					/* translators: 1: HTTP status, 2: approximate HTML size */
+					__( 'Profile OK (HTTP %1$d, ~%2$s KB HTML, check-in links found).', 'jardin-toasts' ),
+					(int) $code,
+					(string) max( 1, (int) round( $len / 1024 ) )
+				),
 			)
 		);
 	}

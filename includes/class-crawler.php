@@ -227,17 +227,8 @@ class JT_Crawler {
 		$cp['status']          = empty( $queue ) ? 'done' : 'running';
 		update_option( 'jt_import_checkpoint', $cp, false );
 
-		if ( ! empty( $queue ) && 'background' === get_option( 'jt_import_mode', 'manual' ) ) {
-			$delay = time() + max( 60, absint( get_option( 'jt_import_delay', 3 ) ) * 10 );
-			if ( function_exists( 'as_schedule_single_action' ) ) {
-				jt_when_action_scheduler_store_ready(
-					static function () use ( $delay ) {
-						as_schedule_single_action( $delay, Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH, array(), jt_action_scheduler_group() );
-					}
-				);
-			} else {
-				wp_schedule_single_event( $delay, Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH );
-			}
+		if ( ! empty( $queue ) ) {
+			jt_maybe_schedule_background_import_batch();
 		}
 	}
 }

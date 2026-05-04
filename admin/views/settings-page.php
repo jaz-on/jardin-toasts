@@ -11,20 +11,75 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $base_url = JT_Admin::get_settings_url();
 $tabs     = array(
-	'sync'     => __( 'Synchronization', 'jardin-toasts' ),
-	'import'   => __( 'Historical import', 'jardin-toasts' ),
-	'general'  => __( 'Display & content', 'jardin-toasts' ),
-	'rating'   => __( 'Ratings', 'jardin-toasts' ),
+	'untappd' => __( 'Untappd account', 'jardin-toasts' ),
+	'sync'    => __( 'Import & sync', 'jardin-toasts' ),
+	'display' => __( 'Display & content', 'jardin-toasts' ),
 	'advanced' => __( 'Advanced', 'jardin-toasts' ),
 );
 
 $tab_intros = array(
-	'sync'     => __( 'Connect your Untappd RSS feed and let WordPress pull new check-ins on a calm schedule. RSS only lists your latest items; full details still come from scraping.', 'jardin-toasts' ),
-	'import'   => __( 'Backfill older check-ins by crawling your public profile. Use small batches and delays to stay polite to Untappd’s servers.', 'jardin-toasts' ),
-	'general'  => __( 'Control how archives look and what gets stored with each check-in on the front of your site.', 'jardin-toasts' ),
-	'rating'   => __( 'Untappd stores fractional ratings. Map them to whole stars for display using the rules below (or override with code).', 'jardin-toasts' ),
+	'untappd' => __( 'Your RSS URL and profile username identify the same Untappd account. RSS discovers new check-ins; the public profile is used for historical backfill and for scraping full details.', 'jardin-toasts' ),
+	'sync'    => __( 'Background jobs pull recent check-ins from RSS and can drain the historical import queue. Use “Run sync now” for an immediate RSS run, or discover / import batches for older check-ins.', 'jardin-toasts' ),
+	'display' => __( 'Control how archives look, what gets stored with each check-in, and how ratings map to stars on the front of your site.', 'jardin-toasts' ),
 	'advanced' => __( 'Fine-tune scraping pace, structured data, notifications, and troubleshooting logs.', 'jardin-toasts' ),
 );
+
+$rss_username  = jt_parse_username_from_rss_url( jt_get_rss_feed_url() );
+$batch_current = (int) JT_Settings::get( 'jt_import_batch_size' );
+$delay_current = (int) JT_Settings::get( 'jt_import_delay' );
+$batch_choices = array(
+	10  => __( '10 check-ins — small steps', 'jardin-toasts' ),
+	15  => __( '15 check-ins — light', 'jardin-toasts' ),
+	25  => __( '25 check-ins — balanced (recommended)', 'jardin-toasts' ),
+	40  => __( '40 check-ins — fewer clicks', 'jardin-toasts' ),
+	50  => __( '50 check-ins — large (may time out)', 'jardin-toasts' ),
+);
+$delay_choices = array(
+	0 => __( 'No pause (fast hosts only)', 'jardin-toasts' ),
+	1 => __( '1 second between requests', 'jardin-toasts' ),
+	2 => __( '2 seconds — gentle', 'jardin-toasts' ),
+	3 => __( '3 seconds — polite (default)', 'jardin-toasts' ),
+	5 => __( '5 seconds — very safe', 'jardin-toasts' ),
+	8 => __( '8 seconds — slowest', 'jardin-toasts' ),
+);
+if ( ! array_key_exists( $batch_current, $batch_choices ) ) {
+	$batch_choices[ $batch_current ] = sprintf(
+		/* translators: %d: number of check-ins */
+		__( '%d check-ins (current)', 'jardin-toasts' ),
+		$batch_current
+	);
+	ksort( $batch_choices, SORT_NUMERIC );
+}
+if ( ! array_key_exists( $delay_current, $delay_choices ) ) {
+	$delay_choices[ $delay_current ] = sprintf(
+		/* translators: %d: seconds */
+		__( '%d seconds (current)', 'jardin-toasts' ),
+		$delay_current
+	);
+	ksort( $delay_choices, SORT_NUMERIC );
+}
+
+$rule_template = jt_get_default_rating_rules();
+$rules         = JT_Settings::get( 'jt_rating_rules' );
+if ( ! is_array( $rules ) ) {
+	$rules = $rule_template;
+}
+$rules = array_values( $rules );
+while ( count( $rules ) < count( $rule_template ) ) {
+	$rules[] = $rule_template[ count( $rules ) ];
+}
+$rules = array_slice( $rules, 0, count( $rule_template ) );
+
+$default_labels = jt_get_default_rating_labels();
+$labels         = JT_Settings::get( 'jt_rating_labels' );
+if ( ! is_array( $labels ) ) {
+	$labels = $default_labels;
+}
+for ( $li = 0; $li <= 5; $li++ ) {
+	if ( ! isset( $labels[ $li ] ) ) {
+		$labels[ $li ] = isset( $default_labels[ $li ] ) ? $default_labels[ $li ] : '';
+	}
+}
 ?>
 <div class="wrap jt-admin-wrap">
 	<div class="jt-settings-hero">
@@ -52,6 +107,58 @@ $tab_intros = array(
 			 * (Otherwise saving e.g. "Display & content" would POST missing fields and WordPress clears them.)
 			 */
 			?>
+			<div class="jt-tab-panel-body"<?php echo 'untappd' !== $tab ? ' hidden' : ''; ?> data-jt-tab="untappd">
+				<div class="jt-panel">
+					<div class="jt-panel__header">
+						<h2 class="jt-panel__title"><?php esc_html_e( 'Account', 'jardin-toasts' ); ?></h2>
+						<p class="jt-panel__summary"><?php esc_html_e( 'Use the same RSS URL and username you see on Untappd (Account → RSS). Values are stored in the WordPress options table — only trusted administrators should access this screen.', 'jardin-toasts' ); ?></p>
+					</div>
+					<div class="jt-panel__body">
+						<table class="form-table" role="presentation">
+							<tr>
+								<th scope="row"><label for="jt_rss_feed_url"><?php esc_html_e( 'Untappd RSS feed URL', 'jardin-toasts' ); ?></label></th>
+								<td>
+									<input name="jt_rss_feed_url" id="jt_rss_feed_url" type="url" class="large-text code" value="<?php echo esc_attr( jt_get_rss_feed_url() ); ?>" autocomplete="off" />
+									<p class="description"><?php esc_html_e( 'Public RSS (about 25 recent check-ins). Used by automatic sync and “Run sync now” on the Import & sync tab.', 'jardin-toasts' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row"><label for="jt_untappd_username"><?php esc_html_e( 'Untappd username', 'jardin-toasts' ); ?></label></th>
+								<td>
+									<p class="jt-field-row">
+										<input name="jt_untappd_username" id="jt_untappd_username" type="text" class="regular-text" value="<?php echo esc_attr( jt_get_untappd_username() ); ?>" autocomplete="username" spellcheck="false" />
+										<?php if ( '' !== $rss_username ) : ?>
+											<button type="button" class="button button-secondary" id="jt-use-rss-username"><?php esc_html_e( 'Use username from RSS feed', 'jardin-toasts' ); ?></button>
+										<?php endif; ?>
+									</p>
+									<p class="description"><?php esc_html_e( 'Profile slug only (e.g. jaz_on), not the full URL. Used for historical discovery and scraping; it should match the user segment in your RSS URL (untappd.com/rss/user/…).', 'jardin-toasts' ); ?></p>
+									<?php if ( '' !== $rss_username ) : ?>
+										<p class="description"><?php echo esc_html( sprintf( /* translators: %s: username */ __( 'Detected from your saved RSS URL: %s', 'jardin-toasts' ), $rss_username ) ); ?></p>
+									<?php endif; ?>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<div class="jt-panel jt-panel--actions">
+					<div class="jt-panel__header">
+						<h2 class="jt-panel__title"><?php esc_html_e( 'Test connections', 'jardin-toasts' ); ?></h2>
+						<p class="jt-panel__summary"><?php esc_html_e( 'Save your feed and username first, then run each test to confirm WordPress can reach Untappd over RSS and over the public profile HTML.', 'jardin-toasts' ); ?></p>
+					</div>
+					<div class="jt-panel__body jt-panel__body--inline jt-panel__body--test-row">
+						<p class="jt-test-row">
+							<button type="button" class="button button-secondary" id="jt-test-rss"><?php esc_html_e( 'Test RSS feed', 'jardin-toasts' ); ?></button>
+							<span id="jt-test-rss-result" class="jt-test-result" aria-live="polite"></span>
+						</p>
+						<p class="jt-test-row">
+							<button type="button" class="button button-secondary" id="jt-test-profile"><?php esc_html_e( 'Test public profile', 'jardin-toasts' ); ?></button>
+							<span id="jt-test-profile-result" class="jt-test-result" aria-live="polite"></span>
+						</p>
+					</div>
+				</div>
+
+			</div>
 			<div class="jt-tab-panel-body"<?php echo 'sync' !== $tab ? ' hidden' : ''; ?> data-jt-tab="sync">
 				<?php include JT_PLUGIN_DIR . 'admin/views/stats-box.php'; ?>
 
@@ -69,38 +176,57 @@ $tab_intros = array(
 
 				<div class="jt-panel">
 					<div class="jt-panel__header">
-						<h2 class="jt-panel__title"><?php esc_html_e( 'RSS feed & scheduling', 'jardin-toasts' ); ?></h2>
-						<p class="jt-panel__summary"><?php esc_html_e( 'The feed URL is pre-filled with a working example. Replace it with your own from Untappd → Account if you use a different profile.', 'jardin-toasts' ); ?></p>
+						<h2 class="jt-panel__title"><?php esc_html_e( 'Scheduled RSS sync', 'jardin-toasts' ); ?></h2>
+						<p class="jt-panel__summary"><?php esc_html_e( 'Scheduled sync fetches your public RSS feed and imports new check-ins (details still come from scraping).', 'jardin-toasts' ); ?></p>
 					</div>
 					<div class="jt-panel__body">
 						<table class="form-table" role="presentation">
 							<tr>
-								<th scope="row"><label for="jt_rss_feed_url"><?php esc_html_e( 'Untappd RSS feed URL', 'jardin-toasts' ); ?></label></th>
-								<td>
-									<input name="jt_rss_feed_url" id="jt_rss_feed_url" type="url" class="large-text code" value="<?php echo esc_attr( jt_get_rss_feed_url() ); ?>" autocomplete="off" />
-									<p class="description"><?php esc_html_e( 'Public RSS (about 25 recent check-ins). Used by automatic sync and “Run sync now”.', 'jardin-toasts' ); ?></p>
-									<p class="description"><?php echo wp_kses_post( sprintf( /* translators: %s: link to Import tab */ __( 'Historical import uses the same Untappd profile. Set your username on the <a href="%s">Import</a> tab (it should match this feed).', 'jardin-toasts' ), esc_url( add_query_arg( 'tab', 'import', $base_url ) ) . '#jt-import-profile' ) ); ?></p>
-								</td>
-							</tr>
-							<tr>
-								<th scope="row"><?php esc_html_e( 'Automatic sync', 'jardin-toasts' ); ?></th>
+								<th scope="row"><?php esc_html_e( 'Scheduled sync', 'jardin-toasts' ); ?></th>
 								<td>
 									<label class="jt-toggle">
 										<input type="hidden" name="jt_sync_enabled" value="0" />
 										<input name="jt_sync_enabled" type="checkbox" value="1" <?php checked( JT_Settings::get( 'jt_sync_enabled' ) ); ?> />
 										<span><?php esc_html_e( 'Enable scheduled RSS synchronization', 'jardin-toasts' ); ?></span>
 									</label>
-									<p class="description"><?php
-									if ( jt_using_action_scheduler() ) {
-										esc_html_e( 'Uses Action Scheduler with adaptive intervals: more frequent when you check in often, lighter when you are quiet. Inspect the jardin-toasts group under Tools → Scheduled Actions (menu location may differ if WooCommerce owns Action Scheduler).', 'jardin-toasts' );
-									} else {
-										esc_html_e( 'Uses adaptive WP-Cron: more frequent when you check in often, lighter when you are quiet. Low-traffic sites should hit wp-cron.php from a real system cron, or install the Action Scheduler plugin for a proper job queue.', 'jardin-toasts' );
-									}
-									?></p>
+									<p class="description">
+										<?php if ( jt_using_action_scheduler() ) : ?>
+											<span class="dashicons dashicons-yes-alt" style="color:#00a32a;font-size:1em;vertical-align:text-bottom;" aria-hidden="true"></span>
+											<?php esc_html_e( 'Action Scheduler detected — RSS sync runs reliably in the background. Inspect scheduled actions under Tools → Scheduled Actions, group “jardin-toasts” (the menu label may differ if WooCommerce owns Action Scheduler).', 'jardin-toasts' ); ?>
+										<?php elseif ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) : ?>
+											<span class="dashicons dashicons-yes-alt" style="color:#00a32a;font-size:1em;vertical-align:text-bottom;" aria-hidden="true"></span>
+											<?php
+											echo wp_kses_post(
+												sprintf(
+													/* translators: %s: link to Action Scheduler */
+													__( 'WP-Cron with <code>DISABLE_WP_CRON</code> enabled — a system task is triggering WordPress, which is the recommended setup. For even more reliable scheduling you can also install %s.', 'jardin-toasts' ),
+													'<a href="https://actionscheduler.org/" target="_blank" rel="noopener noreferrer">Action Scheduler</a>'
+												)
+											);
+											?>
+										<?php else : ?>
+											<span class="dashicons dashicons-warning" style="color:#dba617;font-size:1em;vertical-align:text-bottom;" aria-hidden="true"></span>
+											<?php
+											echo wp_kses_post(
+												sprintf(
+													/* translators: 1: Action Scheduler link 2: wp-config snippet */
+													__( 'WP-Cron is driven by site traffic — jobs may be delayed on low-traffic hosts. Install %1$s for a proper queue, or add %2$s to <code>wp-config.php</code> and call <code>wp-cron.php</code> from a real system cron.', 'jardin-toasts' ),
+													'<a href="https://actionscheduler.org/" target="_blank" rel="noopener noreferrer">Action Scheduler</a>',
+													"<code>define( 'DISABLE_WP_CRON', true );</code>"
+												)
+											);
+											?>
+										<?php endif; ?>
+									</p>
+									<p class="description"><?php esc_html_e( 'Adaptive timing: more frequent when you check in often, lighter when you are quiet. Historical import batches use the same scheduler when a queue remains after discovery or “Import next batch”.', 'jardin-toasts' ); ?></p>
 								</td>
 							</tr>
 						</table>
 					</div>
+				</div>
+
+				<div class="jt-settings-footer jt-settings-footer--inline">
+					<?php submit_button( __( 'Save changes', 'jardin-toasts' ), 'primary large', 'submit', false ); ?>
 				</div>
 
 				<div class="jt-panel jt-panel--actions">
@@ -114,67 +240,13 @@ $tab_intros = array(
 					</div>
 				</div>
 
-			</div>
-			<div class="jt-tab-panel-body"<?php echo 'import' !== $tab ? ' hidden' : ''; ?> data-jt-tab="import">
-				<?php
-				$rss_username = jt_parse_username_from_rss_url( jt_get_rss_feed_url() );
-				$batch_current  = (int) JT_Settings::get( 'jt_import_batch_size' );
-				$delay_current  = (int) JT_Settings::get( 'jt_import_delay' );
-				$batch_choices  = array(
-					10  => __( '10 check-ins — small steps', 'jardin-toasts' ),
-					15  => __( '15 check-ins — light', 'jardin-toasts' ),
-					25  => __( '25 check-ins — balanced (recommended)', 'jardin-toasts' ),
-					40  => __( '40 check-ins — fewer clicks', 'jardin-toasts' ),
-					50  => __( '50 check-ins — large (may time out)', 'jardin-toasts' ),
-				);
-				$delay_choices  = array(
-					0 => __( 'No pause (fast hosts only)', 'jardin-toasts' ),
-					1 => __( '1 second between requests', 'jardin-toasts' ),
-					2 => __( '2 seconds — gentle', 'jardin-toasts' ),
-					3 => __( '3 seconds — polite (default)', 'jardin-toasts' ),
-					5 => __( '5 seconds — very safe', 'jardin-toasts' ),
-					8 => __( '8 seconds — slowest', 'jardin-toasts' ),
-				);
-				if ( ! array_key_exists( $batch_current, $batch_choices ) ) {
-					$batch_choices[ $batch_current ] = sprintf(
-						/* translators: %d: number of check-ins */
-						__( '%d check-ins (current)', 'jardin-toasts' ),
-						$batch_current
-					);
-					ksort( $batch_choices, SORT_NUMERIC );
-				}
-				if ( ! array_key_exists( $delay_current, $delay_choices ) ) {
-					$delay_choices[ $delay_current ] = sprintf(
-						/* translators: %d: seconds */
-						__( '%d seconds (current)', 'jardin-toasts' ),
-						$delay_current
-					);
-					ksort( $delay_choices, SORT_NUMERIC );
-				}
-				?>
-
-				<div class="jt-panel" id="jt-import-profile">
+				<div class="jt-panel" id="jt-import-backfill">
 					<div class="jt-panel__header">
-						<h2 class="jt-panel__title"><?php esc_html_e( 'Profile & batching', 'jardin-toasts' ); ?></h2>
-						<p class="jt-panel__summary"><?php esc_html_e( 'Discovery loads your public profile HTML and collects check-in links. Only the username is needed — the same person as in your RSS feed on the Synchronization tab.', 'jardin-toasts' ); ?></p>
+						<h2 class="jt-panel__title"><?php esc_html_e( 'Historical import', 'jardin-toasts' ); ?></h2>
+						<p class="jt-panel__summary"><?php esc_html_e( 'Discovery reads your public profile HTML and queues check-ins that are not in WordPress yet. Remaining work continues in the background via Action Scheduler when available, otherwise WP-Cron single events.', 'jardin-toasts' ); ?></p>
 					</div>
 					<div class="jt-panel__body">
 						<table class="form-table" role="presentation">
-							<tr>
-								<th scope="row"><label for="jt_untappd_username"><?php esc_html_e( 'Untappd username', 'jardin-toasts' ); ?></label></th>
-								<td>
-									<p class="jt-field-row">
-										<input name="jt_untappd_username" id="jt_untappd_username" type="text" class="regular-text" value="<?php echo esc_attr( jt_get_untappd_username() ); ?>" autocomplete="username" spellcheck="false" />
-										<?php if ( '' !== $rss_username ) : ?>
-											<button type="button" class="button button-secondary" id="jt-use-rss-username"><?php esc_html_e( 'Use username from RSS feed', 'jardin-toasts' ); ?></button>
-										<?php endif; ?>
-									</p>
-									<p class="description"><?php esc_html_e( 'Enter the profile slug only (e.g. jaz_on), not the full URL. It must match the user segment in your RSS URL: untappd.com/rss/user/…', 'jardin-toasts' ); ?></p>
-									<?php if ( '' !== $rss_username ) : ?>
-										<p class="description"><?php echo esc_html( sprintf( /* translators: %s: username */ __( 'Detected from your saved RSS URL: %s', 'jardin-toasts' ), $rss_username ) ); ?></p>
-									<?php endif; ?>
-								</td>
-							</tr>
 							<tr>
 								<th scope="row"><label for="jt_import_batch_size"><?php esc_html_e( 'Batch size', 'jardin-toasts' ); ?></label></th>
 								<td>
@@ -183,7 +255,7 @@ $tab_intros = array(
 											<option value="<?php echo esc_attr( (string) $val ); ?>" <?php selected( $batch_current, $val ); ?>><?php echo esc_html( $label ); ?></option>
 										<?php endforeach; ?>
 									</select>
-									<p class="description"><?php esc_html_e( 'How many check-ins to import each time you click “Import next batch”. Smaller batches finish faster per request; larger ones mean fewer clicks for big backfills.', 'jardin-toasts' ); ?></p>
+									<p class="description"><?php esc_html_e( 'How many check-ins each import step processes. Smaller batches are safer on slow hosts; when a queue remains, the plugin schedules the next step automatically.', 'jardin-toasts' ); ?></p>
 								</td>
 							</tr>
 							<tr>
@@ -194,23 +266,7 @@ $tab_intros = array(
 											<option value="<?php echo esc_attr( (string) $val ); ?>" <?php selected( $delay_current, $val ); ?>><?php echo esc_html( $label ); ?></option>
 										<?php endforeach; ?>
 									</select>
-									<p class="description"><?php esc_html_e( 'Wait time after each HTTP request during discovery and import. Longer pauses are kinder to Untappd and your host; shorter pauses finish sooner.', 'jardin-toasts' ); ?></p>
-								</td>
-							</tr>
-							<tr>
-								<th scope="row"><label for="jt_import_mode"><?php esc_html_e( 'Import mode', 'jardin-toasts' ); ?></label></th>
-								<td>
-									<select name="jt_import_mode" id="jt_import_mode">
-										<option value="manual" <?php selected( JT_Settings::get( 'jt_import_mode' ), 'manual' ); ?>><?php esc_html_e( 'Manual — AJAX batches (recommended)', 'jardin-toasts' ); ?></option>
-										<option value="background" <?php selected( JT_Settings::get( 'jt_import_mode' ), 'background' ); ?>><?php echo esc_html( jt_using_action_scheduler() ? __( 'Background — Action Scheduler', 'jardin-toasts' ) : __( 'Background — WP-Cron', 'jardin-toasts' ) ); ?></option>
-									</select>
-									<p class="description"><?php
-									if ( jt_using_action_scheduler() ) {
-										esc_html_e( 'Manual keeps you in control; background runs import batches via Action Scheduler when the queue has work.', 'jardin-toasts' );
-									} else {
-										esc_html_e( 'Manual keeps you in control; background spreads work across WP-Cron single events when the queue has work (less reliable on low-traffic sites).', 'jardin-toasts' );
-									}
-									?></p>
+									<p class="description"><?php esc_html_e( 'Wait time after each HTTP request during discovery and each check-in import. Longer pauses are kinder to Untappd; they also space out background batches.', 'jardin-toasts' ); ?></p>
 								</td>
 							</tr>
 						</table>
@@ -220,7 +276,7 @@ $tab_intros = array(
 				<div class="jt-panel jt-panel--actions">
 					<div class="jt-panel__header">
 						<h2 class="jt-panel__title"><?php esc_html_e( 'Discovery & import', 'jardin-toasts' ); ?></h2>
-						<p class="jt-panel__summary"><?php esc_html_e( 'Run discovery once to build a queue, then import batches until the queue is empty.', 'jardin-toasts' ); ?></p>
+						<p class="jt-panel__summary"><?php esc_html_e( 'Run discovery once to build a queue. Use “Import next batch” for an immediate step, or rely on background jobs after discovery.', 'jardin-toasts' ); ?></p>
 					</div>
 					<div class="jt-panel__body jt-panel__body--inline">
 						<button type="button" class="button" id="jt-discover"><?php esc_html_e( 'Discover check-ins', 'jardin-toasts' ); ?></button>
@@ -231,7 +287,7 @@ $tab_intros = array(
 				<input type="hidden" id="jt-discover-max-pages" value="15" />
 
 			</div>
-			<div class="jt-tab-panel-body"<?php echo 'general' !== $tab ? ' hidden' : ''; ?> data-jt-tab="general">
+			<div class="jt-tab-panel-body"<?php echo 'display' !== $tab ? ' hidden' : ''; ?> data-jt-tab="display">
 
 				<div class="jt-panel">
 					<div class="jt-panel__header">
@@ -327,35 +383,9 @@ $tab_intros = array(
 					</div>
 				</div>
 
-			</div>
-			<div class="jt-tab-panel-body"<?php echo 'rating' !== $tab ? ' hidden' : ''; ?> data-jt-tab="rating">
-				<?php
-				$rule_template = jt_get_default_rating_rules();
-				$rules         = JT_Settings::get( 'jt_rating_rules' );
-				if ( ! is_array( $rules ) ) {
-					$rules = $rule_template;
-				}
-				$rules = array_values( $rules );
-				while ( count( $rules ) < count( $rule_template ) ) {
-					$rules[] = $rule_template[ count( $rules ) ];
-				}
-				$rules = array_slice( $rules, 0, count( $rule_template ) );
-
-				$default_labels = jt_get_default_rating_labels();
-				$labels         = JT_Settings::get( 'jt_rating_labels' );
-				if ( ! is_array( $labels ) ) {
-					$labels = $default_labels;
-				}
-				for ( $li = 0; $li <= 5; $li++ ) {
-					if ( ! isset( $labels[ $li ] ) ) {
-						$labels[ $li ] = isset( $default_labels[ $li ] ) ? $default_labels[ $li ] : '';
-					}
-				}
-				?>
-
-				<div class="jt-panel">
+				<div class="jt-panel" id="jt-ratings-section">
 					<div class="jt-panel__header">
-						<h2 class="jt-panel__title"><?php esc_html_e( 'Star mapping', 'jardin-toasts' ); ?></h2>
+						<h2 class="jt-panel__title"><?php esc_html_e( 'Ratings & stars', 'jardin-toasts' ); ?></h2>
 						<p class="jt-panel__summary"><?php esc_html_e( 'Map Untappd’s 0–5 raw score into whole stars. Rules are tested in order; the first matching min/max band wins. The jardin_toasts_rating_rules filter (jt_rating_rules is still fired for backward compatibility) can override in code.', 'jardin-toasts' ); ?></p>
 					</div>
 					<div class="jt-panel__body">
@@ -447,7 +477,7 @@ $tab_intros = array(
 				<div class="jt-panel">
 					<div class="jt-panel__header">
 						<h2 class="jt-panel__title"><?php esc_html_e( 'Scraping & performance', 'jardin-toasts' ); ?></h2>
-						<p class="jt-panel__summary"><?php esc_html_e( 'These settings throttle how aggressively the plugin hits Untappd when it downloads check-in HTML (automatic RSS sync, “Run sync now”, and background import). They are separate from the Synchronization tab (feed URL and whether RSS runs) and from Historical import → “Pause between requests”, which only spaces out clicks in that admin wizard.', 'jardin-toasts' ); ?></p>
+						<p class="jt-panel__summary"><?php esc_html_e( 'These settings throttle how aggressively the plugin hits Untappd when it downloads check-in HTML (RSS sync, “Run sync now”, and historical import). They are separate from the Untappd account tab (feed URL and username) and from Import & sync → “Pause between requests”, which spaces discovery and import requests.', 'jardin-toasts' ); ?></p>
 					</div>
 					<div class="jt-panel__body">
 						<table class="form-table" role="presentation">
@@ -629,8 +659,10 @@ $tab_intros = array(
 
 		</div>
 
+		<?php if ( 'sync' !== $tab ) : ?>
 		<div class="jt-settings-footer">
 			<?php submit_button( __( 'Save changes', 'jardin-toasts' ), 'primary large', 'submit', false ); ?>
 		</div>
+		<?php endif; ?>
 	</form>
 </div>
