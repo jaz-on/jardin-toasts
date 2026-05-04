@@ -276,6 +276,35 @@ function jt_untappd_remote_get_with_session( $url, $referer ) {
 }
 
 /**
+ * Queue a short notice appended to the next “Discover check-ins” AJAX success message.
+ *
+ * @param string $message User-facing text.
+ * @return void
+ */
+function jt_set_discover_session_notice( $message ) {
+	$s = is_string( $message ) ? trim( $message ) : '';
+	if ( '' === $s ) {
+		return;
+	}
+	$prev = get_transient( 'jt_discover_session_notice' );
+	if ( is_string( $prev ) && '' !== $prev ) {
+		$s = trim( $prev . ' ' . $s );
+	}
+	set_transient( 'jt_discover_session_notice', $s, 2 * MINUTE_IN_SECONDS );
+}
+
+/**
+ * Consume a pending discover notice (single use).
+ *
+ * @return string
+ */
+function jt_take_discover_session_notice() {
+	$v = get_transient( 'jt_discover_session_notice' );
+	delete_transient( 'jt_discover_session_notice' );
+	return is_string( $v ) ? $v : '';
+}
+
+/**
  * Normalized batch size / crawl delay choices for the settings UI.
  *
  * @return array{batch_current:int,delay_current:int,batch_choices:array<int,string>,delay_choices:array<int,string>}

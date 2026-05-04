@@ -28,11 +28,32 @@ class JT_Crawler {
 		}
 
 		if ( '' !== jt_get_untappd_session_cookie() ) {
-			return $this->discover_checkins_with_session( $username, $max_pages );
+			$session = $this->discover_checkins_with_session( $username, $max_pages );
+			if ( ! is_wp_error( $session ) ) {
+				return $session;
+			}
+			jt_set_discover_session_notice(
+				sprintf(
+					/* translators: %s: technical error from Untappd */
+					__( 'Note: Untappd did not accept the saved session from this server (%s). Using the public profile crawl instead. To clear this warning, remove the session cookie from the Account tab or obtain cookies from the same outbound IP as WordPress.', 'jardin-toasts' ),
+					$session->get_error_message()
+				)
+			);
 		}
 
-		$seen  = array();
-		$delay = absint( get_option( 'jt_import_delay', 3 ) );
+		return $this->discover_checkins_anonymous( $username, $max_pages );
+	}
+
+	/**
+	 * Discover check-in IDs from public profile ?page= pagination (no session).
+	 *
+	 * @param string $username Untappd username.
+	 * @param int    $max_pages Max pages.
+	 * @return array<int,string>|WP_Error
+	 */
+	private function discover_checkins_anonymous( $username, $max_pages ) {
+		$seen      = array();
+		$delay     = absint( get_option( 'jt_import_delay', 3 ) );
 		$max_pages = max( 1, min( 50, $max_pages ) );
 
 		for ( $page = 1; $page <= $max_pages; $page++ ) {
@@ -107,11 +128,10 @@ class JT_Crawler {
 			foreach ( $ids as $id ) {
 				if ( ! isset( $seen[ $id ] ) ) {
 					$seen[ $id ] = true;
-					$new = true;
+					$new         = true;
 				}
 			}
 
-			// If page returns same-only content, stop.
 			if ( ! $new && $page > 1 ) {
 				break;
 			}
@@ -202,6 +222,16 @@ class JT_Crawler {
 
 			$fragment = jt_untappd_remote_get_with_session( $feed_url, $profile );
 			if ( is_wp_error( $fragment ) ) {
+				if ( ! empty( $seen ) ) {
+					jt_set_discover_session_notice(
+						sprintf(
+							/* translators: %s: error detail */
+							__( 'Note: “Load more” pagination failed from this server (%s). Only check-ins from the first loaded profile page were used; deep history needs a session valid for this host’s IP or use RSS + repeated imports.', 'jardin-toasts' ),
+							$fragment->get_error_message()
+						)
+					);
+					return array_keys( $seen );
+				}
 				return $fragment;
 			}
 
@@ -211,6 +241,12 @@ class JT_Crawler {
 			}
 
 			if ( preg_match( '/<!DOCTYPE\s+html/i', $fragment ) && strlen( $fragment ) > 3000 ) {
+				if ( ! empty( $seen ) ) {
+					jt_set_discover_session_notice(
+						__( 'Note: “Load more” returned a full web page instead of check-in rows; only the first profile page was used.', 'jardin-toasts' )
+					);
+					return array_keys( $seen );
+				}
 				return new WP_Error(
 					'untappd_session_more_feed_html',
 					__( 'Untappd “load more” returned a full web page instead of check-in rows — the session is not valid for pagination from this server (see redirect / Cloudflare notes above).', 'jardin-toasts' )

@@ -348,6 +348,11 @@ class JT_Admin {
 			$message .= __( 'Note: Untappd only shows a handful of check-ins on anonymous profile HTML; the RSS feed supplies more recent IDs without signing in.', 'jardin-toasts' );
 		}
 
+		$session_note = jt_take_discover_session_notice();
+		if ( '' !== $session_note ) {
+			$message .= ' ' . $session_note;
+		}
+
 		if ( $queued > 0 ) {
 			$first_delay = max( 30, absint( get_option( 'jt_import_delay', 3 ) ) * 5 );
 			jt_maybe_schedule_background_import_batch( $first_delay );
