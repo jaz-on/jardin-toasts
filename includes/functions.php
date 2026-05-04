@@ -970,6 +970,7 @@ final class Jardin_Toasts_Keys {
 	public const AJAX_CRAWL_BATCH = 'jardin_toasts_crawl_batch';
 	public const AJAX_TEST_RSS = 'jardin_toasts_test_rss';
 	public const AJAX_TEST_PROFILE = 'jardin_toasts_test_profile';
+	public const AJAX_IMPORT_GDPR_CSV = 'jardin_toasts_import_gdpr_csv';
 
 	public const BULK_RESCRAPE = 'jardin_toasts_bulk_rescrape';
 

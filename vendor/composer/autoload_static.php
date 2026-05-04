@@ -58,6 +58,7 @@ class ComposerStaticInit9655599cbf609db15f57185486ff93bd
         'JT_Crawler' => __DIR__ . '/../..' . '/includes/class-crawler.php',
         'JT_DB_Install' => __DIR__ . '/../..' . '/includes/class-db-install.php',
         'JT_Deactivator' => __DIR__ . '/../..' . '/includes/class-deactivator.php',
+        'JT_Gdpr_Csv_Importer' => __DIR__ . '/../..' . '/includes/class-gdpr-csv-importer.php',
         'JT_Image_Handler' => __DIR__ . '/../..' . '/includes/class-image-handler.php',
         'JT_Importer' => __DIR__ . '/../..' . '/includes/class-importer.php',
         'JT_Logger' => __DIR__ . '/../..' . '/includes/class-logger.php',

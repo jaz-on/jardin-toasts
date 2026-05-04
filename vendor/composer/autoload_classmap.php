@@ -14,6 +14,7 @@ return array(
     'JT_Crawler' => $baseDir . '/includes/class-crawler.php',
     'JT_DB_Install' => $baseDir . '/includes/class-db-install.php',
     'JT_Deactivator' => $baseDir . '/includes/class-deactivator.php',
+    'JT_Gdpr_Csv_Importer' => $baseDir . '/includes/class-gdpr-csv-importer.php',
     'JT_Image_Handler' => $baseDir . '/includes/class-image-handler.php',
     'JT_Importer' => $baseDir . '/includes/class-importer.php',
     'JT_Logger' => $baseDir . '/includes/class-logger.php',

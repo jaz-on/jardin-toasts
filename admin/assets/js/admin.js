@@ -120,6 +120,56 @@
 			} );
 	} );
 
+	$( document ).on( 'click', '#jt-import-gdpr-csv', function () {
+		var $btn = $( this );
+		var input = document.getElementById( 'jt-gdpr-csv-file' );
+		if ( ! input || ! input.files || ! input.files.length ) {
+			setStatus(
+				'#jt-gdpr-csv-status',
+				jtAdmin.i18n.importGdprPick || 'Choose a CSV file first.'
+			);
+			return;
+		}
+		var fd = new FormData();
+		fd.append( 'action', jtAdmin.ajaxImportGdprCsv );
+		fd.append( 'nonce', jtAdmin.nonce );
+		fd.append( 'jt_gdpr_csv', input.files[ 0 ] );
+		$btn.prop( 'disabled', true );
+		setStatus(
+			'#jt-gdpr-csv-status',
+			jtAdmin.i18n.importGdprWorking || 'Importing…'
+		);
+		$.ajax( {
+			url: jtAdmin.ajaxUrl,
+			type: 'POST',
+			data: fd,
+			processData: false,
+			contentType: false,
+		} )
+			.done( function ( res ) {
+				if ( res.success ) {
+					setStatus(
+						'#jt-gdpr-csv-status',
+						res.data.message || jtAdmin.i18n.done
+					);
+				} else {
+					setStatus(
+						'#jt-gdpr-csv-status',
+						res.data && res.data.message ? res.data.message : 'Error'
+					);
+				}
+			} )
+			.fail( function ( xhr ) {
+				setStatus(
+					'#jt-gdpr-csv-status',
+					ajaxFailMessage( xhr, 'Request failed.' )
+				);
+			} )
+			.always( function () {
+				$btn.prop( 'disabled', false );
+			} );
+	} );
+
 	function setTestResult( $out, msg, ok ) {
 		$out.text( msg );
 		$out.removeClass( 'jt-test-ok jt-test-fail' );

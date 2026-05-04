@@ -108,4 +108,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 				<input type="hidden" id="jt-discover-max-pages" value="15" />
 
+				<div class="jt-panel jt-panel--gdpr-csv">
+					<div class="jt-panel__header">
+						<h2 class="jt-panel__title"><?php esc_html_e( 'GDPR / data export (CSV)', 'jardin-toasts' ); ?></h2>
+						<p class="jt-panel__summary"><?php esc_html_e( 'After Untappd emails your personal data export, download the check-ins CSV and import it here. Rows are matched by check-in ID; existing posts are updated. No file field is posted with “Save changes” — upload runs only when you click Import.', 'jardin-toasts' ); ?></p>
+					</div>
+					<div class="jt-panel__body">
+						<p class="jt-panel__inline-actions">
+							<input type="file" id="jt-gdpr-csv-file" accept=".csv,text/csv,text/plain" />
+							<button type="button" class="button button-secondary" id="jt-import-gdpr-csv"><?php esc_html_e( 'Import check-ins CSV', 'jardin-toasts' ); ?></button>
+							<span class="jt-ajax-status jt-ajax-status--block" id="jt-gdpr-csv-status" aria-live="polite"></span>
+						</p>
+						<p class="description"><?php esc_html_e( 'Expected columns include checkin_id, checkin_url, beer_name, brewery_name, rating_score, created_at, comment, venue_name, serving_type, beer_abv, beer_ibu, photo_url (names may vary). Use filters jt_gdpr_csv_map_row / jt_gdpr_csv_max_rows if your export differs.', 'jardin-toasts' ); ?></p>
+					</div>
+				</div>
+
 			</div>

@@ -21,7 +21,7 @@ $tabs     = array(
 
 $tab_intros = array(
 	'untappd'  => __( 'Your RSS URL and profile username identify the same Untappd account. RSS discovers new check-ins; the public profile is used for historical backfill and for scraping full details.', 'jardin-toasts' ),
-	'sync'     => __( 'Background jobs pull recent check-ins from RSS and can drain the historical import queue. Use “Run sync now” for an immediate RSS run, or discover / import batches for older check-ins.', 'jardin-toasts' ),
+	'sync'     => __( 'Background jobs pull recent check-ins from RSS and can drain the historical import queue. Use “Run sync now” for an immediate RSS run, discover / import batches for older check-ins, or import a GDPR data-export CSV for a full history.', 'jardin-toasts' ),
 	'display'  => __( 'Control how archives look, what gets stored with each check-in, and how ratings map to stars on the front of your site.', 'jardin-toasts' ),
 	'advanced' => __( 'Fine-tune scraping pace, structured data, notifications, and troubleshooting logs.', 'jardin-toasts' ),
 );

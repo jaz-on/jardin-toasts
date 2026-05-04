@@ -33,6 +33,7 @@ class JT_Admin {
 		add_action( 'wp_ajax_' . Jardin_Toasts_Keys::AJAX_CRAWL_BATCH, array( $this, 'ajax_crawl_batch' ) );
 		add_action( 'wp_ajax_' . Jardin_Toasts_Keys::AJAX_TEST_RSS, array( $this, 'ajax_test_rss' ) );
 		add_action( 'wp_ajax_' . Jardin_Toasts_Keys::AJAX_TEST_PROFILE, array( $this, 'ajax_test_profile' ) );
+		add_action( 'wp_ajax_' . Jardin_Toasts_Keys::AJAX_IMPORT_GDPR_CSV, array( $this, 'ajax_import_gdpr_csv' ) );
 		add_action( 'wp_ajax_jt_sync_now', array( $this, 'ajax_sync_now' ) );
 		add_action( 'wp_ajax_jt_crawl_discover', array( $this, 'ajax_crawl_discover' ) );
 		add_action( 'wp_ajax_jt_crawl_batch', array( $this, 'ajax_crawl_batch' ) );
@@ -142,6 +143,7 @@ class JT_Admin {
 				'ajaxCrawlBatch'     => Jardin_Toasts_Keys::AJAX_CRAWL_BATCH,
 				'ajaxTestRss'        => Jardin_Toasts_Keys::AJAX_TEST_RSS,
 				'ajaxTestProfile'    => Jardin_Toasts_Keys::AJAX_TEST_PROFILE,
+				'ajaxImportGdprCsv'  => Jardin_Toasts_Keys::AJAX_IMPORT_GDPR_CSV,
 				'rssUsername'       => jt_parse_username_from_rss_url( jt_get_rss_feed_url() ),
 				'placeholderId'     => $placeholder_id,
 				'placeholderThumb' => $placeholder_thumb ? $placeholder_thumb : '',
@@ -154,6 +156,8 @@ class JT_Admin {
 					'removeImage'    => __( 'Remove', 'jardin-toasts' ),
 					'testing'        => __( 'Testing…', 'jardin-toasts' ),
 					'networkError'   => __( 'Network error.', 'jardin-toasts' ),
+					'importGdprPick' => __( 'Choose a CSV file first.', 'jardin-toasts' ),
+					'importGdprWorking' => __( 'Importing CSV…', 'jardin-toasts' ),
 				),
 			)
 		);
@@ -430,6 +434,73 @@ class JT_Admin {
 				'remaining'    => count( $queue ),
 				'total_imported' => $cp['total_imported'],
 				'done'         => empty( $queue ),
+			)
+		);
+	}
+
+	/**
+	 * AJAX: import check-ins from an Untappd GDPR / personal data export CSV (check-ins attachment).
+	 *
+	 * @return void
+	 */
+	public function ajax_import_gdpr_csv() {
+		check_ajax_referer( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX, 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ) );
+		}
+
+		if ( empty( $_FILES['jt_gdpr_csv'] ) || ! isset( $_FILES['jt_gdpr_csv']['tmp_name'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'No file uploaded.', 'jardin-toasts' ) ) );
+		}
+
+		$f = $_FILES['jt_gdpr_csv'];
+		if ( UPLOAD_ERR_OK !== (int) $f['error'] ) {
+			wp_send_json_error( array( 'message' => __( 'Upload failed.', 'jardin-toasts' ) ) );
+		}
+
+		$max_upload = (int) wp_max_upload_size();
+		$cap        = $max_upload > 0 ? min( $max_upload, 25 * MB_IN_BYTES ) : 25 * MB_IN_BYTES;
+		if ( isset( $f['size'] ) && (int) $f['size'] > $cap ) {
+			wp_send_json_error( array( 'message' => __( 'File is too large for this site’s upload limit.', 'jardin-toasts' ) ) );
+		}
+
+		$name = isset( $f['name'] ) ? (string) $f['name'] : '';
+		$ext  = strtolower( pathinfo( $name, PATHINFO_EXTENSION ) );
+		if ( 'csv' !== $ext ) {
+			wp_send_json_error( array( 'message' => __( 'Please upload a .csv file.', 'jardin-toasts' ) ) );
+		}
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- read client-uploaded tmp path only
+		$stream = fopen( $f['tmp_name'], 'rb' );
+		if ( false === $stream ) {
+			wp_send_json_error( array( 'message' => __( 'Could not read the uploaded file.', 'jardin-toasts' ) ) );
+		}
+
+		if ( function_exists( 'set_time_limit' ) ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			@set_time_limit( 300 );
+		}
+
+		$parser = new JT_Gdpr_Csv_Importer();
+		$stats  = $parser->import_stream( $stream );
+		fclose( $stream );
+
+		$msg = sprintf(
+			/* translators: 1: imported count, 2: skipped count */
+			__( 'Imported %1$d check-in(s); skipped %2$d row(s).', 'jardin-toasts' ),
+			(int) $stats['imported'],
+			(int) $stats['skipped']
+		);
+		if ( ! empty( $stats['errors'] ) ) {
+			$msg .= ' ' . __( 'Sample issues:', 'jardin-toasts' ) . ' ' . implode( ' | ', array_slice( $stats['errors'], 0, 12 ) );
+		}
+
+		wp_send_json_success(
+			array(
+				'imported' => (int) $stats['imported'],
+				'skipped'  => (int) $stats['skipped'],
+				'errors'   => $stats['errors'],
+				'message'  => $msg,
 			)
 		);
 	}
