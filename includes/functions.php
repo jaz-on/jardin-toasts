@@ -177,6 +177,45 @@ function jt_settings_importer_choice_lists() {
 }
 
 /**
+ * Check-in IDs from the configured Untappd RSS feed (for discovery merge).
+ *
+ * Untappd’s public profile HTML only exposes a few recent check-ins; the RSS feed
+ * lists more items (~25) without signing in.
+ *
+ * @return list<string>
+ */
+function jt_discovery_feed_checkin_ids() {
+	$url = jt_get_rss_feed_url();
+	if ( ! is_string( $url ) || '' === trim( $url ) ) {
+		return array();
+	}
+	if ( ! function_exists( 'fetch_feed' ) ) {
+		require_once ABSPATH . WPINC . '/feed.php';
+	}
+	$feed = fetch_feed( $url );
+	if ( is_wp_error( $feed ) ) {
+		JT_Logger::warning( 'Discovery: RSS feed not readable — ' . $feed->get_error_message() );
+		return array();
+	}
+	$items = $feed->get_items( 0, 50 );
+	if ( empty( $items ) ) {
+		return array();
+	}
+	$out = array();
+	foreach ( $items as $item ) {
+		$link = $item->get_link();
+		if ( ! is_string( $link ) || '' === $link ) {
+			continue;
+		}
+		$cid = jt_parse_checkin_id_from_url( $link );
+		if ( $cid ) {
+			$out[ (string) $cid ] = true;
+		}
+	}
+	return array_keys( $out );
+}
+
+/**
  * User-Agent for outbound HTTP (scrape, crawl).
  *
  * Same filter order as other doubles (`jt_*` then `jardin_toasts_*`).
@@ -325,16 +364,20 @@ function jt_get_post_id_by_checkin_id( $checkin_id ) {
 	if ( '' === $checkin_id ) {
 		return 0;
 	}
-	$key = '_jt_checkin_id';
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-	$post_id = $wpdb->get_var(
-		$wpdb->prepare(
-			"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s LIMIT 1",
-			$key,
-			$checkin_id
-		)
-	);
-	return $post_id ? absint( $post_id ) : 0;
+	foreach ( array( '_jt_checkin_id', '_jb_checkin_id' ) as $key ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$post_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s LIMIT 1",
+				$key,
+				$checkin_id
+			)
+		);
+		if ( $post_id ) {
+			return absint( $post_id );
+		}
+	}
+	return 0;
 }
 
 /**
@@ -359,10 +402,9 @@ function jt_get_post_ids_by_checkin_ids( array $checkin_ids ) {
 	$ids = array_slice( $ids, 0, 100 );
 	$placeholders = implode( ',', array_fill( 0, count( $ids ), '%s' ) );
 	// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPlaceholder
-	$sql = "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value IN ({$placeholders})";
-	$params = array_merge( array( '_jt_checkin_id' ), $ids );
+	$sql = "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key IN ('_jt_checkin_id','_jb_checkin_id') AND meta_value IN ({$placeholders})";
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-	$prepared = $wpdb->prepare( $sql, $params );
+	$prepared = $wpdb->prepare( $sql, ...$ids );
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$rows = $wpdb->get_results( $prepared, ARRAY_A );
 	if ( ! is_array( $rows ) ) {

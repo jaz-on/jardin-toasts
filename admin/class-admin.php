@@ -242,7 +242,7 @@ class JT_Admin {
 	public function ajax_sync_now() {
 		check_ajax_referer( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX, 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ) );
 		}
 		$parser   = new JT_RSS_Parser();
 		$importer = new JT_Importer();
@@ -253,7 +253,7 @@ class JT_Admin {
 				$result->get_error_message(),
 				'error'
 			);
-			wp_send_json_error( array( 'message' => $result->get_error_message() ), 500 );
+			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
 		}
 		wp_send_json_success( array( 'message' => __( 'Sync finished.', 'jardin-toasts' ) ) );
 	}
@@ -266,19 +266,38 @@ class JT_Admin {
 	public function ajax_crawl_discover() {
 		check_ajax_referer( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX, 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ) );
 		}
 		$username  = isset( $_POST['username'] ) ? sanitize_user( wp_unslash( $_POST['username'] ), true ) : '';
 		$max_pages = isset( $_POST['max_pages'] ) ? absint( $_POST['max_pages'] ) : 10;
 		if ( ! $username ) {
-			wp_send_json_error( array( 'message' => __( 'Username required.', 'jardin-toasts' ) ), 400 );
+			wp_send_json_error( array( 'message' => __( 'Username required.', 'jardin-toasts' ) ) );
 		}
 
-		$crawler = new JT_Crawler();
-		$ids     = $crawler->discover_checkins( $username, $max_pages );
-		if ( is_wp_error( $ids ) ) {
-			wp_send_json_error( array( 'message' => $ids->get_error_message() ), 500 );
+		$crawler   = new JT_Crawler();
+		$crawl_ids = $crawler->discover_checkins( $username, $max_pages );
+		if ( is_wp_error( $crawl_ids ) ) {
+			wp_send_json_error( array( 'message' => $crawl_ids->get_error_message() ) );
 		}
+
+		$feed_ids = jt_discovery_feed_checkin_ids();
+		$merged    = array();
+		foreach ( (array) $crawl_ids as $id ) {
+			$s = sanitize_text_field( (string) $id );
+			if ( '' !== $s ) {
+				$merged[ $s ] = true;
+			}
+		}
+		foreach ( (array) $feed_ids as $id ) {
+			$s = sanitize_text_field( (string) $id );
+			if ( '' !== $s ) {
+				$merged[ $s ] = true;
+			}
+		}
+		$ids = array_keys( $merged );
+
+		$crawl_count = count( (array) $crawl_ids );
+		$feed_count  = count( (array) $feed_ids );
 
 		$queue = array();
 		foreach ( $ids as $id ) {
@@ -305,16 +324,16 @@ class JT_Admin {
 
 		if ( $discovered > 0 && 0 === $queued ) {
 			$message = sprintf(
-				/* translators: %d: number of check-ins found on Untappd profile pages */
-				__( 'Found %d check-in(s) on your profile, but each one already exists in WordPress (same Untappd check-in ID). Nothing new to queue.', 'jardin-toasts' ),
+				/* translators: %d: number of unique check-in IDs from profile crawl + RSS */
+				__( 'Found %d unique check-in ID(s) (public profile crawl plus your configured RSS feed), but each one already exists in WordPress. Nothing new to queue.', 'jardin-toasts' ),
 				$discovered
 			);
 		} elseif ( 0 === $discovered ) {
 			$message = __( 'No check-in links were collected. If the problem persists, your host may not be able to reach Untappd from PHP.', 'jardin-toasts' );
 		} else {
 			$message = sprintf(
-				/* translators: 1: newly queued count, 2: total discovered on profile */
-				__( '%1$d new check-in(s) queued for import (out of %2$d found on the crawled profile pages).', 'jardin-toasts' ),
+				/* translators: 1: newly queued count, 2: total unique IDs from crawl + RSS */
+				__( '%1$d new check-in(s) queued for import (out of %2$d unique IDs from the public profile crawl and RSS feed).', 'jardin-toasts' ),
 				$queued,
 				$discovered
 			);
@@ -322,6 +341,11 @@ class JT_Admin {
 			$message .= jt_using_action_scheduler()
 				? __( 'Imports will continue in the background via Action Scheduler.', 'jardin-toasts' )
 				: __( 'Imports will continue in the background via WP-Cron.', 'jardin-toasts' );
+		}
+
+		if ( $feed_count > 0 && $crawl_count < $discovered ) {
+			$message .= ' ';
+			$message .= __( 'Note: Untappd only shows a handful of check-ins on anonymous profile HTML; the RSS feed supplies more recent IDs without signing in.', 'jardin-toasts' );
 		}
 
 		if ( $queued > 0 ) {
@@ -346,12 +370,12 @@ class JT_Admin {
 	public function ajax_crawl_batch() {
 		check_ajax_referer( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX, 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ) );
 		}
 
 		$cp = get_option( 'jt_import_checkpoint', array() );
 		if ( ! is_array( $cp ) || empty( $cp['queue'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Nothing to import. Run discovery first.', 'jardin-toasts' ) ), 400 );
+			wp_send_json_error( array( 'message' => __( 'Nothing to import. Run discovery first.', 'jardin-toasts' ) ) );
 		}
 
 		$batch_size = absint( get_option( 'jt_import_batch_size', 25 ) );
@@ -413,18 +437,18 @@ class JT_Admin {
 	public function ajax_test_rss() {
 		check_ajax_referer( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX, 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ) );
 		}
 		$url = jt_get_rss_feed_url();
 		if ( ! is_string( $url ) || '' === trim( $url ) ) {
-			wp_send_json_error( array( 'message' => __( 'Save an RSS feed URL first.', 'jardin-toasts' ) ), 400 );
+			wp_send_json_error( array( 'message' => __( 'Save an RSS feed URL first.', 'jardin-toasts' ) ) );
 		}
 		if ( ! function_exists( 'fetch_feed' ) ) {
 			require_once ABSPATH . WPINC . '/feed.php';
 		}
 		$feed = fetch_feed( $url );
 		if ( is_wp_error( $feed ) ) {
-			wp_send_json_error( array( 'message' => $feed->get_error_message() ), 500 );
+			wp_send_json_error( array( 'message' => $feed->get_error_message() ) );
 		}
 		$n = $feed->get_item_quantity();
 		wp_send_json_success(
@@ -446,11 +470,11 @@ class JT_Admin {
 	public function ajax_test_profile() {
 		check_ajax_referer( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX, 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ) );
 		}
 		$user = jt_get_untappd_username();
 		if ( ! is_string( $user ) || '' === $user ) {
-			wp_send_json_error( array( 'message' => __( 'Save an Untappd username first.', 'jardin-toasts' ) ), 400 );
+			wp_send_json_error( array( 'message' => __( 'Save an Untappd username first.', 'jardin-toasts' ) ) );
 		}
 		$url = 'https://untappd.com/user/' . rawurlencode( $user );
 		$response = wp_remote_get(
@@ -465,7 +489,7 @@ class JT_Admin {
 			)
 		);
 		if ( is_wp_error( $response ) ) {
-			wp_send_json_error( array( 'message' => $response->get_error_message() ), 500 );
+			wp_send_json_error( array( 'message' => $response->get_error_message() ) );
 		}
 		$code = wp_remote_retrieve_response_code( $response );
 		$html = wp_remote_retrieve_body( $response );
@@ -479,8 +503,7 @@ class JT_Admin {
 						(int) $code,
 						$len
 					),
-				),
-				500
+				)
 			);
 		}
 		$slug = sanitize_user( $user, true );
@@ -489,8 +512,7 @@ class JT_Admin {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Profile loaded but no check-in links matched. Untappd markup may have changed, or the username does not match this HTML.', 'jardin-toasts' ),
-				),
-				500
+				)
 			);
 		}
 		wp_send_json_success(

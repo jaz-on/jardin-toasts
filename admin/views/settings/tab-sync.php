@@ -71,7 +71,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<div class="jt-panel jt-panel--actions jt-sync-action-panel" id="jt-import-backfill">
 						<div class="jt-panel__header">
 							<h2 class="jt-panel__title"><?php esc_html_e( 'Historical import', 'jardin-toasts' ); ?></h2>
-							<p class="jt-panel__summary"><?php esc_html_e( 'Discovery reads your public profile and queues missing check-ins; the queue drains via Action Scheduler when available, otherwise WP-Cron.', 'jardin-toasts' ); ?></p>
+							<p class="jt-panel__summary"><?php esc_html_e( 'Discovery merges check-in IDs from your public profile HTML (only a few rows without a browser session) with your configured Untappd RSS feed (more recent items). It queues IDs not already stored in WordPress; the queue drains via Action Scheduler when available, otherwise WP-Cron.', 'jardin-toasts' ); ?></p>
 						</div>
 						<div class="jt-panel__body">
 							<p class="jt-panel__inline-actions">

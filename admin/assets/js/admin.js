@@ -5,6 +5,27 @@
 		$( el ).text( msg );
 	}
 
+	/**
+	 * WordPress admin-ajax may return JSON with a message on HTTP error responses.
+	 *
+	 * @param {JQuery.jqXHR} xhr
+	 * @param {string} fallback
+	 * @return {string}
+	 */
+	function ajaxFailMessage( xhr, fallback ) {
+		var d;
+		if ( xhr && xhr.responseJSON ) {
+			d = xhr.responseJSON.data;
+			if ( typeof d === 'string' ) {
+				return d;
+			}
+			if ( d && d.message ) {
+				return d.message;
+			}
+		}
+		return fallback || 'Request failed.';
+	}
+
 	$( document ).on( 'click', '#jt-sync-now', function () {
 		var $btn = $( this );
 		$btn.prop( 'disabled', true );
@@ -23,8 +44,8 @@
 					setStatus( '#jt-sync-status', res.data && res.data.message ? res.data.message : 'Error' );
 				}
 			} )
-			.fail( function () {
-				setStatus( '#jt-sync-status', 'Request failed.' );
+			.fail( function ( xhr ) {
+				setStatus( '#jt-sync-status', ajaxFailMessage( xhr, 'Request failed.' ) );
 			} )
 			.always( function () {
 				$btn.prop( 'disabled', false );
@@ -53,8 +74,8 @@
 					setStatus( '#jt-import-status', res.data && res.data.message ? res.data.message : 'Error' );
 				}
 			} )
-			.fail( function () {
-				setStatus( '#jt-import-status', 'Request failed.' );
+			.fail( function ( xhr ) {
+				setStatus( '#jt-import-status', ajaxFailMessage( xhr, 'Request failed.' ) );
 			} )
 			.always( function () {
 				$btn.prop( 'disabled', false );
@@ -91,8 +112,8 @@
 					setStatus( '#jt-import-status', res.data && res.data.message ? res.data.message : 'Error' );
 				}
 			} )
-			.fail( function () {
-				setStatus( '#jt-import-status', 'Request failed.' );
+			.fail( function ( xhr ) {
+				setStatus( '#jt-import-status', ajaxFailMessage( xhr, 'Request failed.' ) );
 			} )
 			.always( function () {
 				$btn.prop( 'disabled', false );
@@ -137,8 +158,8 @@
 						);
 					}
 				} )
-				.fail( function () {
-					setTestResult( $out, jtAdmin.i18n.networkError, false );
+				.fail( function ( xhr ) {
+					setTestResult( $out, ajaxFailMessage( xhr, jtAdmin.i18n.networkError ), false );
 				} )
 				.always( function () {
 					$btn.prop( 'disabled', false );
