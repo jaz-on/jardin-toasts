@@ -135,6 +135,48 @@ function jt_get_untappd_username() {
 }
 
 /**
+ * Normalized batch size / crawl delay choices for the settings UI.
+ *
+ * @return array{batch_current:int,delay_current:int,batch_choices:array<int,string>,delay_choices:array<int,string>}
+ */
+function jt_settings_importer_choice_lists() {
+	$batch_current = (int) JT_Settings::get( 'jt_import_batch_size' );
+	$delay_current = (int) JT_Settings::get( 'jt_import_delay' );
+	$batch_choices = array(
+		10  => __( '10 check-ins — small steps', 'jardin-toasts' ),
+		15  => __( '15 check-ins — light', 'jardin-toasts' ),
+		25  => __( '25 check-ins — balanced (recommended)', 'jardin-toasts' ),
+		40  => __( '40 check-ins — fewer clicks', 'jardin-toasts' ),
+		50  => __( '50 check-ins — large (may time out)', 'jardin-toasts' ),
+	);
+	$delay_choices = array(
+		0 => __( 'No pause (fast hosts only)', 'jardin-toasts' ),
+		1 => __( '1 second between requests', 'jardin-toasts' ),
+		2 => __( '2 seconds — gentle', 'jardin-toasts' ),
+		3 => __( '3 seconds — polite (default)', 'jardin-toasts' ),
+		5 => __( '5 seconds — very safe', 'jardin-toasts' ),
+		8 => __( '8 seconds — slowest', 'jardin-toasts' ),
+	);
+	if ( ! array_key_exists( $batch_current, $batch_choices ) ) {
+		$batch_choices[ $batch_current ] = sprintf(
+			/* translators: %d: number of check-ins */
+			__( '%d check-ins (current)', 'jardin-toasts' ),
+			$batch_current
+		);
+		ksort( $batch_choices, SORT_NUMERIC );
+	}
+	if ( ! array_key_exists( $delay_current, $delay_choices ) ) {
+		$delay_choices[ $delay_current ] = sprintf(
+			/* translators: %d: seconds */
+			__( '%d seconds (current)', 'jardin-toasts' ),
+			$delay_current
+		);
+		ksort( $delay_choices, SORT_NUMERIC );
+	}
+	return compact( 'batch_current', 'delay_current', 'batch_choices', 'delay_choices' );
+}
+
+/**
  * User-Agent for outbound HTTP (scrape, crawl).
  *
  * Same filter order as other doubles (`jt_*` then `jardin_toasts_*`).

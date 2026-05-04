@@ -154,10 +154,49 @@
 	margin-bottom: 0.35em;
 }
 
-.jt-settings-footer--inline {
-	margin-top: 1rem;
-	padding-top: 1rem;
+.jt-panel--compact .jt-panel__header {
+	padding-bottom: 0.5rem;
+}
+
+.jt-panel--compact .jt-panel__summary {
+	margin-top: 0.35rem;
+}
+
+.jt-panel__footer {
+	padding: 0.85rem 1.25rem 1rem;
 	border-top: 1px solid var(--jd-admin-border, #dcdcde);
+	background: #fafafa;
+}
+
+.jt-sync-actions-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(280px, 1fr));
+	gap: 1rem;
+	align-items: stretch;
+	margin-top: 0.25rem;
+}
+
+.jt-sync-actions-grid .jt-sync-action-panel {
+	margin-bottom: 0;
+}
+
+@media (max-width: 960px) {
+	.jt-sync-actions-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+.jt-panel__inline-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem 0.75rem;
+	margin: 0 0 1rem;
+}
+
+.jt-ajax-status--block {
+	flex: 1 1 100%;
+	min-height: 1.25em;
 }
 
 .jt-panel__body--test-row {
