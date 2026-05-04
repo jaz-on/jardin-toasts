@@ -206,6 +206,12 @@
 	gap: 0.75rem;
 }
 
+/* Beat shared shell `.jt-panel__body--inline` (row flex) when both classes are used. */
+.jt-panel__body--inline.jt-panel__body--test-row {
+	flex-direction: column;
+	align-items: flex-start;
+}
+
 .jt-test-row {
 	margin: 0;
 	display: flex;
