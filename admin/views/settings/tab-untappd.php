@@ -46,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<th scope="row"><label for="jt_untappd_session_cookie"><?php esc_html_e( 'Session cookie (optional)', 'jardin-toasts' ); ?></label></th>
 								<td>
 									<textarea name="jt_untappd_session_cookie" id="jt_untappd_session_cookie" class="large-text code" rows="3" autocomplete="off" spellcheck="false" placeholder="<?php esc_attr_e( 'name=value; name2=value2 …', 'jardin-toasts' ); ?>"><?php echo esc_textarea( (string) JT_Settings::get( 'jt_untappd_session_cookie' ) ); ?></textarea>
-									<p class="description"><?php esc_html_e( 'While logged in on untappd.com in your browser, copy the full Cookie header (or all session cookies concatenated with “; ”) from DevTools → Network → any document request to untappd.com. When this field is non-empty, historical discovery uses the same “Show more” pagination as the site (/profile/more_feed/…) instead of anonymous HTML only. Treat this like a password: anyone with it can act as you on Untappd until it expires.', 'jardin-toasts' ); ?></p>
+									<p class="description"><?php esc_html_e( 'While logged in on untappd.com, copy the full Cookie header value from DevTools → Network → select the HTML document request for your profile (untappd.com/user/…), not a static asset. Cloudflare’s cf_clearance is often bound to your IP: if WordPress runs on another host, the same string may be rejected — in that case run a test request from the server (SSH + curl) or accept that only the shallow public crawl + RSS applies. When this field is set, discovery uses the same “Show more” pagination as the site. Treat it like a password.', 'jardin-toasts' ); ?></p>
 								</td>
 							</tr>
 						</table>

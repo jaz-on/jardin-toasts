@@ -183,6 +183,99 @@ function jt_untappd_http_headers( $referer_url = '' ) {
 }
 
 /**
+ * User-Agent for Untappd when a session cookie is used (plugin UA is often blocked).
+ *
+ * @return string
+ */
+function jt_untappd_outbound_user_agent() {
+	$default = jt_http_user_agent_string();
+	if ( '' === jt_get_untappd_session_cookie() ) {
+		return $default;
+	}
+	$browser = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0';
+	return (string) apply_filters(
+		'jardin_toasts_untappd_session_user_agent',
+		apply_filters( 'jt_untappd_session_user_agent', $browser, $default ),
+		$default
+	);
+}
+
+/**
+ * Whether HTML looks like a Cloudflare challenge or block page.
+ *
+ * @param string $html Response body.
+ * @return bool
+ */
+function jt_untappd_html_looks_like_cloudflare_challenge( $html ) {
+	if ( ! is_string( $html ) || '' === $html ) {
+		return false;
+	}
+	$h = strtolower( $html );
+	return str_contains( $h, 'cf-browser-verification' )
+		|| str_contains( $h, 'cf-challenge' )
+		|| str_contains( $h, 'just a moment' )
+		|| str_contains( $h, 'attention required' )
+		|| str_contains( $h, 'enable javascript and cookies' );
+}
+
+/**
+ * GET Untappd with session cookie, without following redirects (more_feed returns 303 to home when rejected).
+ *
+ * @param string $url     Full URL.
+ * @param string $referer Referer header (profile URL).
+ * @return string|WP_Error Body on 200, error otherwise.
+ */
+function jt_untappd_remote_get_with_session( $url, $referer ) {
+	$response = wp_remote_get(
+		$url,
+		array(
+			'timeout'     => 25,
+			'redirection' => 0,
+			'headers'     => jt_untappd_http_headers( $referer ),
+			'user-agent'  => jt_untappd_outbound_user_agent(),
+		)
+	);
+	if ( is_wp_error( $response ) ) {
+		return $response;
+	}
+	$code = wp_remote_retrieve_response_code( $response );
+	if ( $code >= 300 && $code < 400 ) {
+		$loc = wp_remote_retrieve_header( $response, 'location' );
+		$loc = is_string( $loc ) ? $loc : '';
+		return new WP_Error(
+			'untappd_session_redirect',
+			sprintf(
+				/* translators: 1: HTTP status code, 2: Location header or "none" */
+				__( 'Untappd returned HTTP %1$d (redirect) instead of the activity feed — the session cookie is not accepted for this request. Location: %2$s. Common causes: cookie copied from another machine, expired login, or Cloudflare token (cf_clearance) tied to a different IP than your WordPress server.', 'jardin-toasts' ),
+				(int) $code,
+				'' !== $loc ? $loc : __( '(none)', 'jardin-toasts' )
+			)
+		);
+	}
+	if ( 200 !== (int) $code ) {
+		return new WP_Error(
+			'untappd_session_http',
+			sprintf(
+				/* translators: %d: HTTP status */
+				__( 'Untappd returned HTTP %d for the authenticated request.', 'jardin-toasts' ),
+				(int) $code
+			)
+		);
+	}
+	$body = wp_remote_retrieve_body( $response );
+	if ( ! is_string( $body ) ) {
+		return new WP_Error( 'untappd_session_body', __( 'Empty response body from Untappd.', 'jardin-toasts' ) );
+	}
+	if ( jt_untappd_html_looks_like_cloudflare_challenge( $body ) ) {
+		return new WP_Error(
+			'untappd_session_cf',
+			__( 'Untappd returned a Cloudflare challenge page instead of your profile. Your host’s outbound IP must pass Cloudflare the same way your browser does; a cookie copied from your laptop often fails on a remote server.', 'jardin-toasts' )
+		);
+	}
+	return $body;
+}
+
+/**
  * Normalized batch size / crawl delay choices for the settings UI.
  *
  * @return array{batch_current:int,delay_current:int,batch_choices:array<int,string>,delay_choices:array<int,string>}

@@ -142,30 +142,18 @@ class JT_Crawler {
 			1
 		);
 
-		$response = wp_remote_get(
-			$profile,
-			array(
-				'timeout'    => 25,
-				'headers'    => jt_untappd_http_headers( $profile ),
-				'user-agent' => jt_http_user_agent_string(),
-			)
-		);
-
-		if ( is_wp_error( $response ) ) {
-			return $response;
+		$html = jt_untappd_remote_get_with_session( $profile, $profile );
+		if ( is_wp_error( $html ) ) {
+			return $html;
 		}
 
-		$html = wp_remote_retrieve_body( $response );
-		$code = wp_remote_retrieve_response_code( $response );
-		$len  = is_string( $html ) ? strlen( $html ) : 0;
-
-		if ( ! is_string( $html ) || $len < 200 ) {
+		$len = strlen( $html );
+		if ( $len < 200 ) {
 			return new WP_Error(
 				'untappd_session_empty',
 				sprintf(
-					/* translators: 1: HTTP status, 2: response bytes */
-					__( 'Untappd profile response was too small with your saved session cookie (HTTP %1$d, %2$d bytes). The cookie may be expired or incomplete.', 'jardin-toasts' ),
-					(int) $code,
+					/* translators: %d: response bytes */
+					__( 'Untappd profile response was too small with your saved session cookie (%d bytes). The cookie may be expired or incomplete.', 'jardin-toasts' ),
 					$len
 				)
 			);
@@ -212,26 +200,21 @@ class JT_Crawler {
 				$offset
 			);
 
-			$response = wp_remote_get(
-				$feed_url,
-				array(
-					'timeout'    => 25,
-					'headers'    => jt_untappd_http_headers( $profile ),
-					'user-agent' => jt_http_user_agent_string(),
-				)
-			);
-
-			if ( is_wp_error( $response ) ) {
-				return $response;
+			$fragment = jt_untappd_remote_get_with_session( $feed_url, $profile );
+			if ( is_wp_error( $fragment ) ) {
+				return $fragment;
 			}
 
-			$fragment = wp_remote_retrieve_body( $response );
-			if ( ! is_string( $fragment ) ) {
-				break;
-			}
 			$fragment = trim( $fragment );
 			if ( '' === $fragment || strlen( $fragment ) < 30 ) {
 				break;
+			}
+
+			if ( preg_match( '/<!DOCTYPE\s+html/i', $fragment ) && strlen( $fragment ) > 3000 ) {
+				return new WP_Error(
+					'untappd_session_more_feed_html',
+					__( 'Untappd “load more” returned a full web page instead of check-in rows — the session is not valid for pagination from this server (see redirect / Cloudflare notes above).', 'jardin-toasts' )
+				);
 			}
 
 			$new_ids = $this->extract_checkin_ids_from_html( $fragment, $username );
@@ -273,6 +256,9 @@ class JT_Crawler {
 		}
 		$start = stripos( $html, 'id="main-stream"' );
 		if ( false === $start ) {
+			$start = stripos( $html, "id='main-stream'" );
+		}
+		if ( false === $start ) {
 			return null;
 		}
 		$needles = array( 'more_checkins_logged', 'class="yellow button more_checkins', 'class=\'yellow button more_checkins' );
@@ -300,7 +286,7 @@ class JT_Crawler {
 		if ( ! is_string( $chunk ) || '' === $chunk ) {
 			return null;
 		}
-		if ( ! preg_match_all( '/data-checkin-id="(\d+)"/', $chunk, $m ) || empty( $m[1] ) ) {
+		if ( ! preg_match_all( '/data-checkin-id\s*=\s*["\'](\d+)["\']/i', $chunk, $m ) || empty( $m[1] ) ) {
 			return null;
 		}
 		$ids = $m[1];

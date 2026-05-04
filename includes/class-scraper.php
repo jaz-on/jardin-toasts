@@ -50,7 +50,7 @@ class JT_Scraper {
 							'Accept' => 'text/html,application/xhtml+xml',
 						)
 					),
-					'user-agent' => jt_http_user_agent_string(),
+					'user-agent' => jt_untappd_outbound_user_agent(),
 				)
 			);
 

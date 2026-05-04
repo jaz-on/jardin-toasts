@@ -477,20 +477,29 @@ class JT_Admin {
 			wp_send_json_error( array( 'message' => __( 'Save an Untappd username first.', 'jardin-toasts' ) ) );
 		}
 		$url = 'https://untappd.com/user/' . rawurlencode( $user );
-		$response = wp_remote_get(
-			$url,
-			array(
-				'timeout'    => 25,
-				'user-agent' => jt_http_user_agent_string(),
-				'headers'    => jt_untappd_http_headers( jt_get_untappd_session_cookie() ? $url : '' ),
-			)
-		);
-		if ( is_wp_error( $response ) ) {
-			wp_send_json_error( array( 'message' => $response->get_error_message() ) );
+		if ( jt_get_untappd_session_cookie() ) {
+			$html = jt_untappd_remote_get_with_session( $url, $url );
+			if ( is_wp_error( $html ) ) {
+				wp_send_json_error( array( 'message' => $html->get_error_message() ) );
+			}
+			$code = 200;
+			$len  = strlen( $html );
+		} else {
+			$response = wp_remote_get(
+				$url,
+				array(
+					'timeout'    => 25,
+					'user-agent' => jt_http_user_agent_string(),
+					'headers'    => jt_untappd_http_headers( '' ),
+				)
+			);
+			if ( is_wp_error( $response ) ) {
+				wp_send_json_error( array( 'message' => $response->get_error_message() ) );
+			}
+			$code = wp_remote_retrieve_response_code( $response );
+			$html = wp_remote_retrieve_body( $response );
+			$len  = is_string( $html ) ? strlen( $html ) : 0;
 		}
-		$code = wp_remote_retrieve_response_code( $response );
-		$html = wp_remote_retrieve_body( $response );
-		$len  = is_string( $html ) ? strlen( $html ) : 0;
 		if ( $len < 200 ) {
 			wp_send_json_error(
 				array(
