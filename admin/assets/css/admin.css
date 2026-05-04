@@ -199,28 +199,22 @@
 	min-height: 1.25em;
 }
 
-/* Untappd “Test connections”: block stack so shell flex utilities cannot lay rows side-by-side. */
-.jt-panel__body--test-stack {
-	display: block;
+/* Untappd “Test connections”: RSS + profile tests side by side (wraps on narrow widths). */
+.jt-panel__body--test-inline {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 1rem 1.5rem;
 	padding-top: 1rem;
 	padding-bottom: 1rem;
 }
 
-.jt-panel__body--test-stack > .jt-test-row + .jt-test-row {
-	margin-top: 0.75rem;
-}
-
-/* Legacy class kept if an older template still outputs it. */
-.jt-panel__body--test-row {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 0.75rem;
-}
-
-.jt-panel__body--inline.jt-panel__body--test-row {
-	flex-direction: column;
-	align-items: flex-start;
+.jt-panel__body--test-inline > .jt-test-row {
+	flex: 1 1 220px;
+	margin: 0;
+	min-width: 0;
+	max-width: 100%;
 }
 
 .jt-test-row {
@@ -232,15 +226,15 @@
 }
 
 /* Neutral secondary buttons (admin colour scheme can paint all .button with accent). */
-.jt-admin-wrap .jt-panel__body--test-stack .button.button-secondary {
+.jt-admin-wrap .jt-panel__body--test-inline .button.button-secondary {
 	color: #2c3338;
 	border-color: #dcdcde;
 	background: #f6f7f7;
 	box-shadow: 0 1px 0 #f6f7f7;
 }
 
-.jt-admin-wrap .jt-panel__body--test-stack .button.button-secondary:hover,
-.jt-admin-wrap .jt-panel__body--test-stack .button.button-secondary:focus {
+.jt-admin-wrap .jt-panel__body--test-inline .button.button-secondary:hover,
+.jt-admin-wrap .jt-panel__body--test-inline .button.button-secondary:focus {
 	color: #0a4b78;
 	border-color: #0a4b78;
 	background: #f0f0f1;
