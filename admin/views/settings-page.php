@@ -665,4 +665,14 @@ for ( $li = 0; $li <= 5; $li++ ) {
 		</div>
 		<?php endif; ?>
 	</form>
+	<?php if ( isset( $_GET['tab'] ) && 'rating' === sanitize_key( wp_unslash( $_GET['tab'] ) ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
+	<script>
+	(function () {
+		var el = document.getElementById( 'jt-ratings-section' );
+		if ( el ) {
+			el.scrollIntoView( { block: 'start' } );
+		}
+	})();
+	</script>
+	<?php endif; ?>
 </div>

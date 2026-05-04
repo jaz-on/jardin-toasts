@@ -63,18 +63,9 @@ class JT_Admin {
 		}
 		$dest = self::get_settings_url();
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$raw_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
-		if ( $raw_tab ) {
-			$legacy_tabs = array(
-				'import'  => 'sync',
-				'general' => 'display',
-				'rating'  => 'display',
-			);
-			$tab = isset( $legacy_tabs[ $raw_tab ] ) ? $legacy_tabs[ $raw_tab ] : $raw_tab;
+		$tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+		if ( $tab ) {
 			$dest = add_query_arg( 'tab', $tab, $dest );
-			if ( 'rating' === $raw_tab ) {
-				$dest .= '#jt-ratings-section';
-			}
 		}
 		wp_safe_redirect( $dest );
 		exit;
@@ -221,28 +212,15 @@ class JT_Admin {
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$tab_req = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
-		$legacy_map = array(
+		$legacy_tab_map = array(
 			'import'  => 'sync',
 			'general' => 'display',
 			'rating'  => 'display',
 		);
-		if ( $tab_req && isset( $legacy_map[ $tab_req ] ) ) {
-			$params = array(
-				'page' => self::SETTINGS_PAGE_SLUG,
-				'tab'  => $legacy_map[ $tab_req ],
-			);
-			if ( isset( $_GET['settings-updated'] ) ) {
-				$params['settings-updated'] = 'true';
-			}
-			$dest = add_query_arg( $params, admin_url( 'admin.php' ) );
-			if ( 'rating' === $tab_req ) {
-				$dest .= '#jt-ratings-section';
-			}
-			wp_safe_redirect( $dest );
-			exit;
+		$tab = $tab_req ? $tab_req : 'untappd';
+		if ( isset( $legacy_tab_map[ $tab ] ) ) {
+			$tab = $legacy_tab_map[ $tab ];
 		}
-
-		$tab = $tab_req ? $tab_req : 'untappd'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$allowed = array( 'untappd', 'sync', 'display', 'advanced' );
 		if ( ! in_array( $tab, $allowed, true ) ) {
 			$tab = 'untappd';
