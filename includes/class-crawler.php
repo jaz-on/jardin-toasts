@@ -27,6 +27,10 @@ class JT_Crawler {
 			return new WP_Error( 'no_user', __( 'Invalid Untappd username.', 'jardin-toasts' ) );
 		}
 
+		if ( '' !== jt_get_untappd_session_cookie() ) {
+			return $this->discover_checkins_with_session( $username, $max_pages );
+		}
+
 		$seen  = array();
 		$delay = absint( get_option( 'jt_import_delay', 3 ) );
 		$max_pages = max( 1, min( 50, $max_pages ) );
@@ -47,11 +51,8 @@ class JT_Crawler {
 			$response = wp_remote_get(
 				$url,
 				array(
-					'timeout' => 25,
-					'headers' => array(
-						'Accept' => 'text/html',
-						'Accept-Language' => 'en-US,en;q=0.9',
-					),
+					'timeout'    => 25,
+					'headers'    => jt_untappd_http_headers( '' ),
 					'user-agent' => jt_http_user_agent_string(),
 				)
 			);
@@ -117,6 +118,194 @@ class JT_Crawler {
 		}
 
 		return array_keys( $seen );
+	}
+
+	/**
+	 * Discover check-in IDs using a browser session cookie (profile + more_feed AJAX HTML).
+	 *
+	 * Mirrors the logged-in “Show more” flow: GET /user/{user}, then
+	 * GET /profile/more_feed/{user}/{offset}?v2=true with decreasing offsets.
+	 *
+	 * @param string $username Untappd username.
+	 * @param int    $max_pages Controls crawl depth (also scales max more_feed rounds via filter).
+	 * @return array<int,string>|WP_Error
+	 */
+	private function discover_checkins_with_session( $username, $max_pages ) {
+		$seen      = array();
+		$delay     = absint( get_option( 'jt_import_delay', 3 ) );
+		$max_pages = max( 1, min( 50, $max_pages ) );
+		$profile   = 'https://untappd.com/user/' . rawurlencode( $username );
+		$profile   = apply_filters(
+			'jardin_toasts_crawler_profile_url',
+			apply_filters( 'jt_crawler_profile_url', $profile, $username, 1 ),
+			$username,
+			1
+		);
+
+		$response = wp_remote_get(
+			$profile,
+			array(
+				'timeout'    => 25,
+				'headers'    => jt_untappd_http_headers( $profile ),
+				'user-agent' => jt_http_user_agent_string(),
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$html = wp_remote_retrieve_body( $response );
+		$code = wp_remote_retrieve_response_code( $response );
+		$len  = is_string( $html ) ? strlen( $html ) : 0;
+
+		if ( ! is_string( $html ) || $len < 200 ) {
+			return new WP_Error(
+				'untappd_session_empty',
+				sprintf(
+					/* translators: 1: HTTP status, 2: response bytes */
+					__( 'Untappd profile response was too small with your saved session cookie (HTTP %1$d, %2$d bytes). The cookie may be expired or incomplete.', 'jardin-toasts' ),
+					(int) $code,
+					$len
+				)
+			);
+		}
+
+		foreach ( $this->extract_checkin_ids_from_html( $html, $username ) as $id ) {
+			$seen[ $id ] = true;
+		}
+
+		$stream_chunk = $this->html_slice_main_stream( $html );
+		$offset       = $this->last_checkin_id_in_html_chunk( $stream_chunk );
+		if ( null === $offset ) {
+			if ( empty( $seen ) ) {
+				return new WP_Error(
+					'untappd_session_no_stream',
+					__( 'Could not find the activity stream on the profile page with your session cookie. Untappd markup may have changed.', 'jardin-toasts' )
+				);
+			}
+			return array_keys( $seen );
+		}
+
+		$max_more = (int) apply_filters(
+			'jardin_toasts_crawler_session_max_more_feed',
+			apply_filters( 'jt_crawler_session_max_more_feed', min( 400, max( 20, $max_pages * 25 ) ), $max_pages, $username ),
+			$max_pages,
+			$username
+		);
+		$max_more = max( 1, min( 500, $max_more ) );
+
+		$prev_offset = null;
+		for ( $round = 0; $round < $max_more; $round++ ) {
+			if ( $offset === $prev_offset ) {
+				break;
+			}
+			$prev_offset = $offset;
+
+			$this->sleep_delay( $delay );
+
+			$feed_url = 'https://untappd.com/profile/more_feed/' . rawurlencode( $username ) . '/' . rawurlencode( (string) $offset ) . '?v2=true';
+			$feed_url  = apply_filters(
+				'jardin_toasts_crawler_more_feed_url',
+				apply_filters( 'jt_crawler_more_feed_url', $feed_url, $username, $offset ),
+				$username,
+				$offset
+			);
+
+			$response = wp_remote_get(
+				$feed_url,
+				array(
+					'timeout'    => 25,
+					'headers'    => jt_untappd_http_headers( $profile ),
+					'user-agent' => jt_http_user_agent_string(),
+				)
+			);
+
+			if ( is_wp_error( $response ) ) {
+				return $response;
+			}
+
+			$fragment = wp_remote_retrieve_body( $response );
+			if ( ! is_string( $fragment ) ) {
+				break;
+			}
+			$fragment = trim( $fragment );
+			if ( '' === $fragment || strlen( $fragment ) < 30 ) {
+				break;
+			}
+
+			$new_ids = $this->extract_checkin_ids_from_html( $fragment, $username );
+			if ( empty( $new_ids ) ) {
+				break;
+			}
+
+			$added = false;
+			foreach ( $new_ids as $id ) {
+				if ( ! isset( $seen[ $id ] ) ) {
+					$seen[ $id ] = true;
+					$added       = true;
+				}
+			}
+
+			$next = $this->last_checkin_id_in_html_chunk( $fragment );
+			if ( null === $next || $next === $offset ) {
+				break;
+			}
+			$offset = $next;
+
+			if ( ! $added ) {
+				break;
+			}
+		}
+
+		return array_keys( $seen );
+	}
+
+	/**
+	 * Narrow HTML to the profile activity stream region (avoids unrelated data-checkin-id nodes).
+	 *
+	 * @param string $html Full profile document.
+	 * @return string|null
+	 */
+	private function html_slice_main_stream( $html ) {
+		if ( ! is_string( $html ) || '' === $html ) {
+			return null;
+		}
+		$start = stripos( $html, 'id="main-stream"' );
+		if ( false === $start ) {
+			return null;
+		}
+		$needles = array( 'more_checkins_logged', 'class="yellow button more_checkins', 'class=\'yellow button more_checkins' );
+		$end     = false;
+		foreach ( $needles as $needle ) {
+			$pos = stripos( $html, $needle, $start + 30 );
+			if ( false !== $pos ) {
+				$end = $pos;
+				break;
+			}
+		}
+		if ( false === $end ) {
+			return substr( $html, $start );
+		}
+		return substr( $html, $start, $end - $start );
+	}
+
+	/**
+	 * Last data-checkin-id in document order within a chunk (oldest check-in in that chunk for Untappd pagination).
+	 *
+	 * @param string|null $chunk HTML.
+	 * @return string|null
+	 */
+	private function last_checkin_id_in_html_chunk( $chunk ) {
+		if ( ! is_string( $chunk ) || '' === $chunk ) {
+			return null;
+		}
+		if ( ! preg_match_all( '/data-checkin-id="(\d+)"/', $chunk, $m ) || empty( $m[1] ) ) {
+			return null;
+		}
+		$ids = $m[1];
+		$last = (string) end( $ids );
+		return '' !== $last ? $last : null;
 	}
 
 	/**

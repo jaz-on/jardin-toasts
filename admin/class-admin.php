@@ -482,10 +482,7 @@ class JT_Admin {
 			array(
 				'timeout'    => 25,
 				'user-agent' => jt_http_user_agent_string(),
-				'headers'    => array(
-					'Accept'          => 'text/html',
-					'Accept-Language' => 'en-US,en;q=0.9',
-				),
+				'headers'    => jt_untappd_http_headers( jt_get_untappd_session_cookie() ? $url : '' ),
 			)
 		);
 		if ( is_wp_error( $response ) ) {

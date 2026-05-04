@@ -73,6 +73,7 @@ class JT_Settings {
 			'jt_last_checkin_date'      => '',
 			'jt_last_imported_guid'     => '',
 			'jt_untappd_username'       => jt_get_default_untappd_username(),
+			'jt_untappd_session_cookie' => '',
 			'jt_excluded_checkins'      => array(),
 			'jt_rating_rules'           => jt_get_default_rating_rules(),
 			'jt_rating_labels'          => jt_get_default_rating_labels(),
@@ -176,6 +177,17 @@ class JT_Settings {
 				return is_array( $value ) ? $value : array();
 			case 'jt_untappd_username':
 				return sanitize_user( (string) $value, true );
+			case 'jt_untappd_session_cookie':
+				$s = wp_unslash( (string) $value );
+				$s = str_replace( array( "\r", "\n", "\0" ), '', $s );
+				if ( preg_match( '/^cookie:\s*/i', $s ) ) {
+					$s = trim( (string) preg_replace( '/^cookie:\s*/i', '', $s ) );
+				}
+				$max = 12000;
+				if ( strlen( $s ) > $max ) {
+					$s = substr( $s, 0, $max );
+				}
+				return $s;
 			case 'jt_import_mode':
 				$v = sanitize_text_field( (string) $value );
 				return in_array( $v, array( 'manual', 'background' ), true ) ? $v : 'manual';

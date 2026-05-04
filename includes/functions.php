@@ -135,6 +135,54 @@ function jt_get_untappd_username() {
 }
 
 /**
+ * Optional Untappd browser session cookie string for authenticated HTML scraping.
+ *
+ * Paste the raw `Cookie` header value from DevTools (Application → Cookies, or Network
+ * request headers) while logged in on untappd.com. Do not commit this value.
+ *
+ * @return string
+ */
+function jt_get_untappd_session_cookie() {
+	$raw = class_exists( 'JT_Settings' ) ? JT_Settings::get( 'jt_untappd_session_cookie' ) : (string) get_option( 'jt_untappd_session_cookie', '' );
+	if ( ! is_string( $raw ) ) {
+		return '';
+	}
+	$raw = trim( $raw );
+	if ( '' === $raw ) {
+		return '';
+	}
+	if ( preg_match( '/^cookie:\s*/i', $raw ) ) {
+		$raw = trim( (string) preg_replace( '/^cookie:\s*/i', '', $raw ) );
+	}
+	return $raw;
+}
+
+/**
+ * HTTP headers for Untappd HTML requests (profile, more_feed, check-in pages).
+ *
+ * @param string $referer_url Full Referer URL, or empty to omit.
+ * @return array<string, string>
+ */
+function jt_untappd_http_headers( $referer_url = '' ) {
+	$headers = array(
+		'Accept'          => 'text/html',
+		'Accept-Language' => 'en-US,en;q=0.9',
+	);
+	if ( is_string( $referer_url ) && '' !== $referer_url ) {
+		$headers['Referer'] = $referer_url;
+	}
+	$cookie = jt_get_untappd_session_cookie();
+	if ( '' !== $cookie ) {
+		$headers['Cookie'] = $cookie;
+	}
+	return (array) apply_filters(
+		'jardin_toasts_untappd_http_headers',
+		apply_filters( 'jt_untappd_http_headers', $headers, $referer_url ),
+		$referer_url
+	);
+}
+
+/**
  * Normalized batch size / crawl delay choices for the settings UI.
  *
  * @return array{batch_current:int,delay_current:int,batch_choices:array<int,string>,delay_choices:array<int,string>}

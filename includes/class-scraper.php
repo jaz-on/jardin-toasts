@@ -43,9 +43,12 @@ class JT_Scraper {
 			$response = wp_remote_get(
 				$url,
 				array(
-					'timeout' => 20,
-					'headers' => array(
-						'Accept' => 'text/html,application/xhtml+xml',
+					'timeout'    => 20,
+					'headers'    => array_merge(
+						jt_untappd_http_headers( $url ),
+						array(
+							'Accept' => 'text/html,application/xhtml+xml',
+						)
 					),
 					'user-agent' => jt_http_user_agent_string(),
 				)

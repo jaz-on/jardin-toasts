@@ -17,6 +17,7 @@ $defaults = array(
 	'jt_last_checkin_date',
 	'jt_last_imported_guid',
 	'jt_untappd_username',
+	'jt_untappd_session_cookie',
 	'jt_excluded_checkins',
 	'jt_rating_rules',
 	'jt_rating_labels',
