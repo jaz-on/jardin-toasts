@@ -19,7 +19,7 @@ $q = new WP_Query(
 );
 
 if ( ! $q->have_posts() ) {
-	return '<p class="jt-block-placeholder">' . esc_html__( 'No check-ins yet.', 'jardin-toasts' ) . '</p>';
+	return '<div class="jt-block-placeholder jt-block-placeholder--empty"><p>' . esc_html__( 'No beer check-ins in this block yet.', 'jardin-toasts' ) . '</p><p class="jt-block-placeholder__hint">' . esc_html__( 'They appear here after Untappd sync creates beer_checkin posts (WP Admin → Jardin Toasts).', 'jardin-toasts' ) . '</p></div>';
 }
 
 ob_start();
