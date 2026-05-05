@@ -30,6 +30,11 @@ class JT_Storage_Migration {
 	public const PRODUCT_RENAME_FLAG = 'jt_product_paths_migrated_v1';
 
 	/**
+	 * CPT beer_checkin → checkin and meta _jt_* → _jardin_toasts_*.
+	 */
+	public const NOMENCLATURE_FLAG = 'jardin_toasts_nomenclature_migrated_v1';
+
+	/**
 	 * Legacy Action Scheduler group slug.
 	 */
 	private const LEGACY_AS_GROUP = 'beer-journal';
@@ -90,6 +95,35 @@ class JT_Storage_Migration {
 		self::clear_all_legacy_plugin_cron_and_as();
 
 		update_option( self::JB_PREFIX_UPGRADE_FLAG, '1', false );
+	}
+
+	/**
+	 * CPT beer_checkin → checkin; meta _jt_* → _jardin_toasts_*.
+	 *
+	 * @return void
+	 */
+	public static function maybe_migrate_nomenclature(): void {
+		if ( get_option( self::NOMENCLATURE_FLAG, '' ) ) {
+			return;
+		}
+
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-off migration.
+		$wpdb->query(
+			"UPDATE {$wpdb->posts} SET post_type = 'checkin' WHERE post_type = 'beer_checkin'"
+		);
+
+		$like = $wpdb->esc_like( '_jt_' ) . '%';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-off migration.
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$wpdb->postmeta} SET meta_key = REPLACE(meta_key, '_jt_', '_jardin_toasts_') WHERE meta_key LIKE %s",
+				$like
+			)
+		);
+
+		update_option( self::NOMENCLATURE_FLAG, '1', false );
 	}
 
 	/**

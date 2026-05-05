@@ -31,21 +31,21 @@ class JT_Meta_Fields {
 	public function register_meta() {
 		$post_type = JT_Post_Type::POST_TYPE;
 		$keys      = array(
-			'_jt_checkin_id'      => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
-			'_jt_checkin_url'     => array( 'type' => 'string', 'sanitize_callback' => 'esc_url_raw' ),
-			'_jt_beer_name'       => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
-			'_jt_brewery_name'    => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
-			'_jt_beer_style'      => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
-			'_jt_beer_abv'        => array( 'type' => 'number', 'sanitize_callback' => 'floatval' ),
-			'_jt_beer_ibu'        => array( 'type' => 'integer', 'sanitize_callback' => 'absint' ),
-			'_jt_rating_raw'      => array( 'type' => 'number', 'sanitize_callback' => 'floatval' ),
-			'_jt_rating_rounded'  => array( 'type' => 'integer', 'sanitize_callback' => 'absint' ),
-			'_jt_serving_type'    => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
-			'_jt_checkin_date'    => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
-			'_jt_venue_name'      => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
-			'_jt_exclude_sync'    => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
-			'_jt_incomplete_reason' => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
-			'_jt_source'          => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
+			'_jardin_toasts_checkin_id'        => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
+			'_jardin_toasts_checkin_url'        => array( 'type' => 'string', 'sanitize_callback' => 'esc_url_raw' ),
+			'_jardin_toasts_beer_name'          => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
+			'_jardin_toasts_brewery_name'       => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
+			'_jardin_toasts_beer_style'         => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
+			'_jardin_toasts_beer_abv'           => array( 'type' => 'number', 'sanitize_callback' => 'floatval' ),
+			'_jardin_toasts_beer_ibu'           => array( 'type' => 'integer', 'sanitize_callback' => 'absint' ),
+			'_jardin_toasts_rating_raw'         => array( 'type' => 'number', 'sanitize_callback' => 'floatval' ),
+			'_jardin_toasts_rating_rounded'     => array( 'type' => 'integer', 'sanitize_callback' => 'absint' ),
+			'_jardin_toasts_serving_type'       => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
+			'_jardin_toasts_checkin_date'       => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
+			'_jardin_toasts_venue_name'         => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
+			'_jardin_toasts_exclude_sync'       => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
+			'_jardin_toasts_incomplete_reason'  => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
+			'_jardin_toasts_source'             => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
 		);
 
 		foreach ( $keys as $key => $schema ) {

@@ -20,7 +20,7 @@ function jt_get_checkin_rating_raw( $post_id = null ) {
 	if ( ! $post_id ) {
 		return null;
 	}
-	$v = get_post_meta( $post_id, '_jt_rating_raw', true );
+	$v = get_post_meta( $post_id, '_jardin_toasts_rating_raw', true );
 	return '' === $v || null === $v ? null : floatval( $v );
 }
 
@@ -35,7 +35,7 @@ function jt_get_checkin_rating_rounded( $post_id = null ) {
 	if ( ! $post_id ) {
 		return null;
 	}
-	$v = get_post_meta( $post_id, '_jt_rating_rounded', true );
+	$v = get_post_meta( $post_id, '_jardin_toasts_rating_rounded', true );
 	return '' === $v || null === $v ? null : absint( $v );
 }
 

@@ -56,28 +56,28 @@ class JT_Public {
 		if ( is_post_type_archive( JT_Post_Type::POST_TYPE ) ) {
 			$theme = locate_template(
 				array(
+					'jardin-toasts/archive-checkin.php',
 					'jardin-toasts/archive-beer_checkin.php',
-					'jardin-beer/archive-beer_checkin.php',
 				)
 			);
 			if ( $theme ) {
 				return $theme;
 			}
-			$path = JT_PLUGIN_DIR . 'public/templates/archive-beer_checkin.php';
+			$path = JT_PLUGIN_DIR . 'public/templates/archive-checkin.php';
 			return file_exists( $path ) ? $path : $template;
 		}
 
 		if ( is_singular( JT_Post_Type::POST_TYPE ) ) {
 			$theme = locate_template(
 				array(
+					'jardin-toasts/single-checkin.php',
 					'jardin-toasts/single-beer_checkin.php',
-					'jardin-beer/single-beer_checkin.php',
 				)
 			);
 			if ( $theme ) {
 				return $theme;
 			}
-			$path = JT_PLUGIN_DIR . 'public/templates/single-beer_checkin.php';
+			$path = JT_PLUGIN_DIR . 'public/templates/single-checkin.php';
 			return file_exists( $path ) ? $path : $template;
 		}
 
@@ -138,7 +138,7 @@ class JT_Public {
 
 		$post_id = get_queried_object_id();
 		$rating    = jt_get_checkin_rating_raw( $post_id );
-		$beer_name = get_post_meta( $post_id, '_jt_beer_name', true );
+		$beer_name = get_post_meta( $post_id, '_jardin_toasts_beer_name', true );
 		if ( ! is_string( $beer_name ) || '' === $beer_name ) {
 			$beer_name = get_the_title( $post_id );
 		}

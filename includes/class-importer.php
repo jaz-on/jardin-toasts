@@ -50,7 +50,7 @@ class JT_Importer {
 
 		$existing = jt_get_post_id_by_checkin_id( $checkin_id );
 		if ( $existing ) {
-			$exclude = get_post_meta( $existing, '_jt_exclude_sync', true );
+			$exclude = get_post_meta( $existing, '_jardin_toasts_exclude_sync', true );
 			if ( '1' === $exclude ) {
 				return new WP_Error( 'excluded_meta', __( 'Post excluded from sync.', 'jardin-toasts' ) );
 			}
@@ -156,40 +156,40 @@ class JT_Importer {
 	 */
 	private function save_meta( $post_id, array $data, $rating_raw, $rounded, $checkin_date, $reason, $source ) {
 		$fields = array(
-			'_jt_checkin_id'    => isset( $data['checkin_id'] ) ? sanitize_text_field( (string) $data['checkin_id'] ) : '',
-			'_jt_checkin_url'   => isset( $data['checkin_url'] ) ? esc_url_raw( (string) $data['checkin_url'] ) : '',
-			'_jt_beer_name'     => isset( $data['beer_name'] ) ? sanitize_text_field( (string) $data['beer_name'] ) : '',
-			'_jt_brewery_name'  => isset( $data['brewery_name'] ) ? sanitize_text_field( (string) $data['brewery_name'] ) : '',
-			'_jt_beer_style'    => isset( $data['beer_style'] ) ? sanitize_text_field( (string) $data['beer_style'] ) : '',
-			'_jt_serving_type'  => isset( $data['serving_type'] ) ? sanitize_text_field( (string) $data['serving_type'] ) : '',
-			'_jt_venue_name'    => isset( $data['venue_name'] ) ? sanitize_text_field( (string) $data['venue_name'] ) : '',
-			'_jt_checkin_date'  => sanitize_text_field( $checkin_date ),
-			'_jt_source'        => sanitize_text_field( $source ),
-			'_jt_scraped_at'    => gmdate( 'c' ),
+			'_jardin_toasts_checkin_id'   => isset( $data['checkin_id'] ) ? sanitize_text_field( (string) $data['checkin_id'] ) : '',
+			'_jardin_toasts_checkin_url'  => isset( $data['checkin_url'] ) ? esc_url_raw( (string) $data['checkin_url'] ) : '',
+			'_jardin_toasts_beer_name'    => isset( $data['beer_name'] ) ? sanitize_text_field( (string) $data['beer_name'] ) : '',
+			'_jardin_toasts_brewery_name' => isset( $data['brewery_name'] ) ? sanitize_text_field( (string) $data['brewery_name'] ) : '',
+			'_jardin_toasts_beer_style'   => isset( $data['beer_style'] ) ? sanitize_text_field( (string) $data['beer_style'] ) : '',
+			'_jardin_toasts_serving_type' => isset( $data['serving_type'] ) ? sanitize_text_field( (string) $data['serving_type'] ) : '',
+			'_jardin_toasts_venue_name'   => isset( $data['venue_name'] ) ? sanitize_text_field( (string) $data['venue_name'] ) : '',
+			'_jardin_toasts_checkin_date' => sanitize_text_field( $checkin_date ),
+			'_jardin_toasts_source'       => sanitize_text_field( $source ),
+			'_jardin_toasts_scraped_at'   => gmdate( 'c' ),
 		);
 
 		if ( null !== $rating_raw ) {
-			$fields['_jt_rating_raw']     = $rating_raw;
-			$fields['_jt_rating_rounded'] = null !== $rounded ? $rounded : jt_map_rating_raw_to_rounded( $rating_raw );
+			$fields['_jardin_toasts_rating_raw']     = $rating_raw;
+			$fields['_jardin_toasts_rating_rounded'] = null !== $rounded ? $rounded : jt_map_rating_raw_to_rounded( $rating_raw );
 		}
 
 		if ( isset( $data['beer_abv'] ) && null !== $data['beer_abv'] ) {
-			$fields['_jt_beer_abv'] = floatval( $data['beer_abv'] );
+			$fields['_jardin_toasts_beer_abv'] = floatval( $data['beer_abv'] );
 		}
 		if ( isset( $data['beer_ibu'] ) && null !== $data['beer_ibu'] ) {
-			$fields['_jt_beer_ibu'] = absint( $data['beer_ibu'] );
+			$fields['_jardin_toasts_beer_ibu'] = absint( $data['beer_ibu'] );
 		}
 		if ( isset( $data['toast_count'] ) && null !== $data['toast_count'] ) {
-			$fields['_jt_toast_count'] = absint( $data['toast_count'] );
+			$fields['_jardin_toasts_toast_count'] = absint( $data['toast_count'] );
 		}
 		if ( isset( $data['comment_count'] ) && null !== $data['comment_count'] ) {
-			$fields['_jt_comment_count'] = absint( $data['comment_count'] );
+			$fields['_jardin_toasts_comment_count'] = absint( $data['comment_count'] );
 		}
 
 		if ( '' !== $reason ) {
-			$fields['_jt_incomplete_reason'] = $reason;
+			$fields['_jardin_toasts_incomplete_reason'] = $reason;
 		} else {
-			delete_post_meta( $post_id, '_jt_incomplete_reason' );
+			delete_post_meta( $post_id, '_jardin_toasts_incomplete_reason' );
 		}
 
 		foreach ( $fields as $k => $v ) {

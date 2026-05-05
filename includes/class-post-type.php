@@ -17,13 +17,13 @@ class JT_Post_Type {
 	/**
 	 * Post type slug.
 	 */
-	public const POST_TYPE = 'beer_checkin';
+	public const POST_TYPE = 'checkin';
 
 	/**
 	 * Parent file for CPT + taxonomy admin submenus (same as native posts under "Posts").
 	 * Must be `edit.php?post_type=…` so check-ins load first, then taxonomy screens nest correctly.
 	 */
-	public const ADMIN_MENU_SLUG = 'edit.php?post_type=beer_checkin';
+	public const ADMIN_MENU_SLUG = 'edit.php?post_type=checkin';
 
 	/**
 	 * Register hooks.

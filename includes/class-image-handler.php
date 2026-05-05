@@ -66,8 +66,8 @@ class JT_Image_Handler {
 			return $att_id;
 		}
 
-		update_post_meta( $att_id, '_jt_image_hash', $hash );
-		update_post_meta( $att_id, '_jt_image_source_url', $url );
+		update_post_meta( $att_id, '_jardin_toasts_image_hash', $hash );
+		update_post_meta( $att_id, '_jardin_toasts_image_source_url', $url );
 		set_post_thumbnail( $post_id, $att_id );
 
 		return (int) $att_id;
@@ -86,7 +86,7 @@ class JT_Image_Handler {
 		$id = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s LIMIT 1",
-				'_jt_image_hash',
+				'_jardin_toasts_image_hash',
 				$hash
 			)
 		);
@@ -97,7 +97,7 @@ class JT_Image_Handler {
 		$id = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s LIMIT 1",
-				'_jt_image_source_url',
+				'_jardin_toasts_image_source_url',
 				$url
 			)
 		);

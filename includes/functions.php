@@ -171,7 +171,7 @@ function jt_parse_username_from_rss_url( $url ) {
  * @return string
  */
 function jt_get_checkin_archive_url() {
-	$pt = 'beer_checkin';
+	$pt = 'checkin';
 	if ( ! post_type_exists( $pt ) ) {
 		return home_url( '/' );
 	}
@@ -283,20 +283,15 @@ function jt_get_post_id_by_checkin_id( $checkin_id ) {
 	if ( '' === $checkin_id ) {
 		return 0;
 	}
-	foreach ( array( '_jt_checkin_id', '_jb_checkin_id' ) as $key ) {
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$post_id = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s LIMIT 1",
-				$key,
-				$checkin_id
-			)
-		);
-		if ( $post_id ) {
-			return absint( $post_id );
-		}
-	}
-	return 0;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$post_id = $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s LIMIT 1",
+			'_jardin_toasts_checkin_id',
+			$checkin_id
+		)
+	);
+	return $post_id ? absint( $post_id ) : 0;
 }
 
 /**
@@ -321,7 +316,7 @@ function jt_get_post_ids_by_checkin_ids( array $checkin_ids ) {
 	$ids = array_slice( $ids, 0, 100 );
 	$placeholders = implode( ',', array_fill( 0, count( $ids ), '%s' ) );
 	// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPlaceholder
-	$sql = "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key IN ('_jt_checkin_id','_jb_checkin_id') AND meta_value IN ({$placeholders})";
+	$sql = "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = '_jardin_toasts_checkin_id' AND meta_value IN ({$placeholders})";
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	$prepared = $wpdb->prepare( $sql, ...$ids );
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -534,7 +529,7 @@ function jt_count_draft_incomplete_checkins() {
 					'update_post_term_cache' => false,
 					'meta_query'             => array(
 						array(
-							'key'     => '_jt_incomplete_reason',
+							'key'     => '_jardin_toasts_incomplete_reason',
 							'compare' => 'EXISTS',
 						),
 					),

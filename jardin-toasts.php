@@ -170,6 +170,7 @@ function jt_init_plugin() {
 	JT_Storage_Migration::maybe_migrate();
 	JT_Storage_Migration::maybe_migrate_jb_prefix_storage_to_jt();
 	JT_Storage_Migration::maybe_migrate_product_rename();
+	JT_Storage_Migration::maybe_migrate_nomenclature();
 	JT_Plugin::instance()->init();
 }
 add_action( 'plugins_loaded', 'jt_init_plugin', 1 );
