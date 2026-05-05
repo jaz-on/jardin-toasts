@@ -74,9 +74,10 @@ while ( $q->have_posts() ) {
 }
 echo '</div>';
 wp_reset_postdata();
+$buffer = (string) ob_get_clean();
 
 if ( 0 === $rendered ) {
 	return '<div class="jardin-toasts-block-placeholder jardin-toasts-block-placeholder--empty"><p>' . esc_html__( 'No reviews yet.', 'jardin-toasts' ) . '</p><p class="jardin-toasts-block-placeholder__hint">' . esc_html__( 'A review is a check-in with editorial commentary in the post body.', 'jardin-toasts' ) . '</p></div>';
 }
 
-return (string) ob_get_clean();
+return $buffer;

@@ -152,7 +152,17 @@ class Jardin_Toasts_Admin {
 		);
 
 		$dv_asset = JARDIN_TOASTS_PLUGIN_DIR . 'build/admin-dataviews.asset.php';
-		if ( is_readable( $dv_asset ) ) {
+		// Skip enqueue if WP core hasn't registered required handles (typically wp-dataviews,
+		// which is only auto-registered by certain admin screens). Avoids the
+		// "WP_Scripts::add was called incorrectly" notice introduced in WP 6.9.1.
+		$dv_deps    = is_readable( $dv_asset ) ? (array) ( ( require $dv_asset )['dependencies'] ?? array() ) : array();
+		$missing_dv = array();
+		foreach ( $dv_deps as $h ) {
+			if ( ! wp_script_is( (string) $h, 'registered' ) ) {
+				$missing_dv[] = $h;
+			}
+		}
+		if ( is_readable( $dv_asset ) && empty( $missing_dv ) ) {
 			$dv = require $dv_asset;
 			wp_enqueue_style(
 				'jardin-toasts-admin-dataviews',
