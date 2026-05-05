@@ -21,7 +21,7 @@ $mf_content = get_option( 'jt_microformats_enabled', true ) ? 'e-content' : '';
 					<?php the_title( '<h1 class="entry-title p-name">', '</h1>' ); ?>
 					<div class="jt-meta">
 						<?php jt_the_rating_stars(); ?>
-						<time class="jt-date" datetime="<?php echo esc_attr( get_post_meta( get_the_ID(), '_jt_checkin_date', true ) ); ?>">
+						<time class="jt-date" datetime="<?php echo esc_attr( get_post_meta( get_the_ID(), '_jardin_toasts_checkin_date', true ) ); ?>">
 							<?php echo esc_html( get_the_date() ); ?>
 						</time>
 					</div>
@@ -42,7 +42,7 @@ $mf_content = get_option( 'jt_microformats_enabled', true ) ? 'e-content' : '';
 				</div>
 
 				<?php
-				$url = get_post_meta( get_the_ID(), '_jt_checkin_url', true );
+				$url = get_post_meta( get_the_ID(), '_jardin_toasts_checkin_url', true );
 				if ( is_string( $url ) && '' !== $url ) :
 					?>
 					<p class="jt-untappd-link">
