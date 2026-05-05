@@ -64,8 +64,7 @@ if ( is_readable( $jt_autoload ) ) {
 					if ( ! is_readable( $jt_required_file ) ) {
 						throw new \RuntimeException(
 							sprintf(
-								/* translators: %s: missing autoload dependency path. */
-								__( 'Missing Composer dependency file: %s', 'jardin-toasts' ),
+								'Missing Composer dependency file: %s',
 								$jt_required_file
 							)
 						);
