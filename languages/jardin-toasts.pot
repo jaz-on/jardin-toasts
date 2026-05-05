@@ -4,12 +4,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jardin Toasts 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/jardin-toasts\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Last-Translator: Jason Rouet\n"
+"Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-01T12:23:55+00:00\n"
+"POT-Creation-Date: 2026-05-05T14:47:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: jardin-toasts\n"
@@ -23,7 +23,7 @@ msgid "https://github.com/jaz-on/jardin-toasts"
 msgstr ""
 
 #. Description of the plugin
-msgid "Syncs and displays your Untappd beer check-ins on WordPress with templates and media handling."
+msgid "Jardin · Untappd : check-ins bière (CPT), synchro et blocs."
 msgstr ""
 
 #. Author of the plugin
@@ -34,640 +34,578 @@ msgstr ""
 msgid "https://jasonrouet.com"
 msgstr ""
 
-#: admin/class-admin.php:77
+#: admin/class-admin.php:75
 msgid "Jardin Toasts Settings"
 msgstr ""
 
-#: admin/class-admin.php:78
-#: jardin-toasts.php:171
+#: admin/class-admin.php:76
+#: jardin-toasts.php:205
 msgid "Settings"
 msgstr ""
 
-#: admin/class-admin.php:139
+#: admin/class-admin.php:140
 msgid "Working…"
 msgstr ""
 
-#: admin/class-admin.php:140
+#: admin/class-admin.php:141
 msgid "Done."
 msgstr ""
 
-#: admin/class-admin.php:141
-#: admin/views/settings-page.php:157
+#: admin/class-admin.php:142
+#: admin/views/settings/tab-untappd.php:36
 msgid "Use username from RSS feed"
 msgstr ""
 
-#: admin/class-admin.php:142
-#: admin/views/settings-page.php:307
+#: admin/class-admin.php:143
+#: admin/views/settings/tab-display.php:121
 msgid "Choose image"
 msgstr ""
 
-#: admin/class-admin.php:143
+#: admin/class-admin.php:144
 msgid "Replace image"
 msgstr ""
 
-#: admin/class-admin.php:144
-#: admin/views/settings-page.php:308
+#: admin/class-admin.php:145
+#: admin/views/settings/tab-display.php:122
 msgid "Remove"
 msgstr ""
 
-#: admin/class-admin.php:167
+#: admin/class-admin.php:146
+msgid "Testing…"
+msgstr ""
+
+#: admin/class-admin.php:147
+msgid "Network error."
+msgstr ""
+
+#: admin/class-admin.php:148
+msgid "Choose a CSV file first."
+msgstr ""
+
+#: admin/class-admin.php:149
+msgid "Importing CSV…"
+msgstr ""
+
+#: admin/class-admin.php:187
+msgid "RSS feed"
+msgstr ""
+
+#: admin/class-admin.php:192
+#: admin/views/settings/tab-sync.php:37
+msgid "Scheduled sync"
+msgstr ""
+
+#: admin/class-admin.php:193
+msgid "Enabled"
+msgstr ""
+
+#: admin/class-admin.php:193
+msgid "Disabled"
+msgstr ""
+
+#: admin/class-admin.php:197
+msgid "Background queue"
+msgstr ""
+
+#: admin/class-admin.php:233
 msgid "Settings saved."
 msgstr ""
 
-#: admin/class-admin.php:182
-#: admin/class-admin.php:206
-#: admin/class-admin.php:277
+#: admin/class-admin.php:248
+#: admin/class-admin.php:272
+#: admin/class-admin.php:339
 msgid "Permission denied."
 msgstr ""
 
-#: admin/class-admin.php:189
-#: includes/class-action-scheduler.php:195
+#: admin/class-admin.php:255
+#: includes/class-action-scheduler.php:193
 msgid "RSS sync failed"
 msgstr ""
 
-#: admin/class-admin.php:195
+#: admin/class-admin.php:261
 msgid "Sync finished."
 msgstr ""
 
-#: admin/class-admin.php:211
-msgid "Username required."
+#: admin/class-admin.php:276
+msgid "No file uploaded."
 msgstr ""
 
-#. translators: %d: number of check-ins found on Untappd profile pages
-#: admin/class-admin.php:246
-msgid "Found %d check-in(s) on your profile, but each one already exists in WordPress (same Untappd check-in ID). Nothing new to queue."
+#: admin/class-admin.php:281
+msgid "Upload failed."
 msgstr ""
 
-#: admin/class-admin.php:250
-msgid "No check-in links were collected. If the problem persists, your host may not be able to reach Untappd from PHP."
+#: admin/class-admin.php:287
+msgid "File is too large for this site’s upload limit."
 msgstr ""
 
-#. translators: 1: newly queued count, 2: total discovered on profile
-#: admin/class-admin.php:254
-msgid "%1$d new check-in(s) queued for import (out of %2$d found on the crawled profile pages)."
+#: admin/class-admin.php:293
+msgid "Please upload a .csv file."
 msgstr ""
 
-#: admin/class-admin.php:282
-msgid "Nothing to import. Run discovery first."
+#: admin/class-admin.php:299
+msgid "Could not read the uploaded file."
 msgstr ""
 
-#: admin/class-admin.php:339
-msgid "Re-scrape from Untappd"
+#. translators: 1: imported count, 2: skipped count
+#: admin/class-admin.php:313
+msgid "Imported %1$d check-in(s); skipped %2$d row(s)."
 msgstr ""
 
-#. translators: 1: processed count, 2: cap, 3: selected count
-#: admin/class-admin.php:403
-msgid "Re-scraped %1$d check-in(s) (limit %2$d per run). Select again to process more of the %3$d selected."
+#: admin/class-admin.php:318
+msgid "Sample issues:"
 msgstr ""
 
-#. translators: %d: number of check-ins
-#: admin/class-admin.php:416
-msgid "Re-scraped %d check-in from Untappd."
-msgid_plural "Re-scraped %d check-ins from Untappd."
-msgstr[0] ""
-msgstr[1] ""
-
-#: admin/views/settings-page.php:14
-msgid "Synchronization"
+#: admin/class-admin.php:343
+msgid "Save an RSS feed URL first."
 msgstr ""
 
-#: admin/views/settings-page.php:15
-msgid "Historical import"
+#. translators: %d: number of items in the feed snapshot
+#: admin/class-admin.php:357
+msgid "RSS OK: %d item(s) in this fetch (Untappd may cap the list)."
+msgstr ""
+
+#: admin/views/partials/settings-cron-hint.php:15
+msgid "Action Scheduler detected — RSS sync runs reliably in the background. Inspect scheduled actions under Tools → Scheduled Actions, group “jardin-toasts” (the menu label may differ if WooCommerce owns Action Scheduler)."
+msgstr ""
+
+#. translators: %s: link to Action Scheduler
+#: admin/views/partials/settings-cron-hint.php:22
+msgid "WP-Cron with <code>DISABLE_WP_CRON</code> enabled — a system task is triggering WordPress, which is the recommended setup. For even more reliable scheduling you can also install %s."
+msgstr ""
+
+#. translators: 1: Action Scheduler link 2: wp-config snippet
+#: admin/views/partials/settings-cron-hint.php:33
+msgid "WP-Cron is driven by site traffic — jobs may be delayed on low-traffic hosts. Install %1$s for a proper queue, or add %2$s to <code>wp-config.php</code> and call <code>wp-cron.php</code> from a real system cron."
 msgstr ""
 
 #: admin/views/settings-page.php:16
-msgid "Display & content"
+msgid "Untappd account"
 msgstr ""
 
 #: admin/views/settings-page.php:17
-msgid "Ratings"
+msgid "Import & sync"
 msgstr ""
 
 #: admin/views/settings-page.php:18
+msgid "Display & content"
+msgstr ""
+
+#: admin/views/settings-page.php:19
 msgid "Advanced"
 msgstr ""
 
-#: admin/views/settings-page.php:22
-msgid "Connect your Untappd RSS feed and let WordPress pull new check-ins on a calm schedule. RSS only lists your latest items; full details still come from scraping."
-msgstr ""
-
 #: admin/views/settings-page.php:23
-msgid "Backfill older check-ins by crawling your public profile. Use small batches and delays to stay polite to Untappd’s servers."
+msgid "Your RSS URL and username identify the same Untappd account. RSS brings in recent check-ins; a CSV data export (privacy request or Insider archive) is used for full history and complete fields."
 msgstr ""
 
 #: admin/views/settings-page.php:24
-msgid "Control how archives look and what gets stored with each check-in on the front of your site."
+msgid "Scheduled sync reads the public RSS feed. For your complete journal, import the check-ins CSV from Untappd’s data export."
 msgstr ""
 
 #: admin/views/settings-page.php:25
-msgid "Untappd stores fractional ratings. Map them to whole stars for display using the rules below (or override with code)."
+msgid "Control how archives look, what gets stored with each check-in, and how ratings map to stars on the front of your site."
 msgstr ""
 
 #: admin/views/settings-page.php:26
-msgid "Fine-tune scraping pace, structured data, notifications, and troubleshooting logs."
+msgid "Fine-tune RSS import limits, structured data, notifications, and troubleshooting logs."
 msgstr ""
 
-#: admin/views/settings-page.php:32
+#: admin/views/settings-page.php:34
 msgid "Untappd → WordPress: sync, import, and present your beer journal with theme-friendly templates."
 msgstr ""
 
-#: admin/views/settings-page.php:35
+#: admin/views/settings-page.php:37
 msgid "Jardin Toasts settings sections"
 msgstr ""
 
-#: admin/views/settings-page.php:60
-msgid "RSS feed & scheduling"
+#: admin/views/settings-page.php:64
+#: admin/views/settings/tab-sync.php:51
+msgid "Save changes"
 msgstr ""
 
-#: admin/views/settings-page.php:61
-msgid "The feed URL is pre-filled with a working example. Replace it with your own from Untappd → Account if you use a different profile."
+#: admin/views/settings/tab-advanced.php:18
+msgid "RSS sync limits"
 msgstr ""
 
-#: admin/views/settings-page.php:66
-msgid "Untappd RSS feed URL"
+#: admin/views/settings/tab-advanced.php:19
+msgid "Caps how many new feed items each scheduled run turns into posts. Extra items stay in a queue and are processed by follow-up cron events."
 msgstr ""
 
-#: admin/views/settings-page.php:69
-msgid "Public RSS (about 25 recent check-ins). Used by automatic sync and “Run sync now”."
+#: admin/views/settings/tab-advanced.php:24
+msgid "RSS imports per scheduled sync"
 msgstr ""
 
-#. translators: %s: link to Import tab
-#: admin/views/settings-page.php:70
-msgid "Historical import uses the same Untappd profile. Set your username on the <a href=\"%s\">Import</a> tab (it should match this feed)."
+#: admin/views/settings/tab-advanced.php:27
+msgid "Minimum 1 per run (values below 1 are saved as 1). “Run sync now” uses a higher limit."
 msgstr ""
 
-#: admin/views/settings-page.php:74
-msgid "Automatic sync"
+#: admin/views/settings/tab-advanced.php:36
+msgid "Sync health"
 msgstr ""
 
-#: admin/views/settings-page.php:79
-msgid "Enable scheduled RSS synchronization"
+#: admin/views/settings/tab-advanced.php:37
+msgid "Quick signals when diagnosing RSS backlog or incomplete drafts (often RSS items without a rating)."
 msgstr ""
 
-#: admin/views/settings-page.php:83
-msgid "Uses Action Scheduler with adaptive intervals: more frequent when you check in often, lighter when you are quiet. Inspect the jardin-toasts group under Tools → Scheduled Actions (menu location may differ if WooCommerce owns Action Scheduler)."
+#: admin/views/settings/tab-advanced.php:42
+msgid "RSS queue depth"
 msgstr ""
 
-#: admin/views/settings-page.php:85
-msgid "Uses adaptive WP-Cron: more frequent when you check in often, lighter when you are quiet. Low-traffic sites should hit wp-cron.php from a real system cron, or install the Action Scheduler plugin for a proper job queue."
+#: admin/views/settings/tab-advanced.php:46
+msgid "Draft check-ins needing data"
 msgstr ""
 
-#: admin/views/settings-page.php:96
-msgid "Run a sync now"
+#: admin/views/settings/tab-advanced.php:50
+msgid "Recent log lines appear below under “Log file (today)”. Enable debug logging for more detail."
 msgstr ""
 
-#: admin/views/settings-page.php:97
-msgid "Fetches the RSS feed immediately and imports any new items (same code path as automatic scheduled sync)."
+#: admin/views/settings/tab-advanced.php:56
+msgid "SEO & semantics"
 msgstr ""
 
-#: admin/views/settings-page.php:100
-msgid "Run sync now"
+#: admin/views/settings/tab-advanced.php:57
+msgid "Optional structured data and microformats for themes and parsers."
 msgstr ""
 
-#: admin/views/settings-page.php:112
-msgid "10 check-ins — small steps"
+#: admin/views/settings/tab-advanced.php:62
+msgid "Schema.org JSON-LD"
 msgstr ""
 
-#: admin/views/settings-page.php:113
-msgid "15 check-ins — light"
+#: admin/views/settings/tab-advanced.php:67
+msgid "Output Review structured data on single check-in pages"
 msgstr ""
 
-#: admin/views/settings-page.php:114
-msgid "25 check-ins — balanced (recommended)"
+#: admin/views/settings/tab-advanced.php:72
+msgid "Microformats"
 msgstr ""
 
-#: admin/views/settings-page.php:115
-msgid "40 check-ins — fewer clicks"
+#: admin/views/settings/tab-advanced.php:77
+msgid "Add h-entry / e-content classes for IndieWeb-style consumers"
 msgstr ""
 
-#: admin/views/settings-page.php:116
-msgid "50 check-ins — large (may time out)"
+#: admin/views/settings/tab-advanced.php:89
+msgid "Jardin Toasts reads your public Untappd RSS feed and imports check-in CSVs you provide from Untappd’s data export. You are responsible for complying with Untappd’s terms and for content you republish."
 msgstr ""
 
-#: admin/views/settings-page.php:119
-msgid "No pause (fast hosts only)"
+#: admin/views/settings/tab-advanced.php:96
+msgid "Email notifications"
 msgstr ""
 
-#: admin/views/settings-page.php:120
-msgid "1 second between requests"
+#: admin/views/settings/tab-advanced.php:97
+msgid "Optional alerts when sync completes or fails."
 msgstr ""
 
-#: admin/views/settings-page.php:121
-msgid "2 seconds — gentle"
+#: admin/views/settings/tab-advanced.php:102
+msgid "On successful sync"
 msgstr ""
 
-#: admin/views/settings-page.php:122
-msgid "3 seconds — polite (default)"
+#: admin/views/settings/tab-advanced.php:107
+msgid "Email when new check-ins are imported via RSS"
 msgstr ""
 
-#: admin/views/settings-page.php:123
-msgid "5 seconds — very safe"
+#: admin/views/settings/tab-advanced.php:112
+msgid "On RSS error"
 msgstr ""
 
-#: admin/views/settings-page.php:124
-msgid "8 seconds — slowest"
+#: admin/views/settings/tab-advanced.php:117
+msgid "Email when the feed cannot be fetched"
 msgstr ""
 
-#. translators: %d: number of check-ins
-#: admin/views/settings-page.php:129
-msgid "%d check-ins (current)"
+#: admin/views/settings/tab-advanced.php:122
+msgid "Notification email"
 msgstr ""
 
-#. translators: %d: seconds
-#: admin/views/settings-page.php:137
-msgid "%d seconds (current)"
+#: admin/views/settings/tab-advanced.php:125
+msgid "Leave empty to use the site admin email."
 msgstr ""
 
-#: admin/views/settings-page.php:146
-msgid "Profile & batching"
+#: admin/views/settings/tab-advanced.php:134
+msgid "Logging & debug"
 msgstr ""
 
-#: admin/views/settings-page.php:147
-msgid "Discovery loads your public profile HTML and collects check-in links. Only the username is needed — the same person as in your RSS feed on the Synchronization tab."
+#: admin/views/settings/tab-advanced.php:135
+msgid "Verbose logging can help support; keep retention sensible on shared hosting."
 msgstr ""
 
-#: admin/views/settings-page.php:152
-msgid "Untappd username"
+#: admin/views/settings/tab-advanced.php:140
+msgid "Debug logging"
 msgstr ""
 
-#: admin/views/settings-page.php:160
-msgid "Enter the profile slug only (e.g. jaz_on), not the full URL. It must match the user segment in your RSS URL: untappd.com/rss/user/…"
+#: admin/views/settings/tab-advanced.php:145
+msgid "Write extra detail to the log file"
 msgstr ""
 
-#. translators: %s: username
-#: admin/views/settings-page.php:162
-msgid "Detected from your saved RSS URL: %s"
+#: admin/views/settings/tab-advanced.php:150
+msgid "Log retention"
 msgstr ""
 
-#: admin/views/settings-page.php:167
-msgid "Batch size"
+#: admin/views/settings/tab-advanced.php:153
+msgid "days (0 = disable rotation hints)"
 msgstr ""
 
-#: admin/views/settings-page.php:174
-msgid "How many check-ins to import each time you click “Import next batch”. Smaller batches finish faster per request; larger ones mean fewer clicks for big backfills."
+#: admin/views/settings/tab-advanced.php:162
+msgid "Log file (today)"
 msgstr ""
 
-#: admin/views/settings-page.php:178
-msgid "Pause between requests"
+#: admin/views/settings/tab-advanced.php:163
+msgid "Tail of the current log. Paths may differ on your host."
 msgstr ""
 
-#: admin/views/settings-page.php:185
-msgid "Wait time after each HTTP request during discovery and import. Longer pauses are kinder to Untappd and your host; shorter pauses finish sooner."
+#: admin/views/settings/tab-advanced.php:166
+msgid "Log output"
 msgstr ""
 
-#: admin/views/settings-page.php:189
-msgid "Import mode"
+#. translators: %s: directory path
+#: admin/views/settings/tab-advanced.php:175
+msgid "Log directory: %s"
 msgstr ""
 
-#: admin/views/settings-page.php:192
-msgid "Manual — AJAX batches (recommended)"
+#: admin/views/settings/tab-advanced.php:178
+msgid "Log directory could not be created."
 msgstr ""
 
-#: admin/views/settings-page.php:193
-msgid "Background — Action Scheduler"
-msgstr ""
-
-#: admin/views/settings-page.php:193
-msgid "Background — WP-Cron"
-msgstr ""
-
-#: admin/views/settings-page.php:197
-msgid "Manual keeps you in control; background runs import batches via Action Scheduler when the queue has work."
-msgstr ""
-
-#: admin/views/settings-page.php:199
-msgid "Manual keeps you in control; background spreads work across WP-Cron single events when the queue has work (less reliable on low-traffic sites)."
-msgstr ""
-
-#: admin/views/settings-page.php:210
-msgid "Discovery & import"
-msgstr ""
-
-#: admin/views/settings-page.php:211
-msgid "Run discovery once to build a queue, then import batches until the queue is empty."
-msgstr ""
-
-#: admin/views/settings-page.php:214
-msgid "Discover check-ins"
-msgstr ""
-
-#: admin/views/settings-page.php:215
-msgid "Import next batch"
-msgstr ""
-
-#: admin/views/settings-page.php:226
+#: admin/views/settings/tab-display.php:40
 msgid "Archives & layout"
 msgstr ""
 
-#: admin/views/settings-page.php:227
+#: admin/views/settings/tab-display.php:41
 msgid "Choose how lists of check-ins appear on the main journal and taxonomy pages."
 msgstr ""
 
-#: admin/views/settings-page.php:232
+#: admin/views/settings/tab-display.php:46
 msgid "Archive layout"
 msgstr ""
 
-#: admin/views/settings-page.php:235
+#: admin/views/settings/tab-display.php:49
 msgid "Grid — cards with photos"
 msgstr ""
 
-#: admin/views/settings-page.php:236
+#: admin/views/settings/tab-display.php:50
 msgid "Table — compact rows"
 msgstr ""
 
-#: admin/views/settings-page.php:238
+#: admin/views/settings/tab-display.php:52
 msgid "Applies to the beer check-in archive and beer style / brewery / venue listings."
 msgstr ""
 
-#: admin/views/settings-page.php:243
+#: admin/views/settings/tab-display.php:57
 msgid "Public journal URL:"
 msgstr ""
 
-#: admin/views/settings-page.php:254
+#: admin/views/settings/tab-display.php:68
 msgid "Imported content"
 msgstr ""
 
-#: admin/views/settings-page.php:255
+#: admin/views/settings/tab-display.php:69
 msgid "Control media and taxonomy data saved with each check-in. Check-in notes are stored as post content with automatic paragraphs for plain text."
 msgstr ""
 
-#: admin/views/settings-page.php:260
+#: admin/views/settings/tab-display.php:74
 msgid "Beer photos"
 msgstr ""
 
-#: admin/views/settings-page.php:265
+#: admin/views/settings/tab-display.php:79
 msgid "Yes — import beer photos into the Media Library"
 msgstr ""
 
-#: admin/views/settings-page.php:267
+#: admin/views/settings/tab-display.php:81
 msgid "On by default for new installs. Turn off if you only want text."
 msgstr ""
 
-#: admin/views/settings-page.php:271
+#: admin/views/settings/tab-display.php:85
 #: includes/class-taxonomies.php:118
 #: includes/class-taxonomies.php:126
 msgid "Venues"
 msgstr ""
 
-#: admin/views/settings-page.php:276
+#: admin/views/settings/tab-display.php:90
 msgid "Yes — create venue taxonomy terms when a location is present"
 msgstr ""
 
-#: admin/views/settings-page.php:278
+#: admin/views/settings/tab-display.php:92
 msgid "On by default. Lets you browse check-ins by place."
 msgstr ""
 
-#: admin/views/settings-page.php:282
+#: admin/views/settings/tab-display.php:96
 msgid "Social stats"
 msgstr ""
 
-#: admin/views/settings-page.php:287
+#: admin/views/settings/tab-display.php:101
 msgid "Yes — store toast counts when Untappd exposes them"
 msgstr ""
 
-#: admin/views/settings-page.php:289
+#: admin/views/settings/tab-display.php:103
 msgid "On by default. Optional engagement metadata."
 msgstr ""
 
-#: admin/views/settings-page.php:293
+#: admin/views/settings/tab-display.php:107
 msgid "Fallback image"
 msgstr ""
 
-#: admin/views/settings-page.php:301
+#: admin/views/settings/tab-display.php:115
 msgid "Use a fallback image when Untappd download fails (on by default). Uncheck to leave the post without a featured image."
 msgstr ""
 
-#: admin/views/settings-page.php:303
-msgid "Pick a generic beer or logo from your Media Library (no attachment ID to type). There is no built-in remote beer-photo API (keys, licensing, reliability); you can wire Open Food Facts, Wikimedia, or your own source in PHP with the jardin_toasts_placeholder_attachment_id filter, returning a Media Library attachment ID you created."
+#: admin/views/settings/tab-display.php:117
+msgid "Pick a generic beer or logo from your Media Library (no attachment ID to type). There is no built-in remote beer-photo API (keys, licensing, reliability); you can wire Open Food Facts, Wikimedia, or your own source in PHP with the jardin_toasts_placeholder_attachment_id filter (jardin_toasts_placeholder_attachment_id is still fired for backward compatibility), returning a Media Library attachment ID you created."
 msgstr ""
 
-#: admin/views/settings-page.php:346
-msgid "Star mapping"
+#: admin/views/settings/tab-display.php:134
+msgid "Ratings & stars"
 msgstr ""
 
-#: admin/views/settings-page.php:347
-msgid "Map Untappd’s 0–5 raw score into whole stars. Rules are tested in order; the first matching min/max band wins. The jardin_toasts_rating_rules filter can still override in code."
+#: admin/views/settings/tab-display.php:135
+msgid "Map Untappd’s 0–5 raw score into whole stars. Rules are tested in order; the first matching min/max band wins. The jardin_toasts_rating_rules filter (jardin_toasts_rating_rules is still fired for backward compatibility) can override in code."
 msgstr ""
 
-#: admin/views/settings-page.php:352
+#: admin/views/settings/tab-display.php:140
 msgid "Use mapping rules"
 msgstr ""
 
-#: admin/views/settings-page.php:357
+#: admin/views/settings/tab-display.php:145
 msgid "Map fractional Untappd ratings to whole stars"
 msgstr ""
 
-#: admin/views/settings-page.php:364
+#: admin/views/settings/tab-display.php:152
 msgid "Raw score bands"
 msgstr ""
 
-#: admin/views/settings-page.php:365
+#: admin/views/settings/tab-display.php:153
 msgid "Each row is one band: if the raw rating is between min and max (inclusive), it maps to the chosen star level."
 msgstr ""
 
-#: admin/views/settings-page.php:369
+#: admin/views/settings/tab-display.php:157
 msgid "#"
 msgstr ""
 
-#: admin/views/settings-page.php:370
+#: admin/views/settings/tab-display.php:158
 msgid "Min (raw)"
 msgstr ""
 
-#: admin/views/settings-page.php:371
+#: admin/views/settings/tab-display.php:159
 msgid "Max (raw)"
 msgstr ""
 
-#: admin/views/settings-page.php:372
+#: admin/views/settings/tab-display.php:160
 msgid "Star level"
 msgstr ""
 
 #. translators: %d: row number
-#: admin/views/settings-page.php:385
+#: admin/views/settings/tab-display.php:173
 msgid "Band %d min"
 msgstr ""
 
 #. translators: %d: row number
-#: admin/views/settings-page.php:389
+#: admin/views/settings/tab-display.php:177
 msgid "Band %d max"
 msgstr ""
 
 #. translators: %d: row number
-#: admin/views/settings-page.php:393
+#: admin/views/settings/tab-display.php:181
 msgid "Band %d stars"
 msgstr ""
 
-#: admin/views/settings-page.php:407
+#: admin/views/settings/tab-display.php:195
 msgid "Labels per star level"
 msgstr ""
 
-#: admin/views/settings-page.php:408
+#: admin/views/settings/tab-display.php:196
 msgid "Optional text for each rounded level (for themes, blocks, or future UI)."
 msgstr ""
 
 #. translators: %d: star count 0-5
-#: admin/views/settings-page.php:417
+#: admin/views/settings/tab-display.php:205
 msgid "%d stars"
 msgstr ""
 
-#: admin/views/settings-page.php:437
-msgid "Scraping & performance"
+#: admin/views/settings/tab-sync.php:20
+msgid "Diagnostics (DataViews)"
 msgstr ""
 
-#: admin/views/settings-page.php:438
-msgid "These settings throttle how aggressively the plugin hits Untappd when it downloads check-in HTML (automatic RSS sync, “Run sync now”, and background import). They are separate from the Synchronization tab (feed URL and whether RSS runs) and from Historical import → “Pause between requests”, which only spaces out clicks in that admin wizard."
+#: admin/views/settings/tab-sync.php:21
+msgid "Read-only snapshot from current options. Requires a built admin bundle (npm run build in the plugin directory)."
 msgstr ""
 
-#: admin/views/settings-page.php:443
-msgid "Scraping delay"
+#: admin/views/settings/tab-sync.php:31
+msgid "Background RSS sync"
 msgstr ""
 
-#: admin/views/settings-page.php:446
-msgid "seconds"
+#: admin/views/settings/tab-sync.php:32
+msgid "Scheduled sync reads your public Untappd RSS feed and creates check-in posts from feed items only (beer, brewery, venue, date, and image when present). Ratings are usually missing from RSS — those posts stay as drafts until you enrich them from a full data export CSV."
 msgstr ""
 
-#: admin/views/settings-page.php:447
-msgid "Minimum 1 second (values below 1 are saved as 1). Higher values are gentler; lower values are faster but easier to rate-limit."
+#: admin/views/settings/tab-sync.php:42
+msgid "Enable scheduled RSS synchronization"
 msgstr ""
 
-#: admin/views/settings-page.php:451
-msgid "RSS imports per scheduled sync"
+#: admin/views/settings/tab-sync.php:45
+msgid "Adaptive timing: more frequent when you check in often, lighter when you are quiet."
 msgstr ""
 
-#: admin/views/settings-page.php:454
-msgid "Minimum 1 per run (values below 1 are saved as 1). Each automatic sync scrapes at most this many new check-ins; the rest stay in a queue and are processed by follow-up events. “Run sync now” uses a higher limit."
+#: admin/views/settings/tab-sync.php:58
+#: admin/views/settings/tab-sync.php:62
+msgid "Run sync now"
 msgstr ""
 
-#: admin/views/settings-page.php:463
-msgid "Sync health"
+#: admin/views/settings/tab-sync.php:59
+msgid "Fetches the RSS feed immediately (same code path as scheduled sync)."
 msgstr ""
 
-#: admin/views/settings-page.php:464
-msgid "Quick signals when diagnosing RSS backlog or failed scrapes."
+#: admin/views/settings/tab-sync.php:70
+msgid "Full history: data export (CSV)"
 msgstr ""
 
-#: admin/views/settings-page.php:469
-msgid "RSS queue depth"
+#: admin/views/settings/tab-sync.php:71
+msgid "Request your personal data from Untappd (privacy / GDPR process) or use an Insider subscription export when available. Import the check-ins CSV here — rows are matched by check-in ID and existing posts are updated. No file is sent with “Save changes”; upload runs only when you click Import."
 msgstr ""
 
-#: admin/views/settings-page.php:473
-msgid "Draft check-ins needing data"
+#: admin/views/settings/tab-sync.php:76
+msgid "Import check-ins CSV"
 msgstr ""
 
-#: admin/views/settings-page.php:477
-msgid "Scraper markup version"
+#: admin/views/settings/tab-sync.php:79
+msgid "Expected columns include checkin_id, checkin_url, beer_name, brewery_name, rating_score, created_at, comment, venue_name, serving_type, beer_abv, beer_ibu, photo_url (names may vary). Use filters jardin_toasts_gdpr_csv_map_row / jardin_toasts_gdpr_csv_max_rows or jardin_toasts_gdpr_csv_row if your export differs."
 msgstr ""
 
-#: admin/views/settings-page.php:481
-msgid "Recent log lines appear below under “Log file (today)”. Enable debug logging for more detail."
+#: admin/views/settings/tab-untappd.php:18
+msgid "Account"
 msgstr ""
 
-#: admin/views/settings-page.php:487
-msgid "SEO & semantics"
+#: admin/views/settings/tab-untappd.php:19
+msgid "Use the same RSS URL and username you see on Untappd (Account → RSS). Values are stored in the WordPress options table — only trusted administrators should access this screen."
 msgstr ""
 
-#: admin/views/settings-page.php:488
-msgid "Optional structured data and microformats for themes and parsers."
+#: admin/views/settings/tab-untappd.php:24
+msgid "Untappd RSS feed URL"
 msgstr ""
 
-#: admin/views/settings-page.php:493
-msgid "Schema.org JSON-LD"
+#: admin/views/settings/tab-untappd.php:27
+msgid "Public RSS (about 25 recent check-ins). Used by automatic sync and “Run sync now” on the Import & sync tab."
 msgstr ""
 
-#: admin/views/settings-page.php:498
-msgid "Output Review structured data on single check-in pages"
+#: admin/views/settings/tab-untappd.php:31
+msgid "Untappd username"
 msgstr ""
 
-#: admin/views/settings-page.php:503
-msgid "Microformats"
+#: admin/views/settings/tab-untappd.php:39
+msgid "Profile slug only (e.g. jaz_on), not the full URL. Should match the user segment in your RSS URL (untappd.com/rss/user/…). Optional reference for your records; full history is imported via CSV export."
 msgstr ""
 
-#: admin/views/settings-page.php:508
-msgid "Add h-entry / e-content classes for IndieWeb-style consumers"
+#. translators: %s: username
+#: admin/views/settings/tab-untappd.php:41
+msgid "Detected from your saved RSS URL: %s"
 msgstr ""
 
-#: admin/views/settings-page.php:520
-msgid "Jardin Toasts reads public Untappd RSS and HTML only. Untappd may change pages at any time. You are responsible for complying with Untappd’s terms and for content you republish. See docs/legal/scraping-notice.md in the plugin."
+#: admin/views/settings/tab-untappd.php:51
+msgid "Test connection"
 msgstr ""
 
-#: admin/views/settings-page.php:527
-msgid "Email notifications"
+#: admin/views/settings/tab-untappd.php:52
+msgid "Save your feed URL first, then verify WordPress can read the RSS feed."
 msgstr ""
 
-#: admin/views/settings-page.php:528
-msgid "Optional alerts when sync completes or fails."
-msgstr ""
-
-#: admin/views/settings-page.php:533
-msgid "On successful sync"
-msgstr ""
-
-#: admin/views/settings-page.php:538
-msgid "Email when new check-ins are imported via RSS"
-msgstr ""
-
-#: admin/views/settings-page.php:543
-msgid "On RSS error"
-msgstr ""
-
-#: admin/views/settings-page.php:548
-msgid "Email when the feed cannot be fetched"
-msgstr ""
-
-#: admin/views/settings-page.php:553
-msgid "Notification email"
-msgstr ""
-
-#: admin/views/settings-page.php:556
-msgid "Leave empty to use the site admin email."
-msgstr ""
-
-#: admin/views/settings-page.php:565
-msgid "Logging & debug"
-msgstr ""
-
-#: admin/views/settings-page.php:566
-msgid "Verbose logging can help support; keep retention sensible on shared hosting."
-msgstr ""
-
-#: admin/views/settings-page.php:571
-msgid "Debug logging"
-msgstr ""
-
-#: admin/views/settings-page.php:576
-msgid "Write extra detail to the log file"
-msgstr ""
-
-#: admin/views/settings-page.php:581
-msgid "Log retention"
-msgstr ""
-
-#: admin/views/settings-page.php:584
-msgid "days (0 = disable rotation hints)"
-msgstr ""
-
-#: admin/views/settings-page.php:593
-msgid "Log file (today)"
-msgstr ""
-
-#: admin/views/settings-page.php:594
-msgid "Tail of the current log. Paths may differ on your host."
-msgstr ""
-
-#: admin/views/settings-page.php:597
-msgid "Log output"
-msgstr ""
-
-#. translators: %s: directory path
-#: admin/views/settings-page.php:606
-msgid "Log directory: %s"
-msgstr ""
-
-#: admin/views/settings-page.php:609
-msgid "Log directory could not be created."
-msgstr ""
-
-#: admin/views/settings-page.php:621
-msgid "Save changes"
+#: admin/views/settings/tab-untappd.php:56
+msgid "Test RSS feed"
 msgstr ""
 
 #: admin/views/stats-box.php:18
@@ -694,23 +632,66 @@ msgstr ""
 msgid "Incomplete drafts"
 msgstr ""
 
-#: blocks/brewery-stats/render.php:10
-msgid "Select a brewery term ID in the block sidebar."
+#: blocks/beer-stats/render.php:95
+msgid "No beer check-ins yet."
 msgstr ""
 
-#: blocks/brewery-stats/render.php:15
-msgid "Brewery not found."
+#: blocks/beer-stats/render.php:105
+msgid "check-ins"
 msgstr ""
 
-#. translators: %d: number of check-ins
-#: blocks/brewery-stats/render.php:44
-msgid "%d check-in"
-msgid_plural "%d check-ins"
-msgstr[0] ""
-msgstr[1] ""
+#: blocks/beer-stats/render.php:109
+msgid "breweries"
+msgstr ""
+
+#: blocks/beer-stats/render.php:113
+msgid "top style"
+msgstr ""
+
+#: blocks/beer-stats/render.php:117
+msgid "average rating"
+msgstr ""
+
+#: blocks/beer-stats/render.php:121
+msgid "favourite brewery"
+msgstr ""
+
+#: blocks/beer-stats/render.php:126
+msgid "sync source"
+msgstr ""
 
 #: blocks/checkin-card/render.php:13
 msgid "Select a check-in or view on a single check-in page."
+msgstr ""
+
+#: blocks/checkin-meta/render.php:23
+msgid "Beer-card meta appears here on a single check-in (with rating, brewery, style, ABV, IBU)."
+msgstr ""
+
+#: blocks/checkin-meta/render.php:56
+msgid "brewery"
+msgstr ""
+
+#: blocks/checkin-meta/render.php:62
+msgid "style"
+msgstr ""
+
+#: blocks/checkin-meta/render.php:68
+msgid "abv"
+msgstr ""
+
+#: blocks/checkin-meta/render.php:74
+msgid "ibu"
+msgstr ""
+
+#: blocks/checkin-meta/render.php:104
+msgid "rating"
+msgstr ""
+
+#: blocks/checkin-meta/render.php:114
+#: public/templates/single-beer_checkin.php:49
+#: public/templates/single-checkin.php:49
+msgid "View on Untappd"
 msgstr ""
 
 #: blocks/menu-display/render.php:12
@@ -722,30 +703,59 @@ msgid "No check-ins for this venue."
 msgstr ""
 
 #: blocks/recent-checkins/render.php:22
-#: public/templates/archive-beer_checkin.php:18
-msgid "No check-ins yet."
+msgid "No beer check-ins in this block yet."
 msgstr ""
 
-#: includes/class-action-scheduler.php:41
+#: blocks/recent-checkins/render.php:22
+msgid "They appear here after Untappd sync creates beer_checkin posts (WP Admin → Jardin Toasts)."
+msgstr ""
+
+#: blocks/recent-reviews/render.php:28
+#: blocks/recent-reviews/render.php:79
+msgid "No reviews yet."
+msgstr ""
+
+#: blocks/recent-reviews/render.php:28
+#: blocks/recent-reviews/render.php:79
+msgid "A review is a check-in with editorial commentary in the post body."
+msgstr ""
+
+#: blocks/recent-reviews/render.php:59
+msgid "review"
+msgstr ""
+
+#: blocks/styles-breakdown/render.php:36
+msgid "No beer styles to chart yet."
+msgstr ""
+
+#: blocks/styles-breakdown/render.php:77
+msgid "Others"
+msgstr ""
+
+#: includes/class-action-scheduler.php:40
 msgid "Every 6 hours"
 msgstr ""
 
-#: includes/class-crawler.php:27
-msgid "Invalid Untappd username."
+#: includes/class-gdpr-csv-importer.php:34
+msgid "Invalid file stream."
 msgstr ""
 
-#. translators: 1: HTTP status code, 2: response size in bytes
-#: includes/class-crawler.php:71
-msgid "Untappd returned almost no HTML (HTTP %1$d, %2$d bytes). The server may block outbound requests from your host, or Untappd may require a browser session."
+#: includes/class-gdpr-csv-importer.php:43
+msgid "Empty CSV file."
 msgstr ""
 
-#. translators: 1: HTTP status code, 2: response size in bytes
-#: includes/class-crawler.php:89
-msgid "No check-in links found on the first profile page (HTTP %1$d, %2$d bytes). Often this means your web host cannot load Untappd the same way a browser can (bot protection)."
+#: includes/class-gdpr-csv-importer.php:55
+msgid "Could not read CSV header row."
 msgstr ""
 
-#: includes/class-crawler.php:97
-msgid "No check-in links matched in the profile HTML. Untappd may have changed their page layout; check for a plugin update or report this to the maintainer."
+#. translators: %d: max rows
+#: includes/class-gdpr-csv-importer.php:71
+msgid "Stopped after %d rows (safety limit). Re-import remaining lines in a second file if needed."
+msgstr ""
+
+#. translators: 1: row number, 2: error message
+#: includes/class-gdpr-csv-importer.php:95
+msgid "Row %1$d: %2$s"
 msgstr ""
 
 #: includes/class-image-handler.php:30
@@ -760,26 +770,26 @@ msgstr ""
 msgid "Missing check-in URL."
 msgstr ""
 
-#: includes/class-importer.php:53
-#: includes/functions.php:561
+#: includes/class-importer.php:43
 msgid "Missing check-in ID."
 msgstr ""
 
-#: includes/class-importer.php:58
+#: includes/class-importer.php:48
 msgid "Check-in excluded by settings."
 msgstr ""
 
-#: includes/class-importer.php:65
+#: includes/class-importer.php:55
 msgid "Post excluded from sync."
 msgstr ""
 
-#: includes/class-importer.php:102
+#: includes/class-importer.php:92
 #: includes/class-post-type.php:45
 msgid "Beer check-in"
 msgstr ""
 
 #: includes/class-post-type.php:44
 #: public/templates/archive-beer_checkin.php:15
+#: public/templates/archive-checkin.php:15
 msgid "Beer check-ins"
 msgstr ""
 
@@ -823,29 +833,17 @@ msgstr ""
 msgid "No check-ins in trash"
 msgstr ""
 
-#: includes/class-rss-parser.php:34
+#: includes/class-rss-parser.php:39
 msgid "RSS feed URL is not configured."
 msgstr ""
 
-#: includes/class-rss-parser.php:254
+#: includes/class-rss-parser.php:259
 msgid "RSS sync completed"
 msgstr ""
 
 #. translators: %d: number of check-ins imported
-#: includes/class-rss-parser.php:257
+#: includes/class-rss-parser.php:262
 msgid "Imported %d new check-in(s)."
-msgstr ""
-
-#: includes/class-scraper.php:33
-msgid "Invalid Untappd check-in URL."
-msgstr ""
-
-#: includes/class-scraper.php:73
-msgid "Could not load check-in page."
-msgstr ""
-
-#: includes/class-scraper.php:134
-msgid "Could not parse check-in data from HTML."
 msgstr ""
 
 #: includes/class-taxonomies.php:48
@@ -969,21 +967,8 @@ msgstr ""
 msgid "Excellent"
 msgstr ""
 
-#: includes/functions.php:545
-msgid "You cannot edit this check-in."
-msgstr ""
-
-#: includes/functions.php:548
-msgid "Not a beer check-in post."
-msgstr ""
-
-#: includes/functions.php:552
-msgid "No valid Untappd check-in URL on this post."
-msgstr ""
-
-#. translators: %s: missing autoload dependency path.
-#: jardin-toasts.php:67
-msgid "Missing Composer dependency file: %s"
+#: includes/functions.php:103
+msgid "<strong>Jardin Toasts</strong>: la constante <code>JT_RSS_FEED_URL</code> est dépréciée. Renommez-la en <code>JARDIN_TOASTS_RSS_FEED_URL</code> dans <code>wp-config.php</code>."
 msgstr ""
 
 #: jardin-toasts.php:86
@@ -994,11 +979,19 @@ msgstr ""
 msgid "Jardin Toasts is missing the vendor/ folder (Composer packages). If you install from Git, use a branch or release that includes vendor, or run composer install --no-dev in the plugin directory."
 msgstr ""
 
-#: jardin-toasts.php:193
+#: jardin-toasts.php:121
+msgid "Jardin Toasts cannot activate because its PHP dependencies did not load. If you installed from Git, run <code>composer install --no-dev</code> in the plugin directory (or use a release that includes <code>vendor/</code>), then activate again."
+msgstr ""
+
+#: jardin-toasts.php:123
+msgid "Plugin activation error"
+msgstr ""
+
+#: jardin-toasts.php:227
 msgid "GitHub"
 msgstr ""
 
-#: jardin-toasts.php:198
+#: jardin-toasts.php:232
 msgid "Donate"
 msgstr ""
 
@@ -1030,18 +1023,19 @@ msgstr ""
 msgid "%d out of 5 stars"
 msgstr ""
 
-#: public/templates/single-beer_checkin.php:49
-msgid "View on Untappd"
+#: public/templates/archive-beer_checkin.php:18
+#: public/templates/archive-checkin.php:18
+msgid "No check-ins yet."
 msgstr ""
 
-#: blocks/brewery-stats/block.json
+#: blocks/beer-stats/block.json
 msgctxt "block title"
-msgid "Brewery stats"
+msgid "Beer stats (aggregate)"
 msgstr ""
 
-#: blocks/brewery-stats/block.json
+#: blocks/beer-stats/block.json
 msgctxt "block description"
-msgid "Published check-in count for a brewery term."
+msgid "Aggregated stats: unique beers, breweries, favourite style/brewery, average rating, sync source."
 msgstr ""
 
 #: blocks/checkin-card/block.json
@@ -1052,6 +1046,16 @@ msgstr ""
 #: blocks/checkin-card/block.json
 msgctxt "block description"
 msgid "Single beer check-in card (uses theme/plugin card markup)."
+msgstr ""
+
+#: blocks/checkin-meta/block.json
+msgctxt "block title"
+msgid "Check-in meta"
+msgstr ""
+
+#: blocks/checkin-meta/block.json
+msgctxt "block description"
+msgid "Single check-in beer-card meta (brewery, style, ABV, IBU, rating stars) and outbound Untappd link."
 msgstr ""
 
 #: blocks/menu-display/block.json
@@ -1072,4 +1076,24 @@ msgstr ""
 #: blocks/recent-checkins/block.json
 msgctxt "block description"
 msgid "List of the latest beer check-ins."
+msgstr ""
+
+#: blocks/recent-reviews/block.json
+msgctxt "block title"
+msgid "Recent reviews"
+msgstr ""
+
+#: blocks/recent-reviews/block.json
+msgctxt "block description"
+msgid "Cards for editorial reviews — check-ins with non-empty post content (promoted from auto tasting)."
+msgstr ""
+
+#: blocks/styles-breakdown/block.json
+msgctxt "block title"
+msgid "Beer styles breakdown"
+msgstr ""
+
+#: blocks/styles-breakdown/block.json
+msgctxt "block description"
+msgid "Top beer styles bar chart, computed from the beer_style taxonomy."
 msgstr ""
