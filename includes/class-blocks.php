@@ -21,6 +21,7 @@ class Jardin_Toasts_Blocks {
 	 */
 	private const BLOCKS = array(
 		'checkin-card',
+		'checkin-meta',
 		'recent-checkins',
 		'menu-display',
 		'beer-stats',
