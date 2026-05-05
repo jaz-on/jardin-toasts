@@ -36,8 +36,9 @@ package-lock.json
 yarn.lock
 
 # Build files
-build/
-dist/
+# build/ and dist/ are committed so installs from Git / Git Updater include
+# runtime assets without running npm on the server (same rationale as vendor/).
+# If you regenerate, run `composer dump-autoload --no-dev && npm install && npx webpack --config webpack.config.cjs --mode production`.
 *.min.js
 *.min.css
 

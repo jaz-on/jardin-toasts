@@ -81,13 +81,35 @@ function jardin_toasts_get_rating_labels() {
  * Default Untappd RSS feed URL used when the option is not stored yet.
  *
  * Optional: define `JARDIN_TOASTS_RSS_FEED_URL` in wp-config.php to override the default feed URL.
+ * Legacy `JT_RSS_FEED_URL` is still honored (with a deprecation notice for site admins) so users
+ * who set it before the may-2026 rename keep a working override until they update wp-config.php.
  *
  * @return string
  */
 function jardin_toasts_get_default_rss_feed_url() {
+	$override = '';
 	if ( defined( 'JARDIN_TOASTS_RSS_FEED_URL' ) && is_string( JARDIN_TOASTS_RSS_FEED_URL ) && '' !== trim( JARDIN_TOASTS_RSS_FEED_URL ) ) {
-		return apply_filters( 'jardin_toasts_default_rss_feed_url', esc_url_raw( JARDIN_TOASTS_RSS_FEED_URL ) );
+		$override = JARDIN_TOASTS_RSS_FEED_URL;
+	} elseif ( defined( 'JT_RSS_FEED_URL' ) && is_string( JT_RSS_FEED_URL ) && '' !== trim( JT_RSS_FEED_URL ) ) {
+		$override = JT_RSS_FEED_URL;
+		// Surface a one-time admin notice so the user knows to rename the constant.
+		add_action(
+			'admin_notices',
+			static function () {
+				if ( ! current_user_can( 'manage_options' ) ) {
+					return;
+				}
+				echo '<div class="notice notice-warning"><p>';
+				echo wp_kses_post( __( '<strong>Jardin Toasts</strong>: la constante <code>JT_RSS_FEED_URL</code> est dépréciée. Renommez-la en <code>JARDIN_TOASTS_RSS_FEED_URL</code> dans <code>wp-config.php</code>.', 'jardin-toasts' ) );
+				echo '</p></div>';
+			}
+		);
 	}
+
+	if ( '' !== $override ) {
+		return apply_filters( 'jardin_toasts_default_rss_feed_url', esc_url_raw( $override ) );
+	}
+
 	return apply_filters(
 		'jardin_toasts_default_rss_feed_url',
 		'https://untappd.com/rss/user/jaz_on?key=89731ff4bd5fc508dc3eae87a6cf93f4'
