@@ -32,7 +32,7 @@ class RssQueueTest extends TestCase {
 				'beer_name'  => 'New',
 			),
 		);
-		$merged = jt_rss_queue_merge_unique( $queue, $add );
+		$merged = jardin_toasts_rss_queue_merge_unique( $queue, $add );
 		$this->assertCount( 1, $merged );
 		$this->assertSame( 'New', $merged[0]['beer_name'] );
 	}
@@ -45,7 +45,7 @@ class RssQueueTest extends TestCase {
 	public function test_jt_rss_queue_merge_unique_appends_new_ids() {
 		$queue = array( array( 'checkin_id' => '1' ) );
 		$add   = array( array( 'checkin_id' => '2' ) );
-		$merged = jt_rss_queue_merge_unique( $queue, $add );
+		$merged = jardin_toasts_rss_queue_merge_unique( $queue, $add );
 		$this->assertCount( 2, $merged );
 		$this->assertSame( '1', (string) $merged[0]['checkin_id'] );
 		$this->assertSame( '2', (string) $merged[1]['checkin_id'] );

@@ -12,9 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_Gdpr_Csv_Importer
+ * Class Jardin_Toasts_Gdpr_Csv_Importer
  */
-class JT_Gdpr_Csv_Importer {
+class Jardin_Toasts_Gdpr_Csv_Importer {
 
 	/**
 	 * Import from an open readable stream (file handle).
@@ -58,9 +58,9 @@ class JT_Gdpr_Csv_Importer {
 
 		$headers = $this->sanitize_header_row( $headers );
 
-		$importer = new JT_Importer();
+		$importer = new Jardin_Toasts_Importer();
 		$row_num  = 1;
-		$max_rows = (int) apply_filters( 'jardin_toasts_gdpr_csv_max_rows', apply_filters( 'jt_gdpr_csv_max_rows', 8000 ) );
+		$max_rows = (int) apply_filters( 'jardin_toasts_gdpr_csv_max_rows', apply_filters( 'jardin_toasts_gdpr_csv_max_rows', 8000 ) );
 		$max_rows = max( 100, min( 50000, $max_rows ) );
 
 		while ( ( $row = fgetcsv( $stream, 0, $delimiter ) ) !== false ) {
@@ -79,7 +79,7 @@ class JT_Gdpr_Csv_Importer {
 
 			$assoc = $this->combine_row( $headers, $row );
 			$data = $this->map_row_to_import_data( $assoc );
-			$data = apply_filters( 'jt_gdpr_csv_map_row', $data, $assoc, $row_num );
+			$data = apply_filters( 'jardin_toasts_gdpr_csv_map_row', $data, $assoc, $row_num );
 			$data = apply_filters( 'jardin_toasts_gdpr_csv_row', $data, $assoc, $row_num );
 
 			if ( null === $data || ! is_array( $data ) ) {
@@ -180,7 +180,7 @@ class JT_Gdpr_Csv_Importer {
 
 		$checkin_url = trim( (string) ( $assoc['checkin_url'] ?? $assoc['untappd_url'] ?? '' ) );
 		if ( '' === $checkin_id && '' !== $checkin_url ) {
-			$parsed = jt_parse_checkin_id_from_url( $checkin_url );
+			$parsed = jardin_toasts_parse_checkin_id_from_url( $checkin_url );
 			if ( $parsed ) {
 				$checkin_id = $parsed;
 			}
@@ -191,7 +191,7 @@ class JT_Gdpr_Csv_Importer {
 		}
 
 		if ( '' === $checkin_url ) {
-			$user = jt_get_untappd_username();
+			$user = jardin_toasts_get_untappd_username();
 			if ( '' !== $user ) {
 				$checkin_url = 'https://untappd.com/user/' . rawurlencode( $user ) . '/checkin/' . $checkin_id;
 			}

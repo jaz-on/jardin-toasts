@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<p class="description jt-cron-hint">
-	<?php if ( jt_using_action_scheduler() ) : ?>
+<p class="description jardin-toasts-cron-hint">
+	<?php if ( jardin_toasts_using_action_scheduler() ) : ?>
 		<span class="dashicons dashicons-yes-alt" style="color:#00a32a;font-size:1em;vertical-align:text-bottom;" aria-hidden="true"></span>
 		<?php esc_html_e( 'Action Scheduler detected — RSS sync runs reliably in the background. Inspect scheduled actions under Tools → Scheduled Actions, group “jardin-toasts” (the menu label may differ if WooCommerce owns Action Scheduler).', 'jardin-toasts' ); ?>
 	<?php elseif ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) : ?>

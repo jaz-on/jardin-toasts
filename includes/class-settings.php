@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_Settings
+ * Class Jardin_Toasts_Settings
  */
-class JT_Settings {
+class Jardin_Toasts_Settings {
 
 	/**
 	 * Option group name.
@@ -27,10 +27,10 @@ class JT_Settings {
 	 * and wipe RSS URL, import queue, sync cursors, etc. whenever another tab was saved.
 	 */
 	private const INTERNAL_OPTIONS = array(
-		'jt_last_checkin_date',
-		'jt_last_imported_guid',
-		'jt_last_rss_sync_at',
-		'jt_excluded_checkins',
+		'jardin_toasts_last_checkin_date',
+		'jardin_toasts_last_imported_guid',
+		'jardin_toasts_last_rss_sync_at',
+		'jardin_toasts_excluded_checkins',
 	);
 
 	/**
@@ -49,13 +49,13 @@ class JT_Settings {
 	 * @return void
 	 */
 	public static function maybe_migrate_placeholder_toggle() {
-		if ( '1' === get_option( 'jt_placeholder_toggle_migrated', '' ) ) {
+		if ( '1' === get_option( 'jardin_toasts_placeholder_toggle_migrated', '' ) ) {
 			return;
 		}
-		if ( (int) get_option( 'jt_placeholder_image_id', 0 ) > 0 ) {
-			update_option( 'jt_use_placeholder_image', true );
+		if ( (int) get_option( 'jardin_toasts_placeholder_image_id', 0 ) > 0 ) {
+			update_option( 'jardin_toasts_use_placeholder_image', true );
 		}
-		update_option( 'jt_placeholder_toggle_migrated', '1', false );
+		update_option( 'jardin_toasts_placeholder_toggle_migrated', '1', false );
 	}
 
 	/**
@@ -65,30 +65,30 @@ class JT_Settings {
 	 */
 	public static function get_defaults() {
 		return array(
-			'jt_rss_feed_url'           => jt_get_default_rss_feed_url(),
-			'jt_sync_enabled'           => true,
-			'jt_last_checkin_date'      => '',
-			'jt_last_imported_guid'     => '',
-			'jt_untappd_username'       => jt_get_default_untappd_username(),
-			'jt_excluded_checkins'      => array(),
-			'jt_rating_rules'           => jt_get_default_rating_rules(),
-			'jt_rating_labels'          => jt_get_default_rating_labels(),
-			'jt_rating_rounding_enabled' => true,
-			'jt_import_images'          => true,
-			'jt_rss_max_per_run'        => 10,
-			'jt_schema_enabled'         => true,
-			'jt_microformats_enabled'   => true,
-			'jt_debug_mode'             => false,
-			'jt_log_retention_days'     => 30,
-			'jt_import_social_data'     => true,
-			'jt_import_venues'          => true,
-			'jt_notify_on_sync'         => false,
-			'jt_notify_on_error'        => true,
-			'jt_notification_email'     => '',
-			'jt_archive_layout'         => 'grid',
-			'jt_use_placeholder_image'  => true,
-			'jt_placeholder_image_id'   => 0,
-			'jt_last_rss_sync_at'       => '',
+			'jardin_toasts_rss_feed_url'           => jardin_toasts_get_default_rss_feed_url(),
+			'jardin_toasts_sync_enabled'           => true,
+			'jardin_toasts_last_checkin_date'      => '',
+			'jardin_toasts_last_imported_guid'     => '',
+			'jardin_toasts_untappd_username'       => jardin_toasts_get_default_untappd_username(),
+			'jardin_toasts_excluded_checkins'      => array(),
+			'jardin_toasts_rating_rules'           => jardin_toasts_get_default_rating_rules(),
+			'jardin_toasts_rating_labels'          => jardin_toasts_get_default_rating_labels(),
+			'jardin_toasts_rating_rounding_enabled' => true,
+			'jardin_toasts_import_images'          => true,
+			'jardin_toasts_rss_max_per_run'        => 10,
+			'jardin_toasts_schema_enabled'         => true,
+			'jardin_toasts_microformats_enabled'   => true,
+			'jardin_toasts_debug_mode'             => false,
+			'jardin_toasts_log_retention_days'     => 30,
+			'jardin_toasts_import_social_data'     => true,
+			'jardin_toasts_import_venues'          => true,
+			'jardin_toasts_notify_on_sync'         => false,
+			'jardin_toasts_notify_on_error'        => true,
+			'jardin_toasts_notification_email'     => '',
+			'jardin_toasts_archive_layout'         => 'grid',
+			'jardin_toasts_use_placeholder_image'  => true,
+			'jardin_toasts_placeholder_image_id'   => 0,
+			'jardin_toasts_last_rss_sync_at'       => '',
 		);
 	}
 
@@ -136,41 +136,41 @@ class JT_Settings {
 	 */
 	public static function sanitize_value_for_key( $key, $value ) {
 		switch ( $key ) {
-			case 'jt_rss_feed_url':
+			case 'jardin_toasts_rss_feed_url':
 				return esc_url_raw( (string) $value );
-			case 'jt_sync_enabled':
-			case 'jt_rating_rounding_enabled':
-			case 'jt_import_images':
-			case 'jt_schema_enabled':
-			case 'jt_microformats_enabled':
-			case 'jt_debug_mode':
-			case 'jt_import_social_data':
-			case 'jt_import_venues':
-			case 'jt_notify_on_sync':
-			case 'jt_notify_on_error':
-			case 'jt_use_placeholder_image':
+			case 'jardin_toasts_sync_enabled':
+			case 'jardin_toasts_rating_rounding_enabled':
+			case 'jardin_toasts_import_images':
+			case 'jardin_toasts_schema_enabled':
+			case 'jardin_toasts_microformats_enabled':
+			case 'jardin_toasts_debug_mode':
+			case 'jardin_toasts_import_social_data':
+			case 'jardin_toasts_import_venues':
+			case 'jardin_toasts_notify_on_sync':
+			case 'jardin_toasts_notify_on_error':
+			case 'jardin_toasts_use_placeholder_image':
 				return (bool) $value;
-			case 'jt_log_retention_days':
+			case 'jardin_toasts_log_retention_days':
 				return absint( $value );
-			case 'jt_rss_max_per_run':
+			case 'jardin_toasts_rss_max_per_run':
 				return max( 1, min( 100, absint( $value ) ) );
-			case 'jt_excluded_checkins':
+			case 'jardin_toasts_excluded_checkins':
 				return is_array( $value ) ? array_map( 'sanitize_text_field', $value ) : array();
-			case 'jt_rating_rules':
+			case 'jardin_toasts_rating_rules':
 				return self::sanitize_rating_rules_value( $value );
-			case 'jt_rating_labels':
+			case 'jardin_toasts_rating_labels':
 				return self::sanitize_rating_labels_value( $value );
-			case 'jt_untappd_username':
+			case 'jardin_toasts_untappd_username':
 				return sanitize_user( (string) $value, true );
-			case 'jt_archive_layout':
+			case 'jardin_toasts_archive_layout':
 				$v = sanitize_text_field( (string) $value );
 				return in_array( $v, array( 'grid', 'table' ), true ) ? $v : 'grid';
-			case 'jt_placeholder_image_id':
+			case 'jardin_toasts_placeholder_image_id':
 				return absint( $value );
-			case 'jt_notification_email':
+			case 'jardin_toasts_notification_email':
 				$e = sanitize_email( (string) $value );
 				return '' === $e ? '' : $e;
-			case 'jt_last_rss_sync_at':
+			case 'jardin_toasts_last_rss_sync_at':
 				return sanitize_text_field( (string) $value );
 			default:
 				return is_scalar( $value ) ? sanitize_text_field( (string) $value ) : $value;
@@ -196,7 +196,7 @@ class JT_Settings {
 	 * @return array<int, array{min: float, max: float, round: int}>
 	 */
 	private static function sanitize_rating_rules_value( $value ) {
-		$defaults = jt_get_default_rating_rules();
+		$defaults = jardin_toasts_get_default_rating_rules();
 		if ( ! is_array( $value ) ) {
 			return $defaults;
 		}
@@ -229,7 +229,7 @@ class JT_Settings {
 	 * @return array<int, string>
 	 */
 	private static function sanitize_rating_labels_value( $value ) {
-		$defaults = jt_get_default_rating_labels();
+		$defaults = jardin_toasts_get_default_rating_labels();
 		if ( ! is_array( $value ) ) {
 			return $defaults;
 		}

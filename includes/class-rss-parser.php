@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_RSS_Parser
+ * Class Jardin_Toasts_RSS_Parser
  */
-class JT_RSS_Parser {
+class Jardin_Toasts_RSS_Parser {
 
 	/**
 	 * Bumps when RSS row shape or import behaviour changes (log diagnostics only).
@@ -22,11 +22,11 @@ class JT_RSS_Parser {
 	/**
 	 * Fetch feed and import new check-ins (and drain persisted queue first).
 	 *
-	 * @param JT_Importer          $importer Importer instance.
+	 * @param Jardin_Toasts_Importer          $importer Importer instance.
 	 * @param array<string, mixed> $args     Optional. `manual` bool for admin sync (higher per-run cap).
 	 * @return true|WP_Error
 	 */
-	public function sync_new_items( JT_Importer $importer, array $args = array() ) {
+	public function sync_new_items( Jardin_Toasts_Importer $importer, array $args = array() ) {
 		$manual = ! empty( $args['manual'] );
 		$queue_only = ! empty( $args['queue_only'] );
 
@@ -34,7 +34,7 @@ class JT_RSS_Parser {
 			return $this->run_queue_pass( $importer, $manual, false );
 		}
 
-		$url = jt_get_rss_feed_url();
+		$url = jardin_toasts_get_rss_feed_url();
 		if ( ! is_string( $url ) || '' === trim( $url ) ) {
 			return new WP_Error( 'no_feed', __( 'RSS feed URL is not configured.', 'jardin-toasts' ) );
 		}
@@ -50,12 +50,12 @@ class JT_RSS_Parser {
 
 		$items = $feed->get_items( 0, 50 );
 		if ( empty( $items ) ) {
-			JT_Logger::info( 'RSS sync: no items in feed.' );
+			Jardin_Toasts_Logger::info( 'RSS sync: no items in feed.' );
 			$pass = $this->run_queue_pass( $importer, $manual, true );
 			if ( is_wp_error( $pass ) ) {
 				return $pass;
 			}
-			jt_touch_last_rss_sync_time();
+			jardin_toasts_touch_last_rss_sync_time();
 			return true;
 		}
 
@@ -68,12 +68,12 @@ class JT_RSS_Parser {
 			if ( ! is_string( $link ) || '' === $link ) {
 				continue;
 			}
-			$checkin_id = jt_parse_checkin_id_from_url( $link );
+			$checkin_id = jardin_toasts_parse_checkin_id_from_url( $link );
 			if ( ! $checkin_id ) {
 				continue;
 			}
 			$checkin_ids[] = $checkin_id;
-			$parsed        = jt_parse_rss_item_title( $item->get_title() );
+			$parsed        = jardin_toasts_parse_rss_item_title( $item->get_title() );
 			$date          = $item->get_date( 'c' );
 			$desc          = $item->get_description();
 			$img           = $this->extract_image_from_description( $desc );
@@ -89,7 +89,7 @@ class JT_RSS_Parser {
 			);
 		}
 
-		$existing_map = jt_get_post_ids_by_checkin_ids( $checkin_ids );
+		$existing_map = jardin_toasts_get_post_ids_by_checkin_ids( $checkin_ids );
 		$to_import    = array();
 		foreach ( $candidates as $row ) {
 			$cid = (string) $row['checkin_id'];
@@ -100,13 +100,13 @@ class JT_RSS_Parser {
 		}
 
 		if ( empty( $to_import ) ) {
-			update_option( 'jt_last_imported_guid', $latest_guid, false );
-			JT_Logger::info( 'RSS sync: all feed items already imported.' );
+			update_option( 'jardin_toasts_last_imported_guid', $latest_guid, false );
+			Jardin_Toasts_Logger::info( 'RSS sync: all feed items already imported.' );
 			$pass = $this->run_queue_pass( $importer, $manual, true );
 			if ( is_wp_error( $pass ) ) {
 				return $pass;
 			}
-			jt_touch_last_rss_sync_time();
+			jardin_toasts_touch_last_rss_sync_time();
 			return true;
 		}
 
@@ -120,20 +120,20 @@ class JT_RSS_Parser {
 			}
 		}
 
-		$queue = jt_get_rss_sync_queue();
-		$max   = jt_get_rss_sync_max_per_run( $manual );
+		$queue = jardin_toasts_get_rss_sync_queue();
+		$max   = jardin_toasts_get_rss_sync_max_per_run( $manual );
 
 		list( $imported, $queue ) = $this->import_until_budget( $importer, $queue, $to_import, $max );
 
-		jt_save_rss_sync_queue( $queue );
+		jardin_toasts_save_rss_sync_queue( $queue );
 
-		update_option( 'jt_last_imported_guid', $latest_guid, false );
+		update_option( 'jardin_toasts_last_imported_guid', $latest_guid, false );
 		if ( '' !== $last_checkin_date ) {
-			update_option( 'jt_last_checkin_date', $last_checkin_date, false );
+			update_option( 'jardin_toasts_last_checkin_date', $last_checkin_date, false );
 		}
 
-		$depth_after = count( jt_get_rss_sync_queue() );
-		JT_Logger::info(
+		$depth_after = count( jardin_toasts_get_rss_sync_queue() );
+		Jardin_Toasts_Logger::info(
 			sprintf(
 				'RSS sync: imported %1$d this run; queue depth %2$d (rss row format v%3$d).',
 				$imported,
@@ -142,9 +142,9 @@ class JT_RSS_Parser {
 			)
 		);
 
-		jt_touch_last_rss_sync_time();
+		jardin_toasts_touch_last_rss_sync_time();
 
-		jt_maybe_schedule_rss_queue_tick();
+		jardin_toasts_maybe_schedule_rss_queue_tick();
 
 		$this->maybe_notify_sync( $imported, $manual );
 
@@ -154,31 +154,31 @@ class JT_RSS_Parser {
 	/**
 	 * Cron: drain queue only (no RSS fetch). Does not call reschedule_adaptive.
 	 *
-	 * @param JT_Importer $importer Importer.
+	 * @param Jardin_Toasts_Importer $importer Importer.
 	 * @return true|WP_Error
 	 */
-	public function drain_queue_tick( JT_Importer $importer ) {
+	public function drain_queue_tick( Jardin_Toasts_Importer $importer ) {
 		return $this->run_queue_pass( $importer, false, true );
 	}
 
 	/**
 	 * Drain persisted queue up to budget, optionally continuing into RSS candidates in one pass.
 	 *
-	 * @param JT_Importer $importer     Importer.
+	 * @param Jardin_Toasts_Importer $importer     Importer.
 	 * @param bool        $manual       Manual sync cap.
 	 * @param bool        $touch_sync_time When true and work ran, update last sync time.
 	 * @return true|WP_Error
 	 */
-	private function run_queue_pass( JT_Importer $importer, $manual, $touch_sync_time ) {
-		$queue = jt_get_rss_sync_queue();
+	private function run_queue_pass( Jardin_Toasts_Importer $importer, $manual, $touch_sync_time ) {
+		$queue = jardin_toasts_get_rss_sync_queue();
 		if ( empty( $queue ) ) {
 			return true;
 		}
-		$max = jt_get_rss_sync_max_per_run( $manual );
+		$max = jardin_toasts_get_rss_sync_max_per_run( $manual );
 		list( $imported, $queue ) = $this->import_until_budget( $importer, $queue, array(), $max );
-		jt_save_rss_sync_queue( $queue );
+		jardin_toasts_save_rss_sync_queue( $queue );
 		$depth = count( $queue );
-		JT_Logger::info(
+		Jardin_Toasts_Logger::info(
 			sprintf(
 				'RSS queue tick: imported %1$d; queue depth %2$d.',
 				$imported,
@@ -186,9 +186,9 @@ class JT_RSS_Parser {
 			)
 		);
 		if ( $imported > 0 && $touch_sync_time ) {
-			jt_touch_last_rss_sync_time();
+			jardin_toasts_touch_last_rss_sync_time();
 		}
-		jt_maybe_schedule_rss_queue_tick();
+		jardin_toasts_maybe_schedule_rss_queue_tick();
 		$this->maybe_notify_sync( $imported, $manual );
 		return true;
 	}
@@ -196,13 +196,13 @@ class JT_RSS_Parser {
 	/**
 	 * Import from front of queue, then from $rss_rows, until $budget imports attempted.
 	 *
-	 * @param JT_Importer                        $importer Importer.
+	 * @param Jardin_Toasts_Importer                        $importer Importer.
 	 * @param array<int, array<string, mixed>>  $queue    Persisted queue (modified).
 	 * @param array<int, array<string, mixed>>  $rss_rows New rows oldest-first (remaining appended to queue).
 	 * @param int                               $budget   Max import attempts.
 	 * @return array{0: int, 1: array<int, array<string, mixed>>} imported count, updated queue.
 	 */
-	private function import_until_budget( JT_Importer $importer, array $queue, array $rss_rows, $budget ) {
+	private function import_until_budget( Jardin_Toasts_Importer $importer, array $queue, array $rss_rows, $budget ) {
 		$imported = 0;
 		$budget   = max( 0, (int) $budget );
 
@@ -214,7 +214,7 @@ class JT_RSS_Parser {
 			}
 			$result = $importer->import_from_rss_row( $row );
 			if ( is_wp_error( $result ) ) {
-				JT_Logger::warning( $result->get_error_message() );
+				Jardin_Toasts_Logger::warning( $result->get_error_message() );
 			} else {
 				++$imported;
 			}
@@ -226,14 +226,14 @@ class JT_RSS_Parser {
 			foreach ( $chunk as $row ) {
 				$result = $importer->import_from_rss_row( $row );
 				if ( is_wp_error( $result ) ) {
-					JT_Logger::warning( $result->get_error_message() );
+					Jardin_Toasts_Logger::warning( $result->get_error_message() );
 				} else {
 					++$imported;
 				}
 			}
 			$budget -= count( $chunk );
 			if ( ! empty( $rss_rows ) ) {
-				$queue = jt_rss_queue_merge_unique( $queue, $rss_rows );
+				$queue = jardin_toasts_rss_queue_merge_unique( $queue, $rss_rows );
 			}
 		}
 
@@ -248,14 +248,14 @@ class JT_RSS_Parser {
 	 * @return void
 	 */
 	private function maybe_notify_sync( $imported, $manual ) {
-		if ( $imported <= 0 || ! get_option( 'jt_notify_on_sync', false ) ) {
+		if ( $imported <= 0 || ! get_option( 'jardin_toasts_notify_on_sync', false ) ) {
 			return;
 		}
-		$queue_empty = empty( jt_get_rss_sync_queue() );
+		$queue_empty = empty( jardin_toasts_get_rss_sync_queue() );
 		if ( ! $manual && ! $queue_empty ) {
 			return;
 		}
-		jt_send_notification_email(
+		jardin_toasts_send_notification_email(
 			'[Jardin Toasts] ' . __( 'RSS sync completed', 'jardin-toasts' ),
 			sprintf(
 				/* translators: %d: number of check-ins imported */

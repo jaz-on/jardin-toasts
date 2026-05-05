@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_Deactivator
+ * Class Jardin_Toasts_Deactivator
  */
-class JT_Deactivator {
+class Jardin_Toasts_Deactivator {
 
 	/**
 	 * Run on deactivation.
@@ -20,12 +20,12 @@ class JT_Deactivator {
 	 * @return void
 	 */
 	public static function deactivate() {
-		$group          = function_exists( 'jt_action_scheduler_group' ) ? jt_action_scheduler_group() : 'jardin-toasts';
+		$group          = function_exists( 'jardin_toasts_action_scheduler_group' ) ? jardin_toasts_action_scheduler_group() : 'jardin-toasts';
 		$legacy_groups  = array( 'beer-journal', 'jardin-beer' );
 		$hooks        = Jardin_Toasts_Keys::all_teardown_cron_hooks();
 		$legacy_hooks = array( 'bj_rss_sync', 'bj_rss_queue_tick', 'bj_background_import_batch', 'bj_daily_log_cleanup' );
 		if ( function_exists( 'as_unschedule_all_actions' ) ) {
-			jt_when_action_scheduler_store_ready(
+			jardin_toasts_when_action_scheduler_store_ready(
 				static function () use ( $hooks, $legacy_hooks, $group, $legacy_groups ) {
 					foreach ( $hooks as $hook ) {
 						as_unschedule_all_actions( $hook, array(), $group );
@@ -46,6 +46,6 @@ class JT_Deactivator {
 		}
 		flush_rewrite_rules();
 		do_action( 'jardin_toasts_plugin_deactivated' );
-		do_action( 'jt_plugin_deactivated' );
+		do_action( 'jardin_toasts_plugin_deactivated' );
 	}
 }

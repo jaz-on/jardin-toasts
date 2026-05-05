@@ -26,53 +26,53 @@
 		return fallback || 'Request failed.';
 	}
 
-	$( document ).on( 'click', '#jt-sync-now', function () {
+	$( document ).on( 'click', '#jardin-toasts-sync-now', function () {
 		var $btn = $( this );
 		$btn.prop( 'disabled', true );
-		setStatus( '#jt-sync-status', jtAdmin.i18n.working );
+		setStatus( '#jardin-toasts-sync-status', jardinToastsAdmin.i18n.working );
 		$.post(
-			jtAdmin.ajaxUrl,
+			jardinToastsAdmin.ajaxUrl,
 			{
-				action: jtAdmin.ajaxSyncNow,
-				nonce: jtAdmin.nonce,
+				action: jardinToastsAdmin.ajaxSyncNow,
+				nonce: jardinToastsAdmin.nonce,
 			}
 		)
 			.done( function ( res ) {
 				if ( res.success ) {
-					setStatus( '#jt-sync-status', res.data.message || jtAdmin.i18n.done );
+					setStatus( '#jardin-toasts-sync-status', res.data.message || jardinToastsAdmin.i18n.done );
 				} else {
-					setStatus( '#jt-sync-status', res.data && res.data.message ? res.data.message : 'Error' );
+					setStatus( '#jardin-toasts-sync-status', res.data && res.data.message ? res.data.message : 'Error' );
 				}
 			} )
 			.fail( function ( xhr ) {
-				setStatus( '#jt-sync-status', ajaxFailMessage( xhr, 'Request failed.' ) );
+				setStatus( '#jardin-toasts-sync-status', ajaxFailMessage( xhr, 'Request failed.' ) );
 			} )
 			.always( function () {
 				$btn.prop( 'disabled', false );
 			} );
 	} );
 
-	$( document ).on( 'click', '#jt-import-gdpr-csv', function () {
+	$( document ).on( 'click', '#jardin-toasts-import-gdpr-csv', function () {
 		var $btn = $( this );
-		var input = document.getElementById( 'jt-gdpr-csv-file' );
+		var input = document.getElementById( 'jardin-toasts-gdpr-csv-file' );
 		if ( ! input || ! input.files || ! input.files.length ) {
 			setStatus(
-				'#jt-gdpr-csv-status',
-				jtAdmin.i18n.importGdprPick || 'Choose a CSV file first.'
+				'#jardin-toasts-gdpr-csv-status',
+				jardinToastsAdmin.i18n.importGdprPick || 'Choose a CSV file first.'
 			);
 			return;
 		}
 		var fd = new FormData();
-		fd.append( 'action', jtAdmin.ajaxImportGdprCsv );
-		fd.append( 'nonce', jtAdmin.nonce );
-		fd.append( 'jt_gdpr_csv', input.files[ 0 ] );
+		fd.append( 'action', jardinToastsAdmin.ajaxImportGdprCsv );
+		fd.append( 'nonce', jardinToastsAdmin.nonce );
+		fd.append( 'jardin_toasts_gdpr_csv', input.files[ 0 ] );
 		$btn.prop( 'disabled', true );
 		setStatus(
-			'#jt-gdpr-csv-status',
-			jtAdmin.i18n.importGdprWorking || 'Importing…'
+			'#jardin-toasts-gdpr-csv-status',
+			jardinToastsAdmin.i18n.importGdprWorking || 'Importing…'
 		);
 		$.ajax( {
-			url: jtAdmin.ajaxUrl,
+			url: jardinToastsAdmin.ajaxUrl,
 			type: 'POST',
 			data: fd,
 			processData: false,
@@ -81,19 +81,19 @@
 			.done( function ( res ) {
 				if ( res.success ) {
 					setStatus(
-						'#jt-gdpr-csv-status',
-						res.data.message || jtAdmin.i18n.done
+						'#jardin-toasts-gdpr-csv-status',
+						res.data.message || jardinToastsAdmin.i18n.done
 					);
 				} else {
 					setStatus(
-						'#jt-gdpr-csv-status',
+						'#jardin-toasts-gdpr-csv-status',
 						res.data && res.data.message ? res.data.message : 'Error'
 					);
 				}
 			} )
 			.fail( function ( xhr ) {
 				setStatus(
-					'#jt-gdpr-csv-status',
+					'#jardin-toasts-gdpr-csv-status',
 					ajaxFailMessage( xhr, 'Request failed.' )
 				);
 			} )
@@ -104,11 +104,11 @@
 
 	function setTestResult( $out, msg, ok ) {
 		$out.text( msg );
-		$out.removeClass( 'jt-test-ok jt-test-fail' );
+		$out.removeClass( 'jardin-toasts-test-ok jardin-toasts-test-fail' );
 		if ( ok === true ) {
-			$out.addClass( 'jt-test-ok' );
+			$out.addClass( 'jardin-toasts-test-ok' );
 		} else if ( ok === false ) {
-			$out.addClass( 'jt-test-fail' );
+			$out.addClass( 'jardin-toasts-test-fail' );
 		}
 	}
 
@@ -120,16 +120,16 @@
 				return;
 			}
 			$btn.prop( 'disabled', true );
-			setTestResult( $out, jtAdmin.i18n.testing, null );
-			$.post( jtAdmin.ajaxUrl, {
-				action: jtAdmin[ actionKey ],
-				nonce: jtAdmin.nonce,
+			setTestResult( $out, jardinToastsAdmin.i18n.testing, null );
+			$.post( jardinToastsAdmin.ajaxUrl, {
+				action: jardinToastsAdmin[ actionKey ],
+				nonce: jardinToastsAdmin.nonce,
 			} )
 				.done( function ( res ) {
 					if ( res.success ) {
 						setTestResult(
 							$out,
-							res.data && res.data.message ? res.data.message : jtAdmin.i18n.done,
+							res.data && res.data.message ? res.data.message : jardinToastsAdmin.i18n.done,
 							true
 						);
 					} else {
@@ -141,7 +141,7 @@
 					}
 				} )
 				.fail( function ( xhr ) {
-					setTestResult( $out, ajaxFailMessage( xhr, jtAdmin.i18n.networkError ), false );
+					setTestResult( $out, ajaxFailMessage( xhr, jardinToastsAdmin.i18n.networkError ), false );
 				} )
 				.always( function () {
 					$btn.prop( 'disabled', false );
@@ -149,14 +149,14 @@
 		} );
 	}
 
-	bindConnectionTest( '#jt-test-rss', '#jt-test-rss-result', 'ajaxTestRss' );
+	bindConnectionTest( '#jardin-toasts-test-rss', '#jardin-toasts-test-rss-result', 'ajaxTestRss' );
 
-	var $phToggle = $( '#jt_use_placeholder_image' );
-	var $phPicker = $( '#jt-placeholder-picker' );
-	var $phId = $( '#jt_placeholder_image_id' );
-	var $phPreview = $( '#jt-placeholder-preview' );
-	var $phSelect = $( '#jt-placeholder-select' );
-	var $phClear = $( '#jt-placeholder-clear' );
+	var $phToggle = $( '#jardin_toasts_use_placeholder_image' );
+	var $phPicker = $( '#jardin-toasts-placeholder-picker' );
+	var $phId = $( '#jardin_toasts_placeholder_image_id' );
+	var $phPreview = $( '#jardin-toasts-placeholder-preview' );
+	var $phSelect = $( '#jardin-toasts-placeholder-select' );
+	var $phClear = $( '#jardin-toasts-placeholder-clear' );
 
 	function bjTogglePlaceholderPicker() {
 		if ( ! $phToggle.length || ! $phPicker.length ) {
@@ -179,8 +179,8 @@
 				return;
 			}
 			frame = wp.media( {
-				title: jtAdmin.i18n.chooseImage,
-				button: { text: jtAdmin.i18n.chooseImage },
+				title: jardinToastsAdmin.i18n.chooseImage,
+				button: { text: jardinToastsAdmin.i18n.chooseImage },
 				multiple: false,
 				library: { type: 'image' },
 			} );
@@ -192,7 +192,7 @@
 						? att.sizes.thumbnail.url
 						: att.url;
 				$phPreview.html( '<img src="' + url + '" alt="" />' );
-				$phSelect.text( jtAdmin.i18n.replaceImage );
+				$phSelect.text( jardinToastsAdmin.i18n.replaceImage );
 			} );
 			frame.open();
 		} );
@@ -202,20 +202,20 @@
 		e.preventDefault();
 		$phId.val( '0' );
 		$phPreview.empty();
-		$phSelect.text( jtAdmin.i18n.chooseImage );
+		$phSelect.text( jardinToastsAdmin.i18n.chooseImage );
 	} );
 
-	if ( jtAdmin.placeholderThumb && $phPreview.length && parseInt( jtAdmin.placeholderId, 10 ) > 0 ) {
+	if ( jardinToastsAdmin.placeholderThumb && $phPreview.length && parseInt( jardinToastsAdmin.placeholderId, 10 ) > 0 ) {
 		$phPreview.html(
-			'<img src="' + jtAdmin.placeholderThumb + '" alt="" />'
+			'<img src="' + jardinToastsAdmin.placeholderThumb + '" alt="" />'
 		);
-		$phSelect.text( jtAdmin.i18n.replaceImage );
+		$phSelect.text( jardinToastsAdmin.i18n.replaceImage );
 	}
 
-	$( '#jt-use-rss-username' ).on( 'click', function ( e ) {
+	$( '#jardin-toasts-use-rss-username' ).on( 'click', function ( e ) {
 		e.preventDefault();
-		if ( jtAdmin.rssUsername ) {
-			$( '#jt_untappd_username' ).val( jtAdmin.rssUsername );
+		if ( jardinToastsAdmin.rssUsername ) {
+			$( '#jardin_toasts_untappd_username' ).val( jardinToastsAdmin.rssUsername );
 		}
 	} );
 }( jQuery ) );

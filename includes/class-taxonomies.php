@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_Taxonomies
+ * Class Jardin_Toasts_Taxonomies
  */
-class JT_Taxonomies {
+class Jardin_Toasts_Taxonomies {
 
 	public const STYLE = 'beer_style';
 	public const BREWERY = 'brewery';
@@ -58,13 +58,13 @@ class JT_Taxonomies {
 
 		register_taxonomy(
 			self::STYLE,
-			JT_Post_Type::POST_TYPE,
+			Jardin_Toasts_Post_Type::POST_TYPE,
 			array(
 				'labels'            => $labels,
 				'hierarchical'      => true,
 				'public'            => true,
 				'show_ui'           => true,
-				'show_in_menu'      => JT_Post_Type::ADMIN_MENU_SLUG,
+				'show_in_menu'      => Jardin_Toasts_Post_Type::ADMIN_MENU_SLUG,
 				'show_admin_column' => true,
 				'show_in_nav_menus' => true,
 				'show_in_rest'      => true,
@@ -93,13 +93,13 @@ class JT_Taxonomies {
 
 		register_taxonomy(
 			self::BREWERY,
-			JT_Post_Type::POST_TYPE,
+			Jardin_Toasts_Post_Type::POST_TYPE,
 			array(
 				'labels'            => $labels,
 				'hierarchical'      => false,
 				'public'            => true,
 				'show_ui'           => true,
-				'show_in_menu'      => JT_Post_Type::ADMIN_MENU_SLUG,
+				'show_in_menu'      => Jardin_Toasts_Post_Type::ADMIN_MENU_SLUG,
 				'show_admin_column' => true,
 				'show_in_nav_menus' => true,
 				'show_in_rest'      => true,
@@ -128,13 +128,13 @@ class JT_Taxonomies {
 
 		register_taxonomy(
 			self::VENUE,
-			JT_Post_Type::POST_TYPE,
+			Jardin_Toasts_Post_Type::POST_TYPE,
 			array(
 				'labels'            => $labels,
 				'hierarchical'      => false,
 				'public'            => true,
 				'show_ui'           => true,
-				'show_in_menu'      => JT_Post_Type::ADMIN_MENU_SLUG,
+				'show_in_menu'      => Jardin_Toasts_Post_Type::ADMIN_MENU_SLUG,
 				'show_admin_column' => true,
 				'show_in_nav_menus' => true,
 				'show_in_rest'      => true,

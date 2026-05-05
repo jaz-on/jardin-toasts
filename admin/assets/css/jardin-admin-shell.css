@@ -3,7 +3,7 @@
  */
 
 .jd-admin-wrap,
-.jt-admin-wrap,
+.jardin-toasts-admin-wrap,
 .sj-admin-wrap,
 .jf-admin-wrap {
 	--jd-admin-accent: var(--wp-admin-theme-color, #2271b1);
@@ -15,14 +15,14 @@
 }
 
 .jd-settings-hero,
-.jt-settings-hero,
+.jardin-toasts-settings-hero,
 .sj-settings-hero,
 .jf-settings-hero {
 	margin: 0 0 0.5rem;
 }
 
 .jd-settings-hero h1,
-.jt-settings-hero h1,
+.jardin-toasts-settings-hero h1,
 .sj-settings-hero h1,
 .jf-settings-hero h1 {
 	font-size: 1.6rem;
@@ -33,7 +33,7 @@
 }
 
 .jd-settings-hero__lead,
-.jt-settings-hero__lead,
+.jardin-toasts-settings-hero__lead,
 .sj-settings-hero__lead,
 .jf-settings-hero__lead {
 	margin: 0;
@@ -44,7 +44,7 @@
 }
 
 .jd-admin-wrap .nav-tab-wrapper.jd-nav-tabs,
-.jt-admin-wrap .nav-tab-wrapper.jt-nav-tabs,
+.jardin-toasts-admin-wrap .nav-tab-wrapper.jardin-toasts-nav-tabs,
 .sj-admin-wrap .nav-tab-wrapper.sj-nav-tabs,
 .jf-admin-wrap .nav-tab-wrapper.jf-nav-tabs {
 	margin: 1.25rem 0 0;
@@ -53,14 +53,14 @@
 }
 
 .jd-tab-panel,
-.jt-tab-panel,
+.jardin-toasts-tab-panel,
 .sj-tab-panel,
 .jf-tab-panel {
 	margin-top: 1rem;
 }
 
 .jd-tab-intro,
-.jt-tab-intro,
+.jardin-toasts-tab-intro,
 .sj-tab-intro,
 .jf-tab-intro {
 	margin: 0 0 1.25rem;
@@ -71,7 +71,7 @@
 }
 
 .jd-panel,
-.jt-panel,
+.jardin-toasts-panel,
 .sj-panel,
 .jf-panel {
 	background: var(--jd-admin-surface);
@@ -83,7 +83,7 @@
 }
 
 .jd-panel__header,
-.jt-panel__header,
+.jardin-toasts-panel__header,
 .sj-panel__header,
 .jf-panel__header {
 	padding: 1rem 1.25rem 0.75rem;
@@ -92,7 +92,7 @@
 }
 
 .jd-panel__title,
-.jt-panel__title,
+.jardin-toasts-panel__title,
 .sj-panel__title,
 .jf-panel__title {
 	margin: 0;
@@ -102,7 +102,7 @@
 }
 
 .jd-panel__summary,
-.jt-panel__summary,
+.jardin-toasts-panel__summary,
 .sj-panel__summary,
 .jf-panel__summary {
 	margin: 0.5rem 0 0;
@@ -113,14 +113,14 @@
 }
 
 .jd-panel__body,
-.jt-panel__body,
+.jardin-toasts-panel__body,
 .sj-panel__body,
 .jf-panel__body {
 	padding: 0.5rem 1.25rem 1rem;
 }
 
 .jd-panel__body--inline,
-.jt-panel__body--inline,
+.jardin-toasts-panel__body--inline,
 .sj-panel__body--inline,
 .jf-panel__body--inline {
 	display: flex;
@@ -132,14 +132,14 @@
 }
 
 .jd-panel--actions .jd-panel__body--inline,
-.jt-panel--actions .jt-panel__body--inline,
+.jardin-toasts-panel--actions .jardin-toasts-panel__body--inline,
 .sj-panel--actions .sj-panel__body--inline,
 .jf-panel--actions .jf-panel__body--inline {
 	padding-top: 0.75rem;
 }
 
 .jd-panel--notice,
-.jt-panel--notice,
+.jardin-toasts-panel--notice,
 .sj-panel--notice,
 .jf-panel--notice {
 	border-color: #c3d9ed;
@@ -148,14 +148,14 @@
 }
 
 .jd-panel--notice .jd-panel__body,
-.jt-panel--notice .jt-panel__body,
+.jardin-toasts-panel--notice .jardin-toasts-panel__body,
 .sj-panel--notice .sj-panel__body,
 .jf-panel--notice .jf-panel__body {
 	padding: 1rem 1.25rem;
 }
 
 .jd-panel__notice-text,
-.jt-panel__notice-text,
+.jardin-toasts-panel__notice-text,
 .sj-panel__notice-text,
 .jf-panel__notice-text {
 	display: flex;
@@ -168,7 +168,7 @@
 }
 
 .jd-panel__notice-text .dashicons,
-.jt-panel__notice-text .dashicons,
+.jardin-toasts-panel__notice-text .dashicons,
 .sj-panel__notice-text .dashicons,
 .jf-panel__notice-text .dashicons {
 	margin-top: 2px;
@@ -177,7 +177,7 @@
 }
 
 .jd-admin-wrap .form-table th,
-.jt-admin-wrap .form-table th,
+.jardin-toasts-admin-wrap .form-table th,
 .sj-admin-wrap .form-table th,
 .jf-admin-wrap .form-table th {
 	font-weight: 600;
@@ -186,14 +186,14 @@
 }
 
 .jd-admin-wrap .form-table td .description,
-.jt-admin-wrap .form-table td .description,
+.jardin-toasts-admin-wrap .form-table td .description,
 .sj-admin-wrap .form-table td .description,
 .jf-admin-wrap .form-table td .description {
 	margin-top: 0.35rem;
 }
 
 .jd-toggle,
-.jt-toggle,
+.jardin-toasts-toggle,
 .sj-toggle,
 .jf-toggle {
 	display: inline-flex;
@@ -203,14 +203,14 @@
 }
 
 .jd-toggle input[type="checkbox"],
-.jt-toggle input[type="checkbox"],
+.jardin-toasts-toggle input[type="checkbox"],
 .sj-toggle input[type="checkbox"],
 .jf-toggle input[type="checkbox"] {
 	margin-top: 3px;
 }
 
 .jd-settings-footer,
-.jt-settings-footer,
+.jardin-toasts-settings-footer,
 .sj-settings-footer,
 .jf-settings-footer {
 	margin-top: 1.5rem;

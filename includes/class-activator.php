@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_Activator
+ * Class Jardin_Toasts_Activator
  */
-class JT_Activator {
+class Jardin_Toasts_Activator {
 
 	/**
 	 * Run on activation.
@@ -20,11 +20,11 @@ class JT_Activator {
 	 * @return void
 	 */
 	public static function activate() {
-		JT_Storage_Migration::maybe_migrate();
-		JT_Settings::ensure_defaults();
-		JT_DB_Install::maybe_add_indexes();
+		Jardin_Toasts_Storage_Migration::maybe_migrate();
+		Jardin_Toasts_Settings::ensure_defaults();
+		Jardin_Toasts_DB_Install::maybe_add_indexes();
 		flush_rewrite_rules();
 		do_action( 'jardin_toasts_plugin_activated' );
-		do_action( 'jt_plugin_activated' );
+		do_action( 'jardin_toasts_plugin_activated' );
 	}
 }

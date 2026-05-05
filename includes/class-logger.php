@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_Logger
+ * Class Jardin_Toasts_Logger
  */
-class JT_Logger {
+class Jardin_Toasts_Logger {
 
 	public const LEVEL_ERROR   = 'ERROR';
 	public const LEVEL_WARNING = 'WARNING';
@@ -27,11 +27,11 @@ class JT_Logger {
 	 * @return void
 	 */
 	public static function log( $level, $message ) {
-		$dir = jt_get_log_directory();
+		$dir = jardin_toasts_get_log_directory();
 		if ( ! $dir ) {
 			return;
 		}
-		$debug = (bool) get_option( 'jt_debug_mode', false );
+		$debug = (bool) get_option( 'jardin_toasts_debug_mode', false );
 		if ( self::LEVEL_DEBUG === $level && ! $debug ) {
 			return;
 		}
@@ -88,7 +88,7 @@ class JT_Logger {
 	 * @return string
 	 */
 	public static function tail_today( $lines = 200 ) {
-		$dir = jt_get_log_directory();
+		$dir = jardin_toasts_get_log_directory();
 		if ( ! $dir ) {
 			return '';
 		}

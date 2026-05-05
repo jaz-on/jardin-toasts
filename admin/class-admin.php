@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_Admin
+ * Class Jardin_Toasts_Admin
  */
-class JT_Admin {
+class Jardin_Toasts_Admin {
 
 	/**
 	 * Slug for the tabbed settings page under the CPT (admin.php?page=…).
@@ -46,7 +46,7 @@ class JT_Admin {
 			'jardin-beer',
 			'jardin-beer-settings',
 			'jb_jardin_beer_settings',
-			'jt_jardin_beer_settings',
+			'jardin_toasts_jardin_beer_settings',
 		);
 		if ( ! in_array( $page, $legacy_pages, true ) ) {
 			return;
@@ -71,7 +71,7 @@ class JT_Admin {
 	 */
 	public function register_settings_submenu() {
 		add_submenu_page(
-			JT_Post_Type::ADMIN_MENU_SLUG,
+			Jardin_Toasts_Post_Type::ADMIN_MENU_SLUG,
 			__( 'Jardin Toasts Settings', 'jardin-toasts' ),
 			__( 'Settings', 'jardin-toasts' ),
 			'manage_options',
@@ -96,44 +96,44 @@ class JT_Admin {
 	 * @return void
 	 */
 	public function enqueue_assets( $hook_suffix ) {
-		$settings_hook = JT_Post_Type::POST_TYPE . '_page_' . self::SETTINGS_PAGE_SLUG;
+		$settings_hook = Jardin_Toasts_Post_Type::POST_TYPE . '_page_' . self::SETTINGS_PAGE_SLUG;
 		if ( $settings_hook !== $hook_suffix ) {
 			return;
 		}
-		$shell_path = JT_PLUGIN_DIR . 'admin/assets/css/jardin-admin-shell.css';
-		$shell_ver  = is_readable( $shell_path ) ? (string) filemtime( $shell_path ) : JT_VERSION;
+		$shell_path = JARDIN_TOASTS_PLUGIN_DIR . 'admin/assets/css/jardin-admin-shell.css';
+		$shell_ver  = is_readable( $shell_path ) ? (string) filemtime( $shell_path ) : JARDIN_TOASTS_VERSION;
 		wp_enqueue_style(
 			'jardin-admin-shell',
-			JT_PLUGIN_URL . 'admin/assets/css/jardin-admin-shell.css',
+			JARDIN_TOASTS_PLUGIN_URL . 'admin/assets/css/jardin-admin-shell.css',
 			array( 'dashicons' ),
 			$shell_ver
 		);
 		wp_enqueue_style(
 			'jardin-toasts-admin',
-			JT_PLUGIN_URL . 'admin/assets/css/admin.css',
+			JARDIN_TOASTS_PLUGIN_URL . 'admin/assets/css/admin.css',
 			array( 'jardin-admin-shell' ),
-			JT_VERSION
+			JARDIN_TOASTS_VERSION
 		);
 		wp_enqueue_media();
 		wp_enqueue_script(
 			'jardin-toasts-admin',
-			JT_PLUGIN_URL . 'admin/assets/js/admin.js',
+			JARDIN_TOASTS_PLUGIN_URL . 'admin/assets/js/admin.js',
 			array( 'jquery', 'media' ),
-			JT_VERSION,
+			JARDIN_TOASTS_VERSION,
 			true
 		);
-		$placeholder_id = absint( JT_Settings::get( 'jt_placeholder_image_id' ) );
+		$placeholder_id = absint( Jardin_Toasts_Settings::get( 'jardin_toasts_placeholder_image_id' ) );
 		$placeholder_thumb = $placeholder_id ? wp_get_attachment_image_url( $placeholder_id, 'thumbnail' ) : '';
 		wp_localize_script(
 			'jardin-toasts-admin',
-			'jtAdmin',
+			'jardinToastsAdmin',
 			array(
 				'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
 				'nonce'             => wp_create_nonce( Jardin_Toasts_Keys::NONCE_ADMIN_AJAX ),
 				'ajaxSyncNow'        => Jardin_Toasts_Keys::AJAX_SYNC_NOW,
 				'ajaxTestRss'        => Jardin_Toasts_Keys::AJAX_TEST_RSS,
 				'ajaxImportGdprCsv'  => Jardin_Toasts_Keys::AJAX_IMPORT_GDPR_CSV,
-				'rssUsername'       => jt_parse_username_from_rss_url( jt_get_rss_feed_url() ),
+				'rssUsername'       => jardin_toasts_parse_username_from_rss_url( jardin_toasts_get_rss_feed_url() ),
 				'placeholderId'     => $placeholder_id,
 				'placeholderThumb' => $placeholder_thumb ? $placeholder_thumb : '',
 				'i18n'              => array(
@@ -151,41 +151,41 @@ class JT_Admin {
 			)
 		);
 
-		$dv_asset = JT_PLUGIN_DIR . 'build/admin-dataviews.asset.php';
+		$dv_asset = JARDIN_TOASTS_PLUGIN_DIR . 'build/admin-dataviews.asset.php';
 		if ( is_readable( $dv_asset ) ) {
 			$dv = require $dv_asset;
 			wp_enqueue_style(
-				'jt-admin-dataviews',
-				JT_PLUGIN_URL . 'build/admin-dataviews.css',
+				'jardin-toasts-admin-dataviews',
+				JARDIN_TOASTS_PLUGIN_URL . 'build/admin-dataviews.css',
 				array( 'wp-components' ),
-				isset( $dv['version'] ) ? (string) $dv['version'] : JT_VERSION
+				isset( $dv['version'] ) ? (string) $dv['version'] : JARDIN_TOASTS_VERSION
 			);
 			wp_enqueue_script(
-				'jt-admin-dataviews',
-				JT_PLUGIN_URL . 'build/admin-dataviews.js',
+				'jardin-toasts-admin-dataviews',
+				JARDIN_TOASTS_PLUGIN_URL . 'build/admin-dataviews.js',
 				array_merge( (array) ( $dv['dependencies'] ?? array() ), array( 'wp-components' ) ),
-				isset( $dv['version'] ) ? (string) $dv['version'] : JT_VERSION,
+				isset( $dv['version'] ) ? (string) $dv['version'] : JARDIN_TOASTS_VERSION,
 				true
 			);
 			wp_localize_script(
-				'jt-admin-dataviews',
-				'jtDataviewsSync',
+				'jardin-toasts-admin-dataviews',
+				'jardinToastsDataviewsSync',
 				array(
 					'rows' => array(
 						array(
 							'id'    => 'rss',
 							'label' => __( 'RSS feed', 'jardin-toasts' ),
-							'value' => jt_get_rss_feed_url(),
+							'value' => jardin_toasts_get_rss_feed_url(),
 						),
 						array(
 							'id'    => 'sync',
 							'label' => __( 'Scheduled sync', 'jardin-toasts' ),
-							'value' => JT_Settings::get( 'jt_sync_enabled' ) ? __( 'Enabled', 'jardin-toasts' ) : __( 'Disabled', 'jardin-toasts' ),
+							'value' => Jardin_Toasts_Settings::get( 'jardin_toasts_sync_enabled' ) ? __( 'Enabled', 'jardin-toasts' ) : __( 'Disabled', 'jardin-toasts' ),
 						),
 						array(
 							'id'    => 'queue',
 							'label' => __( 'Background queue', 'jardin-toasts' ),
-							'value' => jt_using_action_scheduler() ? 'Action Scheduler' : 'WP-Cron',
+							'value' => jardin_toasts_using_action_scheduler() ? 'Action Scheduler' : 'WP-Cron',
 						),
 					),
 				)
@@ -224,7 +224,7 @@ class JT_Admin {
 		}
 
 		settings_errors( 'jardin_toasts' );
-		include JT_PLUGIN_DIR . 'admin/views/settings-page.php';
+		include JARDIN_TOASTS_PLUGIN_DIR . 'admin/views/settings-page.php';
 	}
 
 	/**
@@ -237,11 +237,11 @@ class JT_Admin {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ) );
 		}
-		$parser   = new JT_RSS_Parser();
-		$importer = new JT_Importer();
+		$parser   = new Jardin_Toasts_RSS_Parser();
+		$importer = new Jardin_Toasts_Importer();
 		$result   = $parser->sync_new_items( $importer, array( 'manual' => true ) );
 		if ( is_wp_error( $result ) ) {
-			jt_send_notification_email(
+			jardin_toasts_send_notification_email(
 				'[Jardin Toasts] ' . __( 'RSS sync failed', 'jardin-toasts' ),
 				$result->get_error_message(),
 				'error'
@@ -262,11 +262,11 @@ class JT_Admin {
 			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ) );
 		}
 
-		if ( empty( $_FILES['jt_gdpr_csv'] ) || ! isset( $_FILES['jt_gdpr_csv']['tmp_name'] ) ) {
+		if ( empty( $_FILES['jardin_toasts_gdpr_csv'] ) || ! isset( $_FILES['jardin_toasts_gdpr_csv']['tmp_name'] ) ) {
 			wp_send_json_error( array( 'message' => __( 'No file uploaded.', 'jardin-toasts' ) ) );
 		}
 
-		$f = $_FILES['jt_gdpr_csv'];
+		$f = $_FILES['jardin_toasts_gdpr_csv'];
 		if ( UPLOAD_ERR_OK !== (int) $f['error'] ) {
 			wp_send_json_error( array( 'message' => __( 'Upload failed.', 'jardin-toasts' ) ) );
 		}
@@ -294,7 +294,7 @@ class JT_Admin {
 			@set_time_limit( 300 );
 		}
 
-		$parser = new JT_Gdpr_Csv_Importer();
+		$parser = new Jardin_Toasts_Gdpr_Csv_Importer();
 		$stats  = $parser->import_stream( $stream );
 		fclose( $stream );
 
@@ -328,7 +328,7 @@ class JT_Admin {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jardin-toasts' ) ) );
 		}
-		$url = jt_get_rss_feed_url();
+		$url = jardin_toasts_get_rss_feed_url();
 		if ( ! is_string( $url ) || '' === trim( $url ) ) {
 			wp_send_json_error( array( 'message' => __( 'Save an RSS feed URL first.', 'jardin-toasts' ) ) );
 		}

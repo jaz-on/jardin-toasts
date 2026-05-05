@@ -1,35 +1,33 @@
-# Identifiants et migration (`jb` → `jt`)
+# Identifiants et migration legacy
 
-Le code et la base utilisent désormais le préfixe **`jt_`** (options), **`_jt_`** (post meta), **`JT_`** (classes PHP), **`jt_`** (fonctions globales, transients).
+État actuel (mai 2026) : le code et la base utilisent **un seul** préfixe canonique aligné sur les autres plugins de l'écosystème jardin :
 
-Les **hooks** cron et AJAX « publics » utilisent en priorité le préfixe long **`jardin_toasts_*`** ; des alias **`jt_*`** restent en place pour compatibilité (extensions, vieux scripts).
+| Type | Canonique |
+|---|---|
+| Classes PHP | `Jardin_Toasts_*` |
+| Constantes globales | `JARDIN_TOASTS_*` (ex. `JARDIN_TOASTS_VERSION`, `JARDIN_TOASTS_PLUGIN_DIR`, `JARDIN_TOASTS_RSS_FEED_URL`) |
+| Fonctions globales | `jardin_toasts_*()` |
+| Hooks (filtres/actions) | `jardin_toasts_*` |
+| Options `wp_options` | `jardin_toasts_*` |
+| Post meta | `_jardin_toasts_*` |
+| Transients | `jardin_toasts_*` |
+| Préfixe CSS plugin | `jardin-toasts-*` (classes), `jardin-toasts-*` (IDs) |
 
-À l’**activation / `plugins_loaded`**, `JT_Storage_Migration` enchaîne :
+## Migration automatique
 
-1. **`maybe_migrate()`** — import unique depuis beer-journal / `bj_*` vers `jt_*` (sauf si une ancienne version avait déjà posé `jb_storage_migrated_v1`).
-2. **`maybe_migrate_jb_prefix_storage_to_jt()`** — copie puis suppression de toutes les options `jb_*` vers `jt_*`, renommage des métas `_jb_*` → `_jt_*`, purge des transients `jb_*`, nettoyage WP-Cron / Action Scheduler pour les noms de hooks `jb_*` et `jt_*` sur les groupes `beer-journal`, `jardin-beer`, `jardin-toasts`.
-3. **`maybe_migrate_product_rename()`** — chemins / blocs `jardin-beer` → `jardin-toasts` dans `post_content` (sauf si l’ancien drapeau `jb_jardin_toasts_product_rename_v1` est déjà présent).
+À l'**activation / `plugins_loaded`**, `Jardin_Toasts_Storage_Migration` enchaîne les étapes (chaque étape est idempotente, marquée par un flag `_migrated_v1`) :
 
-Les signets admin obsolètes (`jardin-beer`, `jardin-beer-settings`, `jb_jardin_beer_settings`, …) sont toujours redirigés vers l’écran réglages actuel.
+1. **`maybe_migrate()`** — import unique depuis l'ancien plugin **beer-journal** : options `bj_*` → `jardin_toasts_*`, post meta `_bj_*` → `_jt_*` (puis `_jardin_toasts_*` à l'étape 4).
+2. **`maybe_migrate_jb_prefix_storage_to_jt()`** — copie puis suppression des options `jb_*` → `jardin_toasts_*`, métas `_jb_*` → `_jt_*` (puis `_jardin_toasts_*` à l'étape 4), purge des transients `jb_*`.
+3. **`maybe_migrate_product_rename()`** — chemins / blocs `jardin-beer` → `jardin-toasts` dans `post_content`.
+4. **`maybe_migrate_nomenclature()`** — post meta `_jt_*` → `_jardin_toasts_*` (étape finale d'unification).
 
----
+Les anciens noms de hooks WP-Cron / Action Scheduler (`jb_*`, `bj_*`, `jt_*`) sont également nettoyés par ces étapes via `Jardin_Toasts_Keys::legacy_jt_cron_hooks()` et `legacy_jt_and_jb_rss_hooks()`.
 
-## Alias `jardin_toasts_*` / `jt_*` (non exhaustif)
+## Slugs admin redirigés
 
-Référence pratique : constantes dans `Jardin_Toasts_Keys` ([`includes/functions.php`](../../includes/functions.php)).
+Les anciens signets admin (`jardin-beer`, `jardin-beer-settings`, `jb_jardin_beer_settings`, `feed-journal`, etc.) sont automatiquement redirigés vers la page de réglages actuelle (voir `Jardin_Toasts_Admin`).
 
-| Domaine | Canonique (`jardin_toasts_*`) | Alias (`jt_*`) |
-|--------|-------------------------------|------------------|
-| Nonce AJAX admin | `jardin_toasts_admin` (`NONCE_ADMIN_AJAX`) | — |
-| Action AJAX sync | `jardin_toasts_sync_now` | `jt_sync_now` (même callback) |
-| Action AJAX crawl discover | `jardin_toasts_crawl_discover` | `jt_crawl_discover` |
-| Action AJAX crawl batch | `jardin_toasts_crawl_batch` | `jt_crawl_batch` |
-| Cron / AS | `jardin_toasts_rss_sync`, `jardin_toasts_rss_queue_tick`, `jardin_toasts_background_import_batch`, `jardin_toasts_daily_log_cleanup` | Anciens `jt_*` / `jb_*` / `bj_*` nettoyés par migration |
-| Bulk action liste check-ins | `jardin_toasts_bulk_rescrape` | `jt_bulk_rescrape` (handler accepte les deux) |
-| Query args après bulk rescrape | `jardin_toasts_rescraped`, `jardin_toasts_rescrape_total`, `jardin_toasts_rescrape_cap` | Lecture aussi de `jt_rescraped`, `jt_rescrape_total`, `jt_rescrape_cap` (notice admin) |
-| Filtres (exemples) | `jardin_toasts_rating_labels`, `jardin_toasts_default_rss_feed_url`, `jardin_toasts_rating_rules`, … | `jt_rating_labels`, `jt_default_rss_feed_url`, `jt_rating_rules`, … (souvent appliqués en chaîne, voir le code) |
-| User-Agent HTTP | `jardin_toasts_http_user_agent` | `jt_http_user_agent` — helper `jt_http_user_agent_string()` |
-| Actions import | `jardin_toasts_before_checkin_import`, `jardin_toasts_after_checkin_imported` | `jt_before_checkin_import`, `jt_after_checkin_imported` |
-| Activation / désactivation | `jardin_toasts_plugin_activated`, `jardin_toasts_plugin_deactivated` | `jt_plugin_activated`, `jt_plugin_deactivated` |
+## Pour les développeurs externes
 
-Pour les **filtres** du thème ou d’extensions, préférer le nom **`jardin_toasts_*`** ; les alias **`jt_*`** restent pris en charge pour ne pas casser le code existant.
+Si un thème ou un autre plugin hooke un filtre de jardin-toasts, utiliser **uniquement** les noms `jardin_toasts_*`. Les anciens noms `jt_*` ne sont plus exposés depuis le refactor de mai 2026.

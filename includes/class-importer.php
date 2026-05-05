@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_Importer
+ * Class Jardin_Toasts_Importer
  */
-class JT_Importer {
+class Jardin_Toasts_Importer {
 
 	/**
 	 * Import a single row from the public RSS feed (no HTML fetch; fields come from the feed only).
@@ -43,12 +43,12 @@ class JT_Importer {
 			return new WP_Error( 'no_id', __( 'Missing check-in ID.', 'jardin-toasts' ) );
 		}
 
-		$excluded = get_option( 'jt_excluded_checkins', array() );
+		$excluded = get_option( 'jardin_toasts_excluded_checkins', array() );
 		if ( is_array( $excluded ) && in_array( $checkin_id, $excluded, true ) ) {
 			return new WP_Error( 'excluded', __( 'Check-in excluded by settings.', 'jardin-toasts' ) );
 		}
 
-		$existing = jt_get_post_id_by_checkin_id( $checkin_id );
+		$existing = jardin_toasts_get_post_id_by_checkin_id( $checkin_id );
 		if ( $existing ) {
 			$exclude = get_post_meta( $existing, '_jardin_toasts_exclude_sync', true );
 			if ( '1' === $exclude ) {
@@ -62,7 +62,7 @@ class JT_Importer {
 		if ( '' === $comment && isset( $data['post_content'] ) ) {
 			$comment = wp_kses_post( (string) $data['post_content'] );
 		}
-		$comment = jt_normalize_imported_post_content( $comment );
+		$comment = jardin_toasts_normalize_imported_post_content( $comment );
 
 		$rating_raw = isset( $data['rating_raw'] ) && null !== $data['rating_raw'] ? floatval( $data['rating_raw'] ) : null;
 
@@ -72,7 +72,7 @@ class JT_Importer {
 			$ts = time();
 		}
 
-		$rounded = null !== $rating_raw ? jt_map_rating_raw_to_rounded( $rating_raw ) : null;
+		$rounded = null !== $rating_raw ? jardin_toasts_map_rating_raw_to_rounded( $rating_raw ) : null;
 
 		$complete = ( '' !== $beer_name && '' !== $brewery_name && null !== $rating_raw );
 		$status   = $complete ? 'publish' : 'draft';
@@ -95,7 +95,7 @@ class JT_Importer {
 		$post_date_gmt   = get_gmt_from_date( $post_date_local );
 
 		$postarr = array(
-			'post_type'    => JT_Post_Type::POST_TYPE,
+			'post_type'    => Jardin_Toasts_Post_Type::POST_TYPE,
 			'post_title'   => $title,
 			'post_content' => $comment,
 			'post_status'  => $status,
@@ -108,7 +108,7 @@ class JT_Importer {
 		}
 
 		do_action( 'jardin_toasts_before_checkin_import', $data );
-		do_action( 'jt_before_checkin_import', $data );
+		do_action( 'jardin_toasts_before_checkin_import', $data );
 
 		$post_id = wp_insert_post( wp_slash( $postarr ), true );
 		if ( is_wp_error( $post_id ) ) {
@@ -126,18 +126,18 @@ class JT_Importer {
 			$img_url = (string) $data['rss_image'];
 		}
 
-		if ( '' !== $img_url && get_option( 'jt_import_images', true ) ) {
-			$images = new JT_Image_Handler();
+		if ( '' !== $img_url && get_option( 'jardin_toasts_import_images', true ) ) {
+			$images = new Jardin_Toasts_Image_Handler();
 			$res    = $images->import_for_post( $img_url, $post_id, $title );
 			if ( is_wp_error( $res ) ) {
-				JT_Logger::warning( 'Image import: ' . $res->get_error_message() );
+				Jardin_Toasts_Logger::warning( 'Image import: ' . $res->get_error_message() );
 			}
 		}
 
 		do_action( 'jardin_toasts_after_checkin_imported', $post_id, $data );
-		do_action( 'jt_after_checkin_imported', $post_id, $data );
+		do_action( 'jardin_toasts_after_checkin_imported', $post_id, $data );
 
-		jt_invalidate_stats_cache();
+		jardin_toasts_invalidate_stats_cache();
 
 		return (int) $post_id;
 	}
@@ -170,7 +170,7 @@ class JT_Importer {
 
 		if ( null !== $rating_raw ) {
 			$fields['_jardin_toasts_rating_raw']     = $rating_raw;
-			$fields['_jardin_toasts_rating_rounded'] = null !== $rounded ? $rounded : jt_map_rating_raw_to_rounded( $rating_raw );
+			$fields['_jardin_toasts_rating_rounded'] = null !== $rounded ? $rounded : jardin_toasts_map_rating_raw_to_rounded( $rating_raw );
 		}
 
 		if ( isset( $data['beer_abv'] ) && null !== $data['beer_abv'] ) {
@@ -206,13 +206,13 @@ class JT_Importer {
 	 */
 	private function assign_taxonomies( $post_id, array $data ) {
 		if ( ! empty( $data['beer_style'] ) ) {
-			wp_set_object_terms( $post_id, array( sanitize_text_field( (string) $data['beer_style'] ) ), JT_Taxonomies::STYLE, true );
+			wp_set_object_terms( $post_id, array( sanitize_text_field( (string) $data['beer_style'] ) ), Jardin_Toasts_Taxonomies::STYLE, true );
 		}
 		if ( ! empty( $data['brewery_name'] ) ) {
-			wp_set_object_terms( $post_id, array( sanitize_text_field( (string) $data['brewery_name'] ) ), JT_Taxonomies::BREWERY, true );
+			wp_set_object_terms( $post_id, array( sanitize_text_field( (string) $data['brewery_name'] ) ), Jardin_Toasts_Taxonomies::BREWERY, true );
 		}
-		if ( ! empty( $data['venue_name'] ) && get_option( 'jt_import_venues', true ) ) {
-			wp_set_object_terms( $post_id, array( sanitize_text_field( (string) $data['venue_name'] ) ), JT_Taxonomies::VENUE, true );
+		if ( ! empty( $data['venue_name'] ) && get_option( 'jardin_toasts_import_venues', true ) ) {
+			wp_set_object_terms( $post_id, array( sanitize_text_field( (string) $data['venue_name'] ) ), Jardin_Toasts_Taxonomies::VENUE, true );
 		}
 	}
 }

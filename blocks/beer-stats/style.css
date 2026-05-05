@@ -1,0 +1,43 @@
+/**
+ * Styles for jardin-toasts/beer-stats.
+ *
+ * @package JardinToasts
+ */
+
+.jardin-toasts-beer-stats {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: var(--wp--preset--spacing--3, 1rem);
+	margin: 0 0 var(--wp--preset--spacing--5, 2rem);
+}
+
+.jardin-toasts-beer-stats__item {
+	display: flex;
+	flex-direction: column;
+	gap: var(--wp--preset--spacing--1, 0.25rem);
+	padding: var(--wp--preset--spacing--3, 1rem);
+	background: var(--wp--preset--color--accent-soft, transparent);
+	border-radius: var(--wp--custom--radius--soft, 6px);
+	text-align: center;
+}
+
+.jardin-toasts-beer-stats__num {
+	font-size: var(--wp--preset--font-size--lg, 1.25rem);
+	font-weight: 600;
+	color: var(--wp--preset--color--accent, currentColor);
+	line-height: 1.1;
+	word-break: break-word;
+}
+
+.jardin-toasts-beer-stats__num--source {
+	font-family: var(--wp--preset--font-family--mono, monospace);
+	font-size: var(--wp--preset--font-size--sm, 0.875rem);
+	font-weight: 500;
+}
+
+.jardin-toasts-beer-stats__lbl {
+	font-size: var(--wp--preset--font-size--xs, 0.75rem);
+	color: var(--wp--preset--color--text-muted, inherit);
+	text-transform: lowercase;
+	letter-spacing: 0.04em;
+}

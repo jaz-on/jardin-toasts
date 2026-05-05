@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jardin-toasts/recent-reviews",
+	"title": "Recent reviews",
+	"category": "widgets",
+	"icon": "format-quote",
+	"description": "Cards for editorial reviews — check-ins with non-empty post content (promoted from auto tasting).",
+	"textdomain": "jardin-toasts",
+	"attributes": {
+		"postsToShow": {
+			"type": "number",
+			"default": 3
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"render": "file:./render.php",
+	"style": "file:./style.css"
+}

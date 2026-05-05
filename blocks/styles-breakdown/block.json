@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jardin-toasts/styles-breakdown",
+	"title": "Beer styles breakdown",
+	"category": "widgets",
+	"icon": "chart-bar",
+	"description": "Top beer styles bar chart, computed from the beer_style taxonomy.",
+	"textdomain": "jardin-toasts",
+	"attributes": {
+		"topCount": {
+			"type": "number",
+			"default": 7
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"render": "file:./render.php",
+	"style": "file:./style.css"
+}

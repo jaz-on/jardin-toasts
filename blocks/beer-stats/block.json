@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jardin-toasts/beer-stats",
+	"title": "Beer stats (aggregate)",
+	"category": "widgets",
+	"icon": "chart-area",
+	"description": "Aggregated stats: unique beers, breweries, favourite style/brewery, average rating, sync source.",
+	"textdomain": "jardin-toasts",
+	"attributes": {
+		"showSource": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"render": "file:./render.php",
+	"style": "file:./style.css"
+}

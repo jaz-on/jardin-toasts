@@ -49,7 +49,7 @@ Les anciennes clés `_jb_*` sont renommées vers `_jt_*` au chargement du plugin
 
 | Meta Key | Type | Description |
 |----------|------|-------------|
-| `_jt_venue_name` | string | Nom du lieu (consommé avec l’option `jt_import_venues`) |
+| `_jt_venue_name` | string | Nom du lieu (consommé avec l’option `jardin_toasts_import_venues`) |
 
 ---
 
@@ -107,13 +107,13 @@ $args = array(
 );
 ```
 
-Le CPT public est `beer_checkin` (voir `JT_Post_Type::POST_TYPE`).
+Le CPT public est `beer_checkin` (voir `Jardin_Toasts_Post_Type::POST_TYPE`).
 
 ---
 
 ## Champs requis pour un post **publié**
 
-L’importeur définit le statut `publish` lorsque bière, brasserie et note brute sont présents ; sinon `draft` avec `_jt_incomplete_reason`. Voir `JT_Importer::import_checkin_data()`.
+L’importeur définit le statut `publish` lorsque bière, brasserie et note brute sont présents ; sinon `draft` avec `_jt_incomplete_reason`. Voir `Jardin_Toasts_Importer::import_checkin_data()`.
 
 ---
 

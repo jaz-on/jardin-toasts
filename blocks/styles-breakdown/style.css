@@ -1,0 +1,61 @@
+/**
+ * Styles for jardin-toasts/styles-breakdown.
+ *
+ * @package JardinToasts
+ */
+
+.jardin-toasts-styles-breakdown {
+	list-style: none;
+	margin: 0 0 var(--wp--preset--spacing--5, 2rem);
+	padding: 0;
+	display: grid;
+	gap: var(--wp--preset--spacing--2, 0.5rem);
+}
+
+.jardin-toasts-styles-breakdown__row {
+	display: grid;
+	grid-template-columns: 8rem 1fr 3rem;
+	align-items: center;
+	gap: var(--wp--preset--spacing--3, 1rem);
+	padding: var(--wp--preset--spacing--2, 0.5rem) 0;
+	border-bottom: 1px dashed var(--wp--preset--color--border, rgba(0, 0, 0, 0.1));
+}
+
+.jardin-toasts-styles-breakdown__name {
+	font-size: var(--wp--preset--font-size--sm, 0.875rem);
+	color: var(--wp--preset--color--text, inherit);
+}
+
+.jardin-toasts-styles-breakdown__bar {
+	display: block;
+	height: 0.5rem;
+	border-radius: 9999px;
+	background: var(--wp--preset--color--accent-soft, rgba(0, 0, 0, 0.05));
+	overflow: hidden;
+}
+
+.jardin-toasts-styles-breakdown__bar > span {
+	display: block;
+	height: 100%;
+	background: var(--wp--preset--color--accent, currentColor);
+	border-radius: inherit;
+}
+
+.jardin-toasts-styles-breakdown__count {
+	font-size: var(--wp--preset--font-size--sm, 0.875rem);
+	color: var(--wp--preset--color--text-muted, inherit);
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+}
+
+.jardin-toasts-styles-breakdown__row--rest .jardin-toasts-styles-breakdown__name {
+	color: var(--wp--preset--color--text-muted, inherit);
+	font-style: italic;
+}
+
+@media (max-width: 480px) {
+	.jardin-toasts-styles-breakdown__row {
+		grid-template-columns: 6rem 1fr 2.5rem;
+		gap: var(--wp--preset--spacing--2, 0.5rem);
+	}
+}

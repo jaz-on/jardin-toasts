@@ -38,14 +38,14 @@ function parse_markdown_file( $file_path ) {
 		'dependencies' => [],
 	];
 
-	// Classes JT_*
-	preg_match_all( '/`JT_([A-Za-z_]+)`/', $content, $classes );
+	// Classes Jardin_Toasts_*
+	preg_match_all( '/`Jardin_Toasts_([A-Za-z_]+)`/', $content, $classes );
 	if ( ! empty( $classes[1] ) ) {
 		$info['classes'] = array_unique( $classes[1] );
 	}
 
-	// Functions jt_*
-	preg_match_all( '/`jt_([a-z_]+)\(\)`/', $content, $functions );
+	// Functions jardin_toasts_*
+	preg_match_all( '/`jardin_toasts_([a-z_]+)\(\)`/', $content, $functions );
 	if ( ! empty( $functions[1] ) ) {
 		$info['functions'] = array_unique( $functions[1] );
 	}
@@ -113,7 +113,7 @@ echo "\n=== ANALYSIS REPORT ===\n\n";
 
 echo 'Documented components (' . count( $report['components'] ) . "):\n";
 foreach ( $report['components'] as $class => $files ) {
-	echo "  - JT_$class (in " . count( $files ) . " file(s))\n";
+	echo "  - Jardin_Toasts_$class (in " . count( $files ) . " file(s))\n";
 	foreach ( $files as $file ) {
 		echo "    → $file\n";
 	}
@@ -121,7 +121,7 @@ foreach ( $report['components'] as $class => $files ) {
 
 echo "\nDocumented functions (" . count( $report['functions'] ) . "):\n";
 foreach ( $report['functions'] as $function => $files ) {
-	echo "  - jt_$function() (in " . count( $files ) . " file(s))\n";
+	echo "  - jardin_toasts_$function() (in " . count( $files ) . " file(s))\n";
 }
 
 echo "\nDocumented hooks (" . count( $report['hooks'] ) . "):\n";

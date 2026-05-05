@@ -1,6 +1,6 @@
 # Plan d'audit et de documentation du codebase Jardin Toasts
 
-> **Avertissement (2026)** : ce document est un **plan de travail / checklist historique**. Pour le dépôt **Jardin Toasts** actuel, ne pas se fier aux préfixes d’exemples `jb_*`, `JB_*`, ou aux noms de hooks `jb_*` ci-dessous : le code et la BDD utilisent **`jt_*`**, **`_jt_*`**, classes **`JT_*`**, hooks cron/AJAX **`jardin_toasts_*`** (voir [`development/legacy-identifiers.md`](development/legacy-identifiers.md) et [`db/options.md`](db/options.md) / [`db/meta-fields.md`](db/meta-fields.md)).
+> **Avertissement (2026)** : ce document est un **plan de travail / checklist historique**. Pour le dépôt **Jardin Toasts** actuel, ne pas se fier aux préfixes d’exemples `jb_*`, `JB_*`, `jt_*`, `JT_*`, ou aux noms de hooks `jb_*` / `jt_*` ci-dessous : le code et la BDD utilisent un préfixe unique **`jardin_toasts_*`** (options, fonctions, hooks, transients), **`_jardin_toasts_*`** (post meta), classes **`Jardin_Toasts_*`**, constantes **`JARDIN_TOASTS_*`** (voir [`development/legacy-identifiers.md`](development/legacy-identifiers.md) et [`db/options.md`](db/options.md) / [`db/meta-fields.md`](db/meta-fields.md)).
 
 ## Vue d'ensemble
 Ce plan suit la stratégie "Docs First, Code Second" pour auditer et documenter le plugin WordPress Jardin Toasts avant d'écrire du code. L'objectif est de transformer un nouveau dépôt en système documenté et compréhensible.
@@ -45,8 +45,9 @@ Ce plan suit la stratégie "Docs First, Code Second" pour auditer et documenter 
 - Documentation — docstrings sur tous les symboles publics
 - Documentation dans `/docs/**/*.md`
 - Architecture dans `.cursor/rules/*.mdc`
-- Préfixe des fonctions : **`jt_*`** (helpers), filtres/actions publics souvent **`jardin_toasts_*`** avec alias **`jt_*`** documentés dans `legacy-identifiers.md`
-- Préfixe des classes : **`JT_*`** (ex. `JT_Importer`, `JT_Scraper`) ; identifiants cron/AJAX centralisés dans `Jardin_Toasts_Keys` (`includes/functions.php`)
+- Préfixe des fonctions : **`jardin_toasts_*`** (helpers, filtres, actions, transients) — un seul préfixe canonique, pas d'alias
+- Préfixe des classes : **`Jardin_Toasts_*`** (ex. `Jardin_Toasts_Importer`, `Jardin_Toasts_Scraper`) ; identifiants cron/AJAX centralisés dans `Jardin_Toasts_Keys` (`includes/functions.php`)
+- Préfixe des constantes : **`JARDIN_TOASTS_*`** (ex. `JARDIN_TOASTS_VERSION`, `JARDIN_TOASTS_RSS_FEED_URL`)
 - Text domain : `jardin-toasts`
 - Support WordPress : 6.0+ minimum
 - Sécurité : sanitization, escaping, nonces, capability checks
@@ -138,19 +139,19 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 
 #### 2.4 Gestion des Custom Post Types
 - [ ] Documenter `includes/class-post-type.php`
-- [ ] CPT **`beer_checkin`** (`JT_Post_Type::POST_TYPE`)
+- [ ] CPT **`beer_checkin`** (`Jardin_Toasts_Post_Type::POST_TYPE`)
 - [ ] Configuration (public, REST API, supports, etc.)
 - [ ] Structure du post (title, content, date, featured image)
 
 #### 2.5 Système de taxonomies
 - [ ] Documenter `includes/class-taxonomies.php`
-- [ ] Taxonomies enregistrées par `JT_Taxonomies` (slugs réels : `beer_style`, `brewery`, `venue` — voir le fichier)
+- [ ] Taxonomies enregistrées par `Jardin_Toasts_Taxonomies` (slugs réels : `beer_style`, `brewery`, `venue` — voir le fichier)
 - [ ] Auto-création / assignation à l’import
 - [ ] Gestion des doublons et merge
 
 #### 2.6 Gestion des métadonnées
 - [ ] Documenter `includes/class-meta-fields.php`
-- [ ] Clés canoniques **`_jt_*`** (voir [`db/meta-fields.md`](db/meta-fields.md))
+- [ ] Clés canoniques **`_jardin_toasts_*`** (voir [`db/meta-fields.md`](db/meta-fields.md))
 - [ ] Données bière (nom, brasserie, style, ABV, IBU)
 - [ ] Données check-in (rating raw/rounded, serving type, date)
 - [ ] Données lieu (venue)
@@ -158,7 +159,7 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 - [ ] Métadonnées techniques (source, scraped_at, incomplete_reason)
 
 #### 2.7 Système de notation
-- [ ] Documenter le système de rating double (`_jt_rating_raw`, `_jt_rating_rounded`)
+- [ ] Documenter le système de rating double (`_jardin_toasts_rating_raw`, `_jardin_toasts_rating_rounded`)
 - [ ] Règles de mapping par défaut (0-5 stars)
 - [ ] Fonction de mapping personnalisable
 - [ ] Labels personnalisés par niveau
@@ -175,7 +176,7 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 #### 2.9 Cron jobs et scheduling
 - [ ] Documenter `includes/class-action-scheduler.php` (si utilisé)
 - [ ] Polling adaptatif (sixhourly/daily/weekly)
-- [ ] WP-Cron / Action Scheduler : hooks **`jardin_toasts_*`** (legacy `jt_*` / `jb_*` nettoyés à la migration — voir `legacy-identifiers.md`)
+- [ ] WP-Cron / Action Scheduler : hooks **`jardin_toasts_*`** (legacy `jardin_toasts_*` / `jb_*` nettoyés à la migration — voir `legacy-identifiers.md`)
 - [ ] Checkpoints et reprise après interruption
 
 #### 2.10 Page de réglages admin
@@ -213,18 +214,18 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 - [ ] Analyser les taxonomies :
   - Slugs réels : **`beer_style`**, **`brewery`**, **`venue`** (voir `includes/class-taxonomies.php`)
 - [ ] Analyser les meta fields (post meta) :
-  - Liste canonique **`_jt_*`** : voir [`db/meta-fields.md`](db/meta-fields.md) (ne plus lister `_jb_*` comme cible)
+  - Liste canonique **`_jardin_toasts_*`** : voir [`db/meta-fields.md`](db/meta-fields.md) (ne plus lister `_jb_*` ni `_jt_*` comme cibles)
 - [ ] Documenter les options WordPress utilisées :
-  - Préfixe **`jt_*`** : voir [`db/options.md`](db/options.md)
+  - Préfixe **`jardin_toasts_*`** : voir [`db/options.md`](db/options.md)
 - [ ] Documenter les transients :
-  - Cache **`jt_*`** (helpers, scrape, stats) : voir [`db/options.md`](db/options.md) section Transients
+  - Cache **`jardin_toasts_*`** (helpers, scrape, stats) : voir [`db/options.md`](db/options.md) section Transients
 - [ ] Créer un diagramme ERD (Mermaid) avec :
   - Tables WordPress (posts, postmeta, terms, term_taxonomy, term_relationships)
   - Relations entre CPT et taxonomies
   - Meta fields et leurs types
 - [ ] Documenter les relations entre entités
 - [ ] Documenter les index database recommandés :
-  - Index optionnel `jt_checkin_meta` sur `postmeta` (voir `includes/class-db-install.php`, [`db/indexes.md`](db/indexes.md))
+  - Index optionnel `jardin_toasts_checkin_meta` sur `postmeta` (voir `includes/class-db-install.php`, [`db/indexes.md`](db/indexes.md))
 
 **Fichiers à créer :**
 - `/docs/db/schema.md`
@@ -256,12 +257,12 @@ Pour de gros chantiers uniquement documentation, utiliser une branche **`feature
 - [ ] Documenter le système de templates WordPress :
   - Hiérarchie de templates (thème > plugin)
   - Templates surchargeables
-  - Hooks / filtres : préférer les noms **`jardin_toasts_*`** / **`jt_*`** documentés dans [`development/legacy-identifiers.md`](development/legacy-identifiers.md) et [`docs/wordpress/filters.md`](wordpress/filters.md) si à jour
+  - Hooks / filtres : préférer les noms **`jardin_toasts_*`** / **`jardin_toasts_*`** documentés dans [`development/legacy-identifiers.md`](development/legacy-identifiers.md) et [`docs/wordpress/filters.md`](wordpress/filters.md) si à jour
 - [ ] Documenter les partials réutilisables :
   - `public/partials/checkin-card.php`
   - `public/partials/rating-stars.php`
 - [ ] Documenter les template tags disponibles :
-  - Préfixe **`jt_*`** dans `public/template-tags.php` (ex. `jt_get_checkin_rating_raw`, affichage via filtres `jardin_toasts_rating_display` / `jt_rating_display`)
+  - Préfixe **`jardin_toasts_*`** dans `public/template-tags.php` (ex. `jardin_toasts_get_checkin_rating_raw`, affichage via filtres `jardin_toasts_rating_display` / `jardin_toasts_rating_display`)
 - [ ] Documenter les shortcodes (si Phase 2)
 - [ ] Analyser les assets (CSS/JS) :
   - `public/assets/css/public.css`

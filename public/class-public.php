@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_Public
+ * Class Jardin_Toasts_Public
  */
-class JT_Public {
+class Jardin_Toasts_Public {
 
 	/**
 	 * Register hooks.
@@ -20,7 +20,7 @@ class JT_Public {
 	 * @return void
 	 */
 	public function register() {
-		require_once JT_PLUGIN_DIR . 'public/template-tags.php';
+		require_once JARDIN_TOASTS_PLUGIN_DIR . 'public/template-tags.php';
 
 		add_filter( 'template_include', array( $this, 'template_include' ), 99 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
@@ -35,15 +35,21 @@ class JT_Public {
 	 * @return array<int, string>
 	 */
 	public function body_class_layout( $classes ) {
-		if ( is_post_type_archive( JT_Post_Type::POST_TYPE )
-			|| is_tax( array( JT_Taxonomies::STYLE, JT_Taxonomies::BREWERY, JT_Taxonomies::VENUE ) ) ) {
-			$classes[] = 'jt-archive-layout-' . jt_get_archive_layout();
+		if ( is_post_type_archive( Jardin_Toasts_Post_Type::POST_TYPE )
+			|| is_tax( array( Jardin_Toasts_Taxonomies::STYLE, Jardin_Toasts_Taxonomies::BREWERY, Jardin_Toasts_Taxonomies::VENUE ) ) ) {
+			$classes[] = 'jardin-toasts-archive-layout-' . jardin_toasts_get_archive_layout();
 		}
 		return $classes;
 	}
 
 	/**
 	 * Load plugin templates when theme has no override.
+	 *
+	 * Block (FSE) themes resolve archive/single via their own template hierarchy
+	 * (templates/archive-checkin.html, templates/single-checkin.html, taxonomy-*.html
+	 * or fallbacks). Skipping the override there avoids rendering plugin PHP
+	 * templates that call get_header()/get_footer() — those don't exist in FSE
+	 * and would produce a header/footer-less page.
 	 *
 	 * @param string $template Path.
 	 * @return string
@@ -53,7 +59,11 @@ class JT_Public {
 			return $template;
 		}
 
-		if ( is_post_type_archive( JT_Post_Type::POST_TYPE ) ) {
+		if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+			return $template;
+		}
+
+		if ( is_post_type_archive( Jardin_Toasts_Post_Type::POST_TYPE ) ) {
 			$theme = locate_template(
 				array(
 					'jardin-toasts/archive-checkin.php',
@@ -63,11 +73,11 @@ class JT_Public {
 			if ( $theme ) {
 				return $theme;
 			}
-			$path = JT_PLUGIN_DIR . 'public/templates/archive-checkin.php';
+			$path = JARDIN_TOASTS_PLUGIN_DIR . 'public/templates/archive-checkin.php';
 			return file_exists( $path ) ? $path : $template;
 		}
 
-		if ( is_singular( JT_Post_Type::POST_TYPE ) ) {
+		if ( is_singular( Jardin_Toasts_Post_Type::POST_TYPE ) ) {
 			$theme = locate_template(
 				array(
 					'jardin-toasts/single-checkin.php',
@@ -77,11 +87,11 @@ class JT_Public {
 			if ( $theme ) {
 				return $theme;
 			}
-			$path = JT_PLUGIN_DIR . 'public/templates/single-checkin.php';
+			$path = JARDIN_TOASTS_PLUGIN_DIR . 'public/templates/single-checkin.php';
 			return file_exists( $path ) ? $path : $template;
 		}
 
-		if ( is_tax( JT_Taxonomies::STYLE ) || is_tax( JT_Taxonomies::BREWERY ) || is_tax( JT_Taxonomies::VENUE ) ) {
+		if ( is_tax( Jardin_Toasts_Taxonomies::STYLE ) || is_tax( Jardin_Toasts_Taxonomies::BREWERY ) || is_tax( Jardin_Toasts_Taxonomies::VENUE ) ) {
 			$tax = get_queried_object();
 			if ( $tax && isset( $tax->taxonomy ) ) {
 				$theme = locate_template(
@@ -93,7 +103,7 @@ class JT_Public {
 				if ( $theme ) {
 					return $theme;
 				}
-				$path = JT_PLUGIN_DIR . 'public/templates/taxonomy-' . $tax->taxonomy . '.php';
+				$path = JARDIN_TOASTS_PLUGIN_DIR . 'public/templates/taxonomy-' . $tax->taxonomy . '.php';
 				if ( file_exists( $path ) ) {
 					return $path;
 				}
@@ -109,17 +119,17 @@ class JT_Public {
 	 * @return void
 	 */
 	public function enqueue_assets() {
-		if ( ! is_post_type_archive( JT_Post_Type::POST_TYPE )
-			&& ! is_singular( JT_Post_Type::POST_TYPE )
-			&& ! is_tax( array( JT_Taxonomies::STYLE, JT_Taxonomies::BREWERY, JT_Taxonomies::VENUE ) ) ) {
+		if ( ! is_post_type_archive( Jardin_Toasts_Post_Type::POST_TYPE )
+			&& ! is_singular( Jardin_Toasts_Post_Type::POST_TYPE )
+			&& ! is_tax( array( Jardin_Toasts_Taxonomies::STYLE, Jardin_Toasts_Taxonomies::BREWERY, Jardin_Toasts_Taxonomies::VENUE ) ) ) {
 			return;
 		}
 
 		wp_enqueue_style(
 			'jardin-toasts-public',
-			JT_PLUGIN_URL . 'public/assets/css/public.css',
+			JARDIN_TOASTS_PLUGIN_URL . 'public/assets/css/public.css',
 			array(),
-			JT_VERSION
+			JARDIN_TOASTS_VERSION
 		);
 	}
 
@@ -129,15 +139,15 @@ class JT_Public {
 	 * @return void
 	 */
 	public function output_json_ld() {
-		if ( ! is_singular( JT_Post_Type::POST_TYPE ) ) {
+		if ( ! is_singular( Jardin_Toasts_Post_Type::POST_TYPE ) ) {
 			return;
 		}
-		if ( ! get_option( 'jt_schema_enabled', true ) ) {
+		if ( ! get_option( 'jardin_toasts_schema_enabled', true ) ) {
 			return;
 		}
 
 		$post_id = get_queried_object_id();
-		$rating    = jt_get_checkin_rating_raw( $post_id );
+		$rating    = jardin_toasts_get_checkin_rating_raw( $post_id );
 		$beer_name = get_post_meta( $post_id, '_jardin_toasts_beer_name', true );
 		if ( ! is_string( $beer_name ) || '' === $beer_name ) {
 			$beer_name = get_the_title( $post_id );
@@ -163,7 +173,7 @@ class JT_Public {
 			);
 		}
 
-		$data = apply_filters( 'jardin_toasts_schema_review_data', apply_filters( 'jt_schema_review_data', $data, $post_id ), $post_id );
+		$data = apply_filters( 'jardin_toasts_schema_review_data', apply_filters( 'jardin_toasts_schema_review_data', $data, $post_id ), $post_id );
 
 		echo '<script type="application/ld+json">' . wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . '</script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}

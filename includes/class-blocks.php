@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_Blocks
+ * Class Jardin_Toasts_Blocks
  */
-class JT_Blocks {
+class Jardin_Toasts_Blocks {
 
 	/**
 	 * Block slugs relative to blocks/.
@@ -23,7 +23,9 @@ class JT_Blocks {
 		'checkin-card',
 		'recent-checkins',
 		'menu-display',
-		'brewery-stats',
+		'beer-stats',
+		'recent-reviews',
+		'styles-breakdown',
 	);
 
 	/**
@@ -40,7 +42,7 @@ class JT_Blocks {
 	 */
 	public function register_block_types() {
 		foreach ( self::BLOCKS as $slug ) {
-			$dir = JT_PLUGIN_DIR . 'blocks/' . $slug;
+			$dir = JARDIN_TOASTS_PLUGIN_DIR . 'blocks/' . $slug;
 			if ( is_readable( $dir . '/block.json' ) ) {
 				register_block_type( $dir );
 			}

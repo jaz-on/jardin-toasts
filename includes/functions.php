@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param string $url Check-in URL.
  * @return string|null Numeric ID or null.
  */
-function jt_parse_checkin_id_from_url( $url ) {
+function jardin_toasts_parse_checkin_id_from_url( $url ) {
 	if ( ! is_string( $url ) || '' === $url ) {
 		return null;
 	}
@@ -30,7 +30,7 @@ function jt_parse_checkin_id_from_url( $url ) {
  *
  * @return array<int, array{min: float, max: float, round: int}>
  */
-function jt_get_default_rating_rules() {
+function jardin_toasts_get_default_rating_rules() {
 	return array(
 		array( 'min' => 0.0, 'max' => 0.49, 'round' => 0 ),
 		array( 'min' => 0.5, 'max' => 1.49, 'round' => 1 ),
@@ -46,7 +46,7 @@ function jt_get_default_rating_rules() {
  *
  * @return array<int, string>
  */
-function jt_get_default_rating_labels() {
+function jardin_toasts_get_default_rating_labels() {
 	return array(
 		0 => __( 'Undrinkable', 'jardin-toasts' ),
 		1 => __( 'Terrible', 'jardin-toasts' ),
@@ -62,11 +62,11 @@ function jt_get_default_rating_labels() {
  *
  * @return array<int, string>
  */
-function jt_get_rating_labels() {
-	$defaults = jt_get_default_rating_labels();
-	$stored   = get_option( 'jt_rating_labels', false );
+function jardin_toasts_get_rating_labels() {
+	$defaults = jardin_toasts_get_default_rating_labels();
+	$stored   = get_option( 'jardin_toasts_rating_labels', false );
 	if ( false === $stored || ! is_array( $stored ) ) {
-		return apply_filters( 'jardin_toasts_rating_labels', apply_filters( 'jt_rating_labels', $defaults ) );
+		return apply_filters( 'jardin_toasts_rating_labels', apply_filters( 'jardin_toasts_rating_labels', $defaults ) );
 	}
 	$out = array();
 	for ( $i = 0; $i <= 5; $i++ ) {
@@ -74,26 +74,23 @@ function jt_get_rating_labels() {
 			? (string) $stored[ $i ]
 			: ( isset( $defaults[ $i ] ) ? $defaults[ $i ] : '' );
 	}
-	return apply_filters( 'jardin_toasts_rating_labels', apply_filters( 'jt_rating_labels', $out ) );
+	return apply_filters( 'jardin_toasts_rating_labels', apply_filters( 'jardin_toasts_rating_labels', $out ) );
 }
 
 /**
  * Default Untappd RSS feed URL used when the option is not stored yet.
  *
- * Optional: define `JT_RSS_FEED_URL` in wp-config.php to override the default feed URL.
+ * Optional: define `JARDIN_TOASTS_RSS_FEED_URL` in wp-config.php to override the default feed URL.
  *
  * @return string
  */
-function jt_get_default_rss_feed_url() {
-	if ( defined( 'JT_RSS_FEED_URL' ) && is_string( JT_RSS_FEED_URL ) && '' !== trim( JT_RSS_FEED_URL ) ) {
-		return apply_filters( 'jardin_toasts_default_rss_feed_url', apply_filters( 'jt_default_rss_feed_url', esc_url_raw( JT_RSS_FEED_URL ) ) );
+function jardin_toasts_get_default_rss_feed_url() {
+	if ( defined( 'JARDIN_TOASTS_RSS_FEED_URL' ) && is_string( JARDIN_TOASTS_RSS_FEED_URL ) && '' !== trim( JARDIN_TOASTS_RSS_FEED_URL ) ) {
+		return apply_filters( 'jardin_toasts_default_rss_feed_url', esc_url_raw( JARDIN_TOASTS_RSS_FEED_URL ) );
 	}
 	return apply_filters(
 		'jardin_toasts_default_rss_feed_url',
-		apply_filters(
-			'jt_default_rss_feed_url',
-			'https://untappd.com/rss/user/jaz_on?key=89731ff4bd5fc508dc3eae87a6cf93f4'
-		)
+		'https://untappd.com/rss/user/jaz_on?key=89731ff4bd5fc508dc3eae87a6cf93f4'
 	);
 }
 
@@ -104,10 +101,10 @@ function jt_get_default_rss_feed_url() {
  *
  * @return string
  */
-function jt_get_rss_feed_url() {
-	$stored = get_option( 'jt_rss_feed_url', false );
+function jardin_toasts_get_rss_feed_url() {
+	$stored = get_option( 'jardin_toasts_rss_feed_url', false );
 	if ( false === $stored ) {
-		return jt_get_default_rss_feed_url();
+		return jardin_toasts_get_default_rss_feed_url();
 	}
 	return trim( (string) $stored );
 }
@@ -117,8 +114,8 @@ function jt_get_rss_feed_url() {
  *
  * @return string
  */
-function jt_get_default_untappd_username() {
-	return apply_filters( 'jardin_toasts_default_untappd_username', apply_filters( 'jt_default_untappd_username', 'jaz_on' ) );
+function jardin_toasts_get_default_untappd_username() {
+	return apply_filters( 'jardin_toasts_default_untappd_username', apply_filters( 'jardin_toasts_default_untappd_username', 'jaz_on' ) );
 }
 
 /**
@@ -126,10 +123,10 @@ function jt_get_default_untappd_username() {
  *
  * @return string
  */
-function jt_get_untappd_username() {
-	$stored = get_option( 'jt_untappd_username', false );
+function jardin_toasts_get_untappd_username() {
+	$stored = get_option( 'jardin_toasts_untappd_username', false );
 	if ( false === $stored ) {
-		return jt_get_default_untappd_username();
+		return jardin_toasts_get_default_untappd_username();
 	}
 	return (string) $stored;
 }
@@ -137,15 +134,15 @@ function jt_get_untappd_username() {
 /**
  * User-Agent for outbound HTTP (optional media and integrations).
  *
- * Same filter order as other doubles (`jt_*` then `jardin_toasts_*`).
+ * Same filter order as other doubles (`jardin_toasts_*` then `jardin_toasts_*`).
  *
  * @return string
  */
-function jt_http_user_agent_string() {
-	$default = 'Jardin Toasts/' . JT_VERSION . '; ' . home_url( '/' );
+function jardin_toasts_http_user_agent_string() {
+	$default = 'Jardin Toasts/' . JARDIN_TOASTS_VERSION . '; ' . home_url( '/' );
 	return (string) apply_filters(
 		'jardin_toasts_http_user_agent',
-		(string) apply_filters( 'jt_http_user_agent', $default )
+		(string) apply_filters( 'jardin_toasts_http_user_agent', $default )
 	);
 }
 
@@ -155,7 +152,7 @@ function jt_http_user_agent_string() {
  * @param string $url RSS URL.
  * @return string Username slug or empty.
  */
-function jt_parse_username_from_rss_url( $url ) {
+function jardin_toasts_parse_username_from_rss_url( $url ) {
 	if ( ! is_string( $url ) || '' === trim( $url ) ) {
 		return '';
 	}
@@ -170,7 +167,7 @@ function jt_parse_username_from_rss_url( $url ) {
  *
  * @return string
  */
-function jt_get_checkin_archive_url() {
+function jardin_toasts_get_checkin_archive_url() {
 	$pt = 'checkin';
 	if ( ! post_type_exists( $pt ) ) {
 		return home_url( '/' );
@@ -185,7 +182,7 @@ function jt_get_checkin_archive_url() {
  * @param string $content Raw or HTML comment.
  * @return string
  */
-function jt_normalize_imported_post_content( $content ) {
+function jardin_toasts_normalize_imported_post_content( $content ) {
 	$content = trim( (string) $content );
 	if ( '' === $content ) {
 		return '';
@@ -204,15 +201,15 @@ function jt_normalize_imported_post_content( $content ) {
  * @param float|null $raw Raw rating.
  * @return int|null Rounded 0–5 or null if unknown.
  */
-function jt_map_rating_raw_to_rounded( $raw ) {
+function jardin_toasts_map_rating_raw_to_rounded( $raw ) {
 	if ( null === $raw || '' === $raw ) {
 		return null;
 	}
 	$raw = floatval( $raw );
-	$rules = get_option( 'jt_rating_rules', jt_get_default_rating_rules() );
-	$rules = apply_filters( 'jardin_toasts_rating_rules', apply_filters( 'jt_rating_rules', $rules ) );
+	$rules = get_option( 'jardin_toasts_rating_rules', jardin_toasts_get_default_rating_rules() );
+	$rules = apply_filters( 'jardin_toasts_rating_rules', apply_filters( 'jardin_toasts_rating_rules', $rules ) );
 	if ( ! is_array( $rules ) || empty( $rules ) ) {
-		$rules = jt_get_default_rating_rules();
+		$rules = jardin_toasts_get_default_rating_rules();
 	}
 	foreach ( $rules as $rule ) {
 		if ( ! is_array( $rule ) || ! isset( $rule['min'], $rule['max'], $rule['round'] ) ) {
@@ -231,7 +228,7 @@ function jt_map_rating_raw_to_rounded( $raw ) {
  * @param string $title Item title.
  * @return array{beer: string, brewery: string, venue: string}
  */
-function jt_parse_rss_item_title( $title ) {
+function jardin_toasts_parse_rss_item_title( $title ) {
 	$out = array(
 		'beer'    => '',
 		'brewery' => '',
@@ -255,7 +252,7 @@ function jt_parse_rss_item_title( $title ) {
  *
  * @return string|false Absolute path or false.
  */
-function jt_get_log_directory() {
+function jardin_toasts_get_log_directory() {
 	$upload = wp_upload_dir();
 	if ( ! empty( $upload['error'] ) ) {
 		return false;
@@ -277,7 +274,7 @@ function jt_get_log_directory() {
  * @param string $checkin_id Untappd check-in ID.
  * @return int Post ID or 0.
  */
-function jt_get_post_id_by_checkin_id( $checkin_id ) {
+function jardin_toasts_get_post_id_by_checkin_id( $checkin_id ) {
 	global $wpdb;
 	$checkin_id = sanitize_text_field( (string) $checkin_id );
 	if ( '' === $checkin_id ) {
@@ -300,7 +297,7 @@ function jt_get_post_id_by_checkin_id( $checkin_id ) {
  * @param array<int, string|int> $checkin_ids Check-in IDs.
  * @return array<string, int> checkin_id => post_id
  */
-function jt_get_post_ids_by_checkin_ids( array $checkin_ids ) {
+function jardin_toasts_get_post_ids_by_checkin_ids( array $checkin_ids ) {
 	global $wpdb;
 	$clean = array();
 	foreach ( $checkin_ids as $id ) {
@@ -339,14 +336,14 @@ function jt_get_post_ids_by_checkin_ids( array $checkin_ids ) {
  * @param bool $manual True when triggered from admin AJAX.
  * @return int
  */
-function jt_get_rss_sync_max_per_run( $manual = false ) {
+function jardin_toasts_get_rss_sync_max_per_run( $manual = false ) {
 	if ( $manual ) {
-		$max = (int) apply_filters( 'jardin_toasts_rss_manual_sync_max_items', apply_filters( 'jt_rss_manual_sync_max_items', 500 ) );
+		$max = (int) apply_filters( 'jardin_toasts_rss_manual_sync_max_items', apply_filters( 'jardin_toasts_rss_manual_sync_max_items', 500 ) );
 		return max( 1, $max );
 	}
-	$n = class_exists( 'JT_Settings' ) ? (int) JT_Settings::get( 'jt_rss_max_per_run' ) : absint( get_option( 'jt_rss_max_per_run', 10 ) );
+	$n = class_exists( 'Jardin_Toasts_Settings' ) ? (int) Jardin_Toasts_Settings::get( 'jardin_toasts_rss_max_per_run' ) : absint( get_option( 'jardin_toasts_rss_max_per_run', 10 ) );
 	$n = max( 1, min( 100, $n ) );
-	return (int) apply_filters( 'jardin_toasts_rss_max_per_run', apply_filters( 'jt_rss_max_per_run', $n ) );
+	return (int) apply_filters( 'jardin_toasts_rss_max_per_run', apply_filters( 'jardin_toasts_rss_max_per_run', $n ) );
 }
 
 /**
@@ -354,8 +351,8 @@ function jt_get_rss_sync_max_per_run( $manual = false ) {
  *
  * @return array<int, array<string, mixed>>
  */
-function jt_get_rss_sync_queue() {
-	$q = get_option( 'jt_rss_sync_queue', array() );
+function jardin_toasts_get_rss_sync_queue() {
+	$q = get_option( 'jardin_toasts_rss_sync_queue', array() );
 	return is_array( $q ) ? array_values( $q ) : array();
 }
 
@@ -365,8 +362,8 @@ function jt_get_rss_sync_queue() {
  * @param array<int, array<string, mixed>> $queue Rows (FIFO).
  * @return void
  */
-function jt_save_rss_sync_queue( array $queue ) {
-	update_option( 'jt_rss_sync_queue', array_values( $queue ), false );
+function jardin_toasts_save_rss_sync_queue( array $queue ) {
+	update_option( 'jardin_toasts_rss_sync_queue', array_values( $queue ), false );
 }
 
 /**
@@ -376,7 +373,7 @@ function jt_save_rss_sync_queue( array $queue ) {
  * @param array<int, array<string, mixed>> $rows  Rows to append.
  * @return array<int, array<string, mixed>>
  */
-function jt_rss_queue_merge_unique( array $queue, array $rows ) {
+function jardin_toasts_rss_queue_merge_unique( array $queue, array $rows ) {
 	$seen = array();
 	$out  = array();
 	foreach ( $queue as $row ) {
@@ -407,20 +404,20 @@ function jt_rss_queue_merge_unique( array $queue, array $rows ) {
  *
  * @return void
  */
-function jt_maybe_schedule_rss_queue_tick() {
-	$q = jt_get_rss_sync_queue();
+function jardin_toasts_maybe_schedule_rss_queue_tick() {
+	$q = jardin_toasts_get_rss_sync_queue();
 	if ( empty( $q ) ) {
 		return;
 	}
 	$delay = (int) apply_filters(
 		'jardin_toasts_rss_queue_tick_delay_seconds',
-		apply_filters( 'jt_rss_queue_tick_delay_seconds', 60 )
+		apply_filters( 'jardin_toasts_rss_queue_tick_delay_seconds', 60 )
 	);
 	$delay = max( 30, $delay );
-	$group = jt_action_scheduler_group();
+	$group = jardin_toasts_action_scheduler_group();
 
-	if ( jt_using_action_scheduler() ) {
-		jt_when_action_scheduler_store_ready(
+	if ( jardin_toasts_using_action_scheduler() ) {
+		jardin_toasts_when_action_scheduler_store_ready(
 			static function () use ( $delay, $group ) {
 				if ( as_next_scheduled_action( Jardin_Toasts_Keys::HOOK_RSS_QUEUE_TICK, array(), $group ) ) {
 					return;
@@ -444,7 +441,7 @@ function jt_maybe_schedule_rss_queue_tick() {
  * @param callable():void $callback Callback using Action Scheduler APIs.
  * @return void
  */
-function jt_when_action_scheduler_store_ready( callable $callback ) {
+function jardin_toasts_when_action_scheduler_store_ready( callable $callback ) {
 	if ( ! function_exists( 'as_schedule_recurring_action' ) ) {
 		return;
 	}
@@ -460,7 +457,7 @@ function jt_when_action_scheduler_store_ready( callable $callback ) {
  *
  * @return bool
  */
-function jt_using_action_scheduler() {
+function jardin_toasts_using_action_scheduler() {
 	return function_exists( 'as_schedule_recurring_action' )
 		&& function_exists( 'as_next_scheduled_action' )
 		&& function_exists( 'as_schedule_single_action' );
@@ -471,21 +468,21 @@ function jt_using_action_scheduler() {
  *
  * @return string
  */
-function jt_action_scheduler_group() {
+function jardin_toasts_action_scheduler_group() {
 	return 'jardin-toasts';
 }
 
 /**
  * Transient-backed cache helper (see docs/development/caching.md).
  *
- * @param string   $key      Short key (prefix jt_ added).
+ * @param string   $key      Short key (prefix jardin_toasts_ added).
  * @param callable $producer Callback returning data to cache.
  * @param int|null $ttl      TTL seconds; default 1 hour.
  * @return mixed
  */
-function jt_get_cached_data( $key, $producer, $ttl = null ) {
+function jardin_toasts_get_cached_data( $key, $producer, $ttl = null ) {
 	$key       = preg_replace( '/[^a-z0-9_\-]/i', '', (string) $key );
-	$cache_key = 'jt_' . $key;
+	$cache_key = 'jardin_toasts_' . $key;
 	$cached    = get_transient( $cache_key );
 	if ( false !== $cached ) {
 		return $cached;
@@ -501,9 +498,9 @@ function jt_get_cached_data( $key, $producer, $ttl = null ) {
  *
  * @return void
  */
-function jt_invalidate_stats_cache() {
-	delete_transient( 'jt_global_stats' );
-	delete_transient( 'jt_incomplete_checkin_count' );
+function jardin_toasts_invalidate_stats_cache() {
+	delete_transient( 'jardin_toasts_global_stats' );
+	delete_transient( 'jardin_toasts_incomplete_checkin_count' );
 }
 
 /**
@@ -511,16 +508,16 @@ function jt_invalidate_stats_cache() {
  *
  * @return int
  */
-function jt_count_draft_incomplete_checkins() {
-	if ( ! post_type_exists( JT_Post_Type::POST_TYPE ) ) {
+function jardin_toasts_count_draft_incomplete_checkins() {
+	if ( ! post_type_exists( Jardin_Toasts_Post_Type::POST_TYPE ) ) {
 		return 0;
 	}
-	return (int) jt_get_cached_data(
+	return (int) jardin_toasts_get_cached_data(
 		'incomplete_checkin_count',
 		static function () {
 			$q = new WP_Query(
 				array(
-					'post_type'              => JT_Post_Type::POST_TYPE,
+					'post_type'              => Jardin_Toasts_Post_Type::POST_TYPE,
 					'post_status'            => 'draft',
 					'fields'                 => 'ids',
 					'posts_per_page'         => 200,
@@ -546,11 +543,11 @@ function jt_count_draft_incomplete_checkins() {
  *
  * @return array{publish: int, draft: int}
  */
-function jt_get_global_stats() {
-	return jt_get_cached_data(
+function jardin_toasts_get_global_stats() {
+	return jardin_toasts_get_cached_data(
 		'global_stats',
 		function () {
-			$counts = wp_count_posts( JT_Post_Type::POST_TYPE );
+			$counts = wp_count_posts( Jardin_Toasts_Post_Type::POST_TYPE );
 			return array(
 				'publish' => isset( $counts->publish ) ? (int) $counts->publish : 0,
 				'draft'   => isset( $counts->draft ) ? (int) $counts->draft : 0,
@@ -568,14 +565,14 @@ function jt_get_global_stats() {
  * @param string $type    sync|error.
  * @return void
  */
-function jt_send_notification_email( $subject, $body, $type = 'error' ) {
-	if ( 'sync' === $type && ! get_option( 'jt_notify_on_sync', false ) ) {
+function jardin_toasts_send_notification_email( $subject, $body, $type = 'error' ) {
+	if ( 'sync' === $type && ! get_option( 'jardin_toasts_notify_on_sync', false ) ) {
 		return;
 	}
-	if ( 'error' === $type && ! get_option( 'jt_notify_on_error', true ) ) {
+	if ( 'error' === $type && ! get_option( 'jardin_toasts_notify_on_error', true ) ) {
 		return;
 	}
-	$to = get_option( 'jt_notification_email', '' );
+	$to = get_option( 'jardin_toasts_notification_email', '' );
 	if ( ! is_string( $to ) || '' === trim( $to ) ) {
 		$to = (string) get_option( 'admin_email', '' );
 	}
@@ -591,17 +588,17 @@ function jt_send_notification_email( $subject, $body, $type = 'error' ) {
  *
  * @return void
  */
-function jt_touch_last_rss_sync_time() {
-	update_option( 'jt_last_rss_sync_at', gmdate( 'c' ), false );
+function jardin_toasts_touch_last_rss_sync_time() {
+	update_option( 'jardin_toasts_last_rss_sync_at', gmdate( 'c' ), false );
 }
 
 /**
- * Archive layout: grid or table (option jt_archive_layout).
+ * Archive layout: grid or table (option jardin_toasts_archive_layout).
  *
  * @return string grid|table
  */
-function jt_get_archive_layout() {
-	$l = get_option( 'jt_archive_layout', 'grid' );
+function jardin_toasts_get_archive_layout() {
+	$l = get_option( 'jardin_toasts_archive_layout', 'grid' );
 	return in_array( $l, array( 'grid', 'table' ), true ) ? $l : 'grid';
 }
 
@@ -610,19 +607,19 @@ function jt_get_archive_layout() {
  *
  * @return void
  */
-function jt_maybe_remove_scraper_artifacts() {
+function jardin_toasts_maybe_remove_scraper_artifacts() {
 	if ( get_option( 'jardin_toasts_no_scraper_v1', '' ) === '1' ) {
 		return;
 	}
 
-	delete_option( 'jt_import_checkpoint' );
+	delete_option( 'jardin_toasts_import_checkpoint' );
 	wp_clear_scheduled_hook( Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH );
 
-	if ( function_exists( 'as_unschedule_all_actions' ) && function_exists( 'jt_when_action_scheduler_store_ready' ) ) {
-		jt_when_action_scheduler_store_ready(
+	if ( function_exists( 'as_unschedule_all_actions' ) && function_exists( 'jardin_toasts_when_action_scheduler_store_ready' ) ) {
+		jardin_toasts_when_action_scheduler_store_ready(
 			static function () {
 				$hook = Jardin_Toasts_Keys::HOOK_BACKGROUND_IMPORT_BATCH;
-				$groups = array( jt_action_scheduler_group(), 'beer-journal', 'jardin-beer' );
+				$groups = array( jardin_toasts_action_scheduler_group(), 'beer-journal', 'jardin-beer' );
 				foreach ( $groups as $group ) {
 					as_unschedule_all_actions( $hook, array(), $group );
 				}
@@ -634,7 +631,7 @@ function jt_maybe_remove_scraper_artifacts() {
 }
 
 /**
- * Canonical public identifiers (cron, AJAX, nonces) and legacy `jt_*` cron cleanup.
+ * Canonical public identifiers (cron, AJAX, nonces) and legacy `jardin_toasts_*` cron cleanup.
  */
 final class Jardin_Toasts_Keys {
 
@@ -656,10 +653,10 @@ final class Jardin_Toasts_Keys {
 	 */
 	public static function legacy_jt_cron_hooks(): array {
 		return array(
-			'jt_rss_sync',
-			'jt_rss_queue_tick',
-			'jt_background_import_batch',
-			'jt_daily_log_cleanup',
+			'jardin_toasts_rss_sync',
+			'jardin_toasts_rss_queue_tick',
+			'jardin_toasts_background_import_batch',
+			'jardin_toasts_daily_log_cleanup',
 		);
 	}
 
@@ -749,8 +746,8 @@ final class Jardin_Toasts_Keys {
 			update_option( Jardin_Toasts_Keys::OPTION_CRON_HOOKS_MIGRATED, '1', false );
 		};
 
-		if ( function_exists( 'jt_using_action_scheduler' ) && jt_using_action_scheduler() && function_exists( 'jt_when_action_scheduler_store_ready' ) ) {
-			jt_when_action_scheduler_store_ready( $finish );
+		if ( function_exists( 'jardin_toasts_using_action_scheduler' ) && jardin_toasts_using_action_scheduler() && function_exists( 'jardin_toasts_when_action_scheduler_store_ready' ) ) {
+			jardin_toasts_when_action_scheduler_store_ready( $finish );
 			return;
 		}
 

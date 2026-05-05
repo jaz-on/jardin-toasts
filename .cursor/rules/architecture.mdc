@@ -286,7 +286,7 @@ function jb_display_rating($post_id, $show_label = true, $show_raw = true) {
 - **Scope**: One logical change per commit
 
 ### Version numbers
-- Do not bump the plugin `Version` header or `JT_VERSION` unless the maintainer explicitly authorizes it.
+- Do not bump the plugin `Version` header or `JARDIN_TOASTS_VERSION` unless the maintainer explicitly authorizes it.
 
 ## Testing
 

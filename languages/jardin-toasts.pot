@@ -438,7 +438,7 @@ msgid "Use a fallback image when Untappd download fails (on by default). Uncheck
 msgstr ""
 
 #: admin/views/settings-page.php:303
-msgid "Pick a generic beer or logo from your Media Library (no attachment ID to type). There is no built-in remote beer-photo API (keys, licensing, reliability); you can wire Open Food Facts, Wikimedia, or your own source in PHP with the jt_placeholder_attachment_id filter, returning a Media Library attachment ID you created."
+msgid "Pick a generic beer or logo from your Media Library (no attachment ID to type). There is no built-in remote beer-photo API (keys, licensing, reliability); you can wire Open Food Facts, Wikimedia, or your own source in PHP with the jardin_toasts_placeholder_attachment_id filter, returning a Media Library attachment ID you created."
 msgstr ""
 
 #: admin/views/settings-page.php:346
@@ -446,7 +446,7 @@ msgid "Star mapping"
 msgstr ""
 
 #: admin/views/settings-page.php:347
-msgid "Map Untappd’s 0–5 raw score into whole stars. Rules are tested in order; the first matching min/max band wins. The jt_rating_rules filter can still override in code."
+msgid "Map Untappd’s 0–5 raw score into whole stars. Rules are tested in order; the first matching min/max band wins. The jardin_toasts_rating_rules filter can still override in code."
 msgstr ""
 
 #: admin/views/settings-page.php:352

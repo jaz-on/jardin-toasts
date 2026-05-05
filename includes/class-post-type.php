@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_Post_Type
+ * Class Jardin_Toasts_Post_Type
  */
-class JT_Post_Type {
+class Jardin_Toasts_Post_Type {
 
 	/**
 	 * Post type slug.

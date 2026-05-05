@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_Meta_Fields
+ * Class Jardin_Toasts_Meta_Fields
  */
-class JT_Meta_Fields {
+class Jardin_Toasts_Meta_Fields {
 
 	/**
 	 * Register hooks.
@@ -29,7 +29,7 @@ class JT_Meta_Fields {
 	 * @return void
 	 */
 	public function register_meta() {
-		$post_type = JT_Post_Type::POST_TYPE;
+		$post_type = Jardin_Toasts_Post_Type::POST_TYPE;
 		$keys      = array(
 			'_jardin_toasts_checkin_id'        => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
 			'_jardin_toasts_checkin_url'        => array( 'type' => 'string', 'sanitize_callback' => 'esc_url_raw' ),

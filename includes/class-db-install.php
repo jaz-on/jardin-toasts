@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_DB_Install
+ * Class Jardin_Toasts_DB_Install
  */
-class JT_DB_Install {
+class Jardin_Toasts_DB_Install {
 
 	/**
 	 * Add composite index on postmeta for check-in ID lookups (best-effort, once).
@@ -20,7 +20,7 @@ class JT_DB_Install {
 	 * @return void
 	 */
 	public static function maybe_add_indexes() {
-		$state = get_option( 'jt_db_index_checkin_v1', '' );
+		$state = get_option( 'jardin_toasts_db_index_checkin_v1', '' );
 		if ( in_array( $state, array( 'ok', 'failed' ), true ) ) {
 			return;
 		}
@@ -29,21 +29,21 @@ class JT_DB_Install {
 		$wpdb->suppress_errors( true );
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange
 		$wpdb->query(
-			"ALTER TABLE {$wpdb->postmeta} ADD INDEX jt_checkin_meta (meta_key(20), meta_value(64))"
+			"ALTER TABLE {$wpdb->postmeta} ADD INDEX jardin_toasts_checkin_meta (meta_key(20), meta_value(64))"
 		);
 		$wpdb->suppress_errors( false );
 
 		$err = $wpdb->last_error;
 		if ( ! $err ) {
-			update_option( 'jt_db_index_checkin_v1', 'ok', true );
+			update_option( 'jardin_toasts_db_index_checkin_v1', 'ok', true );
 			return;
 		}
 		if ( false !== strpos( $err, 'Duplicate' ) || false !== strpos( $err, 'duplicate' ) ) {
-			update_option( 'jt_db_index_checkin_v1', 'ok', true );
+			update_option( 'jardin_toasts_db_index_checkin_v1', 'ok', true );
 			return;
 		}
 
-		update_option( 'jt_db_index_checkin_v1', 'failed', true );
-		JT_Logger::warning( 'DB index jt_checkin_meta not added: ' . $err );
+		update_option( 'jardin_toasts_db_index_checkin_v1', 'failed', true );
+		Jardin_Toasts_Logger::warning( 'DB index jardin_toasts_checkin_meta not added: ' . $err );
 	}
 }

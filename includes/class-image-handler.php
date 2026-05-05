@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class JT_Image_Handler
+ * Class Jardin_Toasts_Image_Handler
  */
-class JT_Image_Handler {
+class Jardin_Toasts_Image_Handler {
 
 	/**
 	 * Sideload remote image as featured image for a post.
@@ -23,10 +23,10 @@ class JT_Image_Handler {
 	 * @return int|WP_Error Attachment ID or error.
 	 *
 	 * When sideload fails and placeholders are enabled, uses the saved attachment ID, then the
-	 * `jardin_toasts_placeholder_attachment_id` / `jt_placeholder_attachment_id` filters so extensions can return another attachment (e.g. from an API).
+	 * `jardin_toasts_placeholder_attachment_id` / `jardin_toasts_placeholder_attachment_id` filters so extensions can return another attachment (e.g. from an API).
 	 */
 	public function import_for_post( $url, $post_id, $title = '' ) {
-		if ( ! get_option( 'jt_import_images', true ) ) {
+		if ( ! get_option( 'jardin_toasts_import_images', true ) ) {
 			return new WP_Error( 'disabled', __( 'Image import is disabled.', 'jardin-toasts' ) );
 		}
 		$url = esc_url_raw( $url );
@@ -47,20 +47,20 @@ class JT_Image_Handler {
 
 		$att_id = media_sideload_image( $url, $post_id, $title, 'id' );
 		if ( is_wp_error( $att_id ) ) {
-			if ( ! JT_Settings::get( 'jt_use_placeholder_image' ) ) {
+			if ( ! Jardin_Toasts_Settings::get( 'jardin_toasts_use_placeholder_image' ) ) {
 				return $att_id;
 			}
-			$placeholder = absint( JT_Settings::get( 'jt_placeholder_image_id' ) );
+			$placeholder = absint( Jardin_Toasts_Settings::get( 'jardin_toasts_placeholder_image_id' ) );
 			$placeholder = (int) apply_filters(
 				'jardin_toasts_placeholder_attachment_id',
-				(int) apply_filters( 'jt_placeholder_attachment_id', $placeholder, $post_id, $url, (string) $title ),
+				(int) apply_filters( 'jardin_toasts_placeholder_attachment_id', $placeholder, $post_id, $url, (string) $title ),
 				$post_id,
 				$url,
 				(string) $title
 			);
 			if ( $placeholder && wp_attachment_is_image( $placeholder ) ) {
 				set_post_thumbnail( $post_id, $placeholder );
-				JT_Logger::info( 'Image sideload failed; using placeholder attachment ' . (string) $placeholder );
+				Jardin_Toasts_Logger::info( 'Image sideload failed; using placeholder attachment ' . (string) $placeholder );
 				return $placeholder;
 			}
 			return $att_id;

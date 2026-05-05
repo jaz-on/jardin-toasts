@@ -12,7 +12,7 @@ Jardin · Untappd : check-ins bière (CPT), synchro et blocs. RSS + crawl HTML o
 ## Install
 
 1. Copy to `wp-content/plugins/jardin-toasts` and activate.
-2. **Jardin Toasts** (admin) → **Synchronization**: set your Untappd RSS URL (or define `JT_RSS_FEED_URL` in `wp-config.php` to override the default feed URL).
+2. **Jardin Toasts** (admin) → **Synchronization**: set your Untappd RSS URL (or define `JARDIN_TOASTS_RSS_FEED_URL` in `wp-config.php` to override the default feed URL).
 3. Optional: **Historical import** for backfill (batched crawl; respect rate limits).
 
 Runtime **Composer `vendor/`** is committed so Git / [Git Updater](https://git-updater.com/) installs work without `composer install` on the server. For local **PHPUnit / PHPCS / PHPStan**, run `composer install` in the plugin directory.

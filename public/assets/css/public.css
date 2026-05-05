@@ -1,65 +1,65 @@
-.jt-checkin-grid {
+.jardin-toasts-checkin-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 	gap: 1.5rem;
 }
 
-.jt-card {
+.jardin-toasts-card {
 	border: 1px solid rgba(0, 0, 0, 0.08);
 	border-radius: 6px;
 	overflow: hidden;
 }
 
-.jt-card__thumb img {
+.jardin-toasts-card__thumb img {
 	display: block;
 	width: 100%;
 	height: auto;
 }
 
-.jt-card__body {
+.jardin-toasts-card__body {
 	padding: 1rem;
 }
 
-.jt-card__title {
+.jardin-toasts-card__title {
 	margin: 0 0 0.5rem;
 	font-size: 1.1rem;
 }
 
-.jt-meta {
+.jardin-toasts-meta {
 	display: flex;
 	gap: 1rem;
 	align-items: center;
 	margin-top: 0.5rem;
 }
 
-.jt-stars {
+.jardin-toasts-stars {
 	letter-spacing: 0.1em;
 }
 
-.jt-checkin-table {
+.jardin-toasts-checkin-table {
 	width: 100%;
 	border-collapse: collapse;
 	margin-bottom: 1.5rem;
 }
 
-.jt-checkin-table th,
-.jt-checkin-table td {
+.jardin-toasts-checkin-table th,
+.jardin-toasts-checkin-table td {
 	border: 1px solid rgba(0, 0, 0, 0.1);
 	padding: 0.5rem 0.75rem;
 	text-align: left;
 	vertical-align: middle;
 }
 
-.jt-checkin-table thead th {
+.jardin-toasts-checkin-table thead th {
 	font-weight: 600;
 	background: rgba(0, 0, 0, 0.03);
 }
 
-.jt-col-thumb {
+.jardin-toasts-col-thumb {
 	width: 80px;
 }
 
-.jt-row__thumb img {
+.jardin-toasts-row__thumb img {
 	max-width: 72px;
 	height: auto;
 	display: block;

@@ -1,6 +1,6 @@
 <?php
 /**
- * One-time migrations: beer-journal / bj_ → jt_; legacy jb_ options/meta → jt_; product paths jardin-beer → jardin-toasts.
+ * One-time migrations: beer-journal / bj_ → jardin_toasts_; legacy jb_ options/meta → jardin_toasts_; product paths jardin-beer → jardin-toasts.
  *
  * @package JardinToasts
  */
@@ -12,22 +12,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Migrates wp_options, post meta, serialized blocks, clears legacy cron/AS hooks.
  */
-class JT_Storage_Migration {
+class Jardin_Toasts_Storage_Migration {
 
 	/**
 	 * Beer-journal / bj_ import completed (or skipped because legacy jb migration already ran historically).
 	 */
-	public const BEER_JOURNAL_FLAG = 'jt_beer_journal_storage_imported_v1';
+	public const BEER_JOURNAL_FLAG = 'jardin_toasts_beer_journal_storage_imported_v1';
 
 	/**
-	 * All `jb_*` options and `_jb_*` post meta copied/renamed to `jt_*` / `_jt_*`.
+	 * All `jb_*` options and `_jb_*` post meta copied/renamed to `jardin_toasts_*` / `_jt_*`.
 	 */
-	public const JB_PREFIX_UPGRADE_FLAG = 'jt_jb_prefix_storage_migrated_v1';
+	public const JB_PREFIX_UPGRADE_FLAG = 'jardin_toasts_jb_prefix_storage_migrated_v1';
 
 	/**
 	 * Post content path / block namespace rename from jardin-beer → jardin-toasts.
 	 */
-	public const PRODUCT_RENAME_FLAG = 'jt_product_paths_migrated_v1';
+	public const PRODUCT_RENAME_FLAG = 'jardin_toasts_product_paths_migrated_v1';
 
 	/**
 	 * CPT beer_checkin → checkin and meta _jt_* → _jardin_toasts_*.
@@ -78,7 +78,7 @@ class JT_Storage_Migration {
 	}
 
 	/**
-	 * Copy/rename all `jb_*` wp_options and `_jb_*` post meta to `jt_*` / `_jt_*` (sites upgraded from jb-prefixed releases).
+	 * Copy/rename all `jb_*` wp_options and `_jb_*` post meta to `jardin_toasts_*` / `_jt_*` (sites upgraded from jb-prefixed releases).
 	 *
 	 * @return void
 	 */
@@ -179,7 +179,7 @@ class JT_Storage_Migration {
 		}
 		$hooks = self::rss_hook_names();
 		$group = 'jardin-beer';
-		jt_when_action_scheduler_store_ready(
+		jardin_toasts_when_action_scheduler_store_ready(
 			static function () use ( $hooks, $group ) {
 				foreach ( $hooks as $hook ) {
 					as_unschedule_all_actions( $hook, array(), $group );
@@ -203,7 +203,7 @@ class JT_Storage_Migration {
 			if ( ! is_string( $old ) || '' === $old || 0 !== strpos( $old, 'bj_' ) ) {
 				continue;
 			}
-			$new = 'jt_' . substr( $old, 3 );
+			$new = 'jardin_toasts_' . substr( $old, 3 );
 			$raw = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s LIMIT 1", $old ) );
 			if ( null === $raw ) {
 				continue;
@@ -233,7 +233,7 @@ class JT_Storage_Migration {
 			if ( ! is_string( $old ) || '' === $old || 0 !== strpos( $old, 'jb_' ) ) {
 				continue;
 			}
-			$new = 'jt_' . substr( $old, 3 );
+			$new = 'jardin_toasts_' . substr( $old, 3 );
 			$raw = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s LIMIT 1", $old ) );
 			if ( null === $raw ) {
 				continue;
@@ -310,7 +310,7 @@ class JT_Storage_Migration {
 			return;
 		}
 		$hooks = array_merge( self::LEGACY_CRON_HOOKS, self::rss_hook_names() );
-		jt_when_action_scheduler_store_ready(
+		jardin_toasts_when_action_scheduler_store_ready(
 			static function () use ( $hooks ) {
 				foreach ( $hooks as $hook ) {
 					as_unschedule_all_actions( $hook, array(), self::LEGACY_AS_GROUP );
@@ -320,7 +320,7 @@ class JT_Storage_Migration {
 	}
 
 	/**
-	 * Clear WP-Cron and Action Scheduler entries for both jb_ and jt_ hook names across legacy groups.
+	 * Clear WP-Cron and Action Scheduler entries for both jb_ and jardin_toasts_ hook names across legacy groups.
 	 *
 	 * @return void
 	 */
@@ -333,7 +333,7 @@ class JT_Storage_Migration {
 		}
 		$hooks  = self::rss_hook_names();
 		$groups = array( 'beer-journal', 'jardin-beer', 'jardin-toasts' );
-		jt_when_action_scheduler_store_ready(
+		jardin_toasts_when_action_scheduler_store_ready(
 			static function () use ( $hooks, $groups ) {
 				foreach ( $groups as $group ) {
 					foreach ( $hooks as $hook ) {

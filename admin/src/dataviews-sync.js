@@ -56,12 +56,12 @@ function SyncSnapshot( { rows } ) {
 }
 
 domReady( () => {
-	const el = document.getElementById( 'jt-sync-dataviews-root' );
-	if ( ! el || typeof window.jtDataviewsSync === 'undefined' ) {
+	const el = document.getElementById( 'jardin-toasts-sync-dataviews-root' );
+	if ( ! el || typeof window.jardinToastsDataviewsSync === 'undefined' ) {
 		return;
 	}
-	const rows = Array.isArray( window.jtDataviewsSync.rows )
-		? window.jtDataviewsSync.rows
+	const rows = Array.isArray( window.jardinToastsDataviewsSync.rows )
+		? window.jardinToastsDataviewsSync.rows
 		: [];
 	createRoot( el ).render( <SyncSnapshot rows={ rows } /> );
 } );

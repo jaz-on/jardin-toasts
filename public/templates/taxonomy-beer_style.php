@@ -13,8 +13,8 @@ get_header();
 			<h1 class="page-title"><?php single_term_title(); ?></h1>
 		</header>
 		<?php
-		$jt_empty_message = __( 'No check-ins found.', 'jardin-toasts' );
-		include JT_PLUGIN_DIR . 'public/partials/archive-loop.php';
+		$jardin_toasts_empty_message = __( 'No check-ins found.', 'jardin-toasts' );
+		include JARDIN_TOASTS_PLUGIN_DIR . 'public/partials/archive-loop.php';
 		?>
 	</main>
 </div>
