@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-05T14:47:35+00:00\n"
+"POT-Creation-Date: 2026-05-05T15:10:12+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: jardin-toasts\n"
@@ -39,7 +39,7 @@ msgid "Jardin Toasts Settings"
 msgstr ""
 
 #: admin/class-admin.php:76
-#: jardin-toasts.php:205
+#: jardin-toasts.php:218
 msgid "Settings"
 msgstr ""
 
@@ -711,12 +711,12 @@ msgid "They appear here after Untappd sync creates beer_checkin posts (WP Admin 
 msgstr ""
 
 #: blocks/recent-reviews/render.php:28
-#: blocks/recent-reviews/render.php:79
+#: blocks/recent-reviews/render.php:80
 msgid "No reviews yet."
 msgstr ""
 
 #: blocks/recent-reviews/render.php:28
-#: blocks/recent-reviews/render.php:79
+#: blocks/recent-reviews/render.php:80
 msgid "A review is a check-in with editorial commentary in the post body."
 msgstr ""
 
@@ -987,11 +987,11 @@ msgstr ""
 msgid "Plugin activation error"
 msgstr ""
 
-#: jardin-toasts.php:227
+#: jardin-toasts.php:240
 msgid "GitHub"
 msgstr ""
 
-#: jardin-toasts.php:232
+#: jardin-toasts.php:245
 msgid "Donate"
 msgstr ""
 

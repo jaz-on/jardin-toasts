@@ -4,16 +4,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jardin Toasts 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/jardin-toasts\n"
+"POT-Creation-Date: 2026-05-05T15:10:12+00:00\n"
+"PO-Revision-Date: 2026-05-05T14:47:35+00:00\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-05T14:47:35+00:00\n"
-"PO-Revision-Date: 2026-05-05T14:47:35+00:00\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: jardin-toasts\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. Plugin Name of the plugin
@@ -40,7 +40,7 @@ msgstr "https://jasonrouet.com"
 msgid "Jardin Toasts Settings"
 msgstr "Réglages Jardin Toasts"
 
-#: admin/class-admin.php:76 jardin-toasts.php:205
+#: admin/class-admin.php:76 jardin-toasts.php:218
 msgid "Settings"
 msgstr "Réglages"
 
@@ -157,14 +157,20 @@ msgstr "Enregistre d’abord une URL de flux RSS."
 #. translators: %d: number of items in the feed snapshot
 #: admin/class-admin.php:357
 msgid "RSS OK: %d item(s) in this fetch (Untappd may cap the list)."
-msgstr "RSS OK : %d élément(s) dans cette récupération (Untappd peut limiter la liste)."
+msgstr ""
+"RSS OK : %d élément(s) dans cette récupération (Untappd peut limiter la "
+"liste)."
 
 #: admin/views/partials/settings-cron-hint.php:15
 msgid ""
 "Action Scheduler detected — RSS sync runs reliably in the background. "
 "Inspect scheduled actions under Tools → Scheduled Actions, group “jardin-"
 "toasts” (the menu label may differ if WooCommerce owns Action Scheduler)."
-msgstr "Action Scheduler détecté — la synchro RSS tourne en arrière-plan de façon fiable. Inspecte les actions planifiées sous Outils → Actions planifiées, groupe « jardin-toasts » (le label du menu peut différer si WooCommerce possède Action Scheduler)."
+msgstr ""
+"Action Scheduler détecté — la synchro RSS tourne en arrière-plan de façon "
+"fiable. Inspecte les actions planifiées sous Outils → Actions planifiées, "
+"groupe « jardin-toasts » (le label du menu peut différer si WooCommerce "
+"possède Action Scheduler)."
 
 #. translators: %s: link to Action Scheduler
 #: admin/views/partials/settings-cron-hint.php:22
@@ -172,7 +178,10 @@ msgid ""
 "WP-Cron with <code>DISABLE_WP_CRON</code> enabled — a system task is "
 "triggering WordPress, which is the recommended setup. For even more reliable "
 "scheduling you can also install %s."
-msgstr "WP-Cron avec <code>DISABLE_WP_CRON</code> activé — une tâche système déclenche WordPress, c’est la configuration recommandée. Pour une planification encore plus fiable, tu peux aussi installer %s."
+msgstr ""
+"WP-Cron avec <code>DISABLE_WP_CRON</code> activé — une tâche système "
+"déclenche WordPress, c’est la configuration recommandée. Pour une "
+"planification encore plus fiable, tu peux aussi installer %s."
 
 #. translators: 1: Action Scheduler link 2: wp-config snippet
 #: admin/views/partials/settings-cron-hint.php:33
@@ -180,7 +189,11 @@ msgid ""
 "WP-Cron is driven by site traffic — jobs may be delayed on low-traffic "
 "hosts. Install %1$s for a proper queue, or add %2$s to <code>wp-config.php</"
 "code> and call <code>wp-cron.php</code> from a real system cron."
-msgstr "WP-Cron est piloté par le trafic du site — les tâches peuvent être retardées sur les hébergements peu fréquentés. Installe %1$s pour une vraie file d’attente, ou ajoute %2$s dans <code>wp-config.php</code> et appelle <code>wp-cron.php</code> depuis un vrai cron système."
+msgstr ""
+"WP-Cron est piloté par le trafic du site — les tâches peuvent être retardées "
+"sur les hébergements peu fréquentés. Installe %1$s pour une vraie file "
+"d’attente, ou ajoute %2$s dans <code>wp-config.php</code> et appelle "
+"<code>wp-cron.php</code> depuis un vrai cron système."
 
 #: admin/views/settings-page.php:16
 msgid "Untappd account"
@@ -203,31 +216,42 @@ msgid ""
 "Your RSS URL and username identify the same Untappd account. RSS brings in "
 "recent check-ins; a CSV data export (privacy request or Insider archive) is "
 "used for full history and complete fields."
-msgstr "Ton URL RSS et ton nom d’utilisateur identifient le même compte Untappd. Le RSS apporte les check-ins récents ; un export de données CSV (demande RGPD ou archive Insider) sert à l’historique complet et aux champs détaillés."
+msgstr ""
+"Ton URL RSS et ton nom d’utilisateur identifient le même compte Untappd. Le "
+"RSS apporte les check-ins récents ; un export de données CSV (demande RGPD "
+"ou archive Insider) sert à l’historique complet et aux champs détaillés."
 
 #: admin/views/settings-page.php:24
 msgid ""
 "Scheduled sync reads the public RSS feed. For your complete journal, import "
 "the check-ins CSV from Untappd’s data export."
-msgstr "La synchro planifiée lit le flux RSS public. Pour ton journal complet, importe le CSV des check-ins depuis l’export de données Untappd."
+msgstr ""
+"La synchro planifiée lit le flux RSS public. Pour ton journal complet, "
+"importe le CSV des check-ins depuis l’export de données Untappd."
 
 #: admin/views/settings-page.php:25
 msgid ""
 "Control how archives look, what gets stored with each check-in, and how "
 "ratings map to stars on the front of your site."
-msgstr "Contrôle l’apparence des archives, ce qui est stocké avec chaque check-in et la conversion des notes en étoiles côté front."
+msgstr ""
+"Contrôle l’apparence des archives, ce qui est stocké avec chaque check-in et "
+"la conversion des notes en étoiles côté front."
 
 #: admin/views/settings-page.php:26
 msgid ""
 "Fine-tune RSS import limits, structured data, notifications, and "
 "troubleshooting logs."
-msgstr "Affine les limites d’import RSS, les données structurées, les notifications et les journaux de diagnostic."
+msgstr ""
+"Affine les limites d’import RSS, les données structurées, les notifications "
+"et les journaux de diagnostic."
 
 #: admin/views/settings-page.php:34
 msgid ""
 "Untappd → WordPress: sync, import, and present your beer journal with theme-"
 "friendly templates."
-msgstr "Untappd → WordPress : synchroniser, importer et présenter ton journal bière avec des gabarits adaptés au thème."
+msgstr ""
+"Untappd → WordPress : synchroniser, importer et présenter ton journal bière "
+"avec des gabarits adaptés au thème."
 
 #: admin/views/settings-page.php:37
 msgid "Jardin Toasts settings sections"
@@ -245,7 +269,10 @@ msgstr "Limites de synchro RSS"
 msgid ""
 "Caps how many new feed items each scheduled run turns into posts. Extra "
 "items stay in a queue and are processed by follow-up cron events."
-msgstr "Plafonne le nombre de nouveaux éléments du flux que chaque run planifié transforme en posts. Le surplus reste en file d’attente et est traité par les évènements cron suivants."
+msgstr ""
+"Plafonne le nombre de nouveaux éléments du flux que chaque run planifié "
+"transforme en posts. Le surplus reste en file d’attente et est traité par "
+"les évènements cron suivants."
 
 #: admin/views/settings/tab-advanced.php:24
 msgid "RSS imports per scheduled sync"
@@ -255,7 +282,9 @@ msgstr "Imports RSS par synchro planifiée"
 msgid ""
 "Minimum 1 per run (values below 1 are saved as 1). “Run sync now” uses a "
 "higher limit."
-msgstr "Minimum 1 par run (les valeurs inférieures à 1 sont enregistrées comme 1). « Lancer la synchro maintenant » utilise une limite plus élevée."
+msgstr ""
+"Minimum 1 par run (les valeurs inférieures à 1 sont enregistrées comme 1). "
+"« Lancer la synchro maintenant » utilise une limite plus élevée."
 
 #: admin/views/settings/tab-advanced.php:36
 msgid "Sync health"
@@ -265,7 +294,9 @@ msgstr "Santé de la synchro"
 msgid ""
 "Quick signals when diagnosing RSS backlog or incomplete drafts (often RSS "
 "items without a rating)."
-msgstr "Signaux rapides pour diagnostiquer un backlog RSS ou des brouillons incomplets (souvent des éléments RSS sans note)."
+msgstr ""
+"Signaux rapides pour diagnostiquer un backlog RSS ou des brouillons "
+"incomplets (souvent des éléments RSS sans note)."
 
 #: admin/views/settings/tab-advanced.php:42
 msgid "RSS queue depth"
@@ -279,7 +310,9 @@ msgstr "Brouillons de check-ins en attente de données"
 msgid ""
 "Recent log lines appear below under “Log file (today)”. Enable debug logging "
 "for more detail."
-msgstr "Les lignes de log récentes apparaissent ci-dessous sous « Fichier de log (aujourd’hui) ». Active le log de debug pour plus de détail."
+msgstr ""
+"Les lignes de log récentes apparaissent ci-dessous sous « Fichier de log "
+"(aujourd’hui) ». Active le log de debug pour plus de détail."
 
 #: admin/views/settings/tab-advanced.php:56
 msgid "SEO & semantics"
@@ -303,14 +336,18 @@ msgstr "Microformats"
 
 #: admin/views/settings/tab-advanced.php:77
 msgid "Add h-entry / e-content classes for IndieWeb-style consumers"
-msgstr "Ajouter les classes h-entry / e-content pour les consommateurs IndieWeb"
+msgstr ""
+"Ajouter les classes h-entry / e-content pour les consommateurs IndieWeb"
 
 #: admin/views/settings/tab-advanced.php:89
 msgid ""
 "Jardin Toasts reads your public Untappd RSS feed and imports check-in CSVs "
 "you provide from Untappd’s data export. You are responsible for complying "
 "with Untappd’s terms and for content you republish."
-msgstr "Jardin Toasts lit ton flux RSS Untappd public et importe les CSV de check-ins issus de l’export de données Untappd. Tu es responsable du respect des conditions d’Untappd et du contenu que tu republies."
+msgstr ""
+"Jardin Toasts lit ton flux RSS Untappd public et importe les CSV de check-"
+"ins issus de l’export de données Untappd. Tu es responsable du respect des "
+"conditions d’Untappd et du contenu que tu republies."
 
 #: admin/views/settings/tab-advanced.php:96
 msgid "Email notifications"
@@ -351,7 +388,9 @@ msgstr "Logs & debug"
 #: admin/views/settings/tab-advanced.php:135
 msgid ""
 "Verbose logging can help support; keep retention sensible on shared hosting."
-msgstr "Les logs verbeux peuvent aider au support ; garde une rétention raisonnable sur un hébergement mutualisé."
+msgstr ""
+"Les logs verbeux peuvent aider au support ; garde une rétention raisonnable "
+"sur un hébergement mutualisé."
 
 #: admin/views/settings/tab-advanced.php:140
 msgid "Debug logging"
@@ -397,7 +436,9 @@ msgstr "Archives & mise en page"
 #: admin/views/settings/tab-display.php:41
 msgid ""
 "Choose how lists of check-ins appear on the main journal and taxonomy pages."
-msgstr "Choisis comment les listes de check-ins apparaissent sur le journal principal et les pages de taxonomies."
+msgstr ""
+"Choisis comment les listes de check-ins apparaissent sur le journal "
+"principal et les pages de taxonomies."
 
 #: admin/views/settings/tab-display.php:46
 msgid "Archive layout"
@@ -415,7 +456,9 @@ msgstr "Tableau — lignes compactes"
 msgid ""
 "Applies to the beer check-in archive and beer style / brewery / venue "
 "listings."
-msgstr "S’applique à l’archive des check-ins bière et aux listes par style / brasserie / lieu."
+msgstr ""
+"S’applique à l’archive des check-ins bière et aux listes par style / "
+"brasserie / lieu."
 
 #: admin/views/settings/tab-display.php:57
 msgid "Public journal URL:"
@@ -429,7 +472,10 @@ msgstr "Contenu importé"
 msgid ""
 "Control media and taxonomy data saved with each check-in. Check-in notes are "
 "stored as post content with automatic paragraphs for plain text."
-msgstr "Contrôle les médias et données de taxonomie enregistrés avec chaque check-in. Les notes de check-in sont stockées comme contenu de post avec paragraphes automatiques pour le texte brut."
+msgstr ""
+"Contrôle les médias et données de taxonomie enregistrés avec chaque check-"
+"in. Les notes de check-in sont stockées comme contenu de post avec "
+"paragraphes automatiques pour le texte brut."
 
 #: admin/views/settings/tab-display.php:74
 msgid "Beer photos"
@@ -441,7 +487,9 @@ msgstr "Oui — importer les photos de bières dans la bibliothèque de médias"
 
 #: admin/views/settings/tab-display.php:81
 msgid "On by default for new installs. Turn off if you only want text."
-msgstr "Activé par défaut sur les nouvelles installations. Désactive si tu ne veux que du texte."
+msgstr ""
+"Activé par défaut sur les nouvelles installations. Désactive si tu ne veux "
+"que du texte."
 
 #: admin/views/settings/tab-display.php:85 includes/class-taxonomies.php:118
 #: includes/class-taxonomies.php:126
@@ -450,7 +498,9 @@ msgstr "Lieux"
 
 #: admin/views/settings/tab-display.php:90
 msgid "Yes — create venue taxonomy terms when a location is present"
-msgstr "Oui — créer des termes de taxonomie « lieu » quand une localisation est présente"
+msgstr ""
+"Oui — créer des termes de taxonomie « lieu » quand une localisation est "
+"présente"
 
 #: admin/views/settings/tab-display.php:92
 msgid "On by default. Lets you browse check-ins by place."
@@ -476,7 +526,9 @@ msgstr "Image de repli"
 msgid ""
 "Use a fallback image when Untappd download fails (on by default). Uncheck to "
 "leave the post without a featured image."
-msgstr "Utiliser une image de repli quand le téléchargement depuis Untappd échoue (activé par défaut). Décoche pour laisser le post sans image mise en avant."
+msgstr ""
+"Utiliser une image de repli quand le téléchargement depuis Untappd échoue "
+"(activé par défaut). Décoche pour laisser le post sans image mise en avant."
 
 #: admin/views/settings/tab-display.php:117
 msgid ""
@@ -486,7 +538,15 @@ msgid ""
 "PHP with the jardin_toasts_placeholder_attachment_id filter "
 "(jardin_toasts_placeholder_attachment_id is still fired for backward "
 "compatibility), returning a Media Library attachment ID you created."
-msgstr "Choisis une bière générique ou un logo dans ta bibliothèque de médias (pas d’ID à saisir). Il n’y a pas d’API distante intégrée pour les photos de bière (clés, licences, fiabilité) ; tu peux brancher Open Food Facts, Wikimedia ou ta propre source en PHP via le filtre jardin_toasts_placeholder_attachment_id (jardin_toasts_placeholder_attachment_id reste émis pour la rétrocompatibilité), en retournant un ID d’attachement créé dans la bibliothèque."
+msgstr ""
+"Choisis une bière générique ou un logo dans ta bibliothèque de médias (pas "
+"d’ID à saisir). Il n’y a pas d’API distante intégrée pour les photos de "
+"bière (clés, licences, fiabilité) ; tu peux brancher Open Food Facts, "
+"Wikimedia ou ta propre source en PHP via le filtre "
+"jardin_toasts_placeholder_attachment_id "
+"(jardin_toasts_placeholder_attachment_id reste émis pour la "
+"rétrocompatibilité), en retournant un ID d’attachement créé dans la "
+"bibliothèque."
 
 #: admin/views/settings/tab-display.php:134
 msgid "Ratings & stars"
@@ -498,7 +558,11 @@ msgid ""
 "first matching min/max band wins. The jardin_toasts_rating_rules filter "
 "(jardin_toasts_rating_rules is still fired for backward compatibility) can "
 "override in code."
-msgstr "Convertit le score brut Untappd 0–5 en étoiles entières. Les règles sont testées dans l’ordre ; la première bande min/max correspondante l’emporte. Le filtre jardin_toasts_rating_rules (jardin_toasts_rating_rules reste émis pour la rétrocompatibilité) peut surcharger en code."
+msgstr ""
+"Convertit le score brut Untappd 0–5 en étoiles entières. Les règles sont "
+"testées dans l’ordre ; la première bande min/max correspondante l’emporte. "
+"Le filtre jardin_toasts_rating_rules (jardin_toasts_rating_rules reste émis "
+"pour la rétrocompatibilité) peut surcharger en code."
 
 #: admin/views/settings/tab-display.php:140
 msgid "Use mapping rules"
@@ -516,7 +580,9 @@ msgstr "Bandes de score brut"
 msgid ""
 "Each row is one band: if the raw rating is between min and max (inclusive), "
 "it maps to the chosen star level."
-msgstr "Chaque ligne est une bande : si la note brute est entre min et max (inclus), elle mappe vers le niveau d’étoile choisi."
+msgstr ""
+"Chaque ligne est une bande : si la note brute est entre min et max (inclus), "
+"elle mappe vers le niveau d’étoile choisi."
 
 #: admin/views/settings/tab-display.php:157
 msgid "#"
@@ -556,7 +622,8 @@ msgstr "Libellés par niveau d’étoile"
 #: admin/views/settings/tab-display.php:196
 msgid ""
 "Optional text for each rounded level (for themes, blocks, or future UI)."
-msgstr "Texte optionnel pour chaque niveau arrondi (pour thèmes, blocs ou UI future)."
+msgstr ""
+"Texte optionnel pour chaque niveau arrondi (pour thèmes, blocs ou UI future)."
 
 #. translators: %d: star count 0-5
 #: admin/views/settings/tab-display.php:205
@@ -571,7 +638,9 @@ msgstr "Diagnostics (DataViews)"
 msgid ""
 "Read-only snapshot from current options. Requires a built admin bundle (npm "
 "run build in the plugin directory)."
-msgstr "Vue en lecture seule des options actuelles. Nécessite un bundle admin compilé (npm run build dans le dossier du plugin)."
+msgstr ""
+"Vue en lecture seule des options actuelles. Nécessite un bundle admin "
+"compilé (npm run build dans le dossier du plugin)."
 
 #: admin/views/settings/tab-sync.php:31
 msgid "Background RSS sync"
@@ -583,7 +652,12 @@ msgid ""
 "from feed items only (beer, brewery, venue, date, and image when present). "
 "Ratings are usually missing from RSS — those posts stay as drafts until you "
 "enrich them from a full data export CSV."
-msgstr "La synchro planifiée lit ton flux RSS Untappd public et crée des posts de check-ins uniquement à partir des éléments du flux (bière, brasserie, lieu, date et image quand présents). Les notes manquent généralement au RSS — ces posts restent en brouillon jusqu’à enrichissement via un CSV d’export complet."
+msgstr ""
+"La synchro planifiée lit ton flux RSS Untappd public et crée des posts de "
+"check-ins uniquement à partir des éléments du flux (bière, brasserie, lieu, "
+"date et image quand présents). Les notes manquent généralement au RSS — ces "
+"posts restent en brouillon jusqu’à enrichissement via un CSV d’export "
+"complet."
 
 #: admin/views/settings/tab-sync.php:42
 msgid "Enable scheduled RSS synchronization"
@@ -593,7 +667,9 @@ msgstr "Activer la synchronisation RSS planifiée"
 msgid ""
 "Adaptive timing: more frequent when you check in often, lighter when you are "
 "quiet."
-msgstr "Cadence adaptative : plus fréquente quand tu check-ines souvent, plus légère quand tu es discret."
+msgstr ""
+"Cadence adaptative : plus fréquente quand tu check-ines souvent, plus légère "
+"quand tu es discret."
 
 #: admin/views/settings/tab-sync.php:58 admin/views/settings/tab-sync.php:62
 msgid "Run sync now"
@@ -601,7 +677,9 @@ msgstr "Lancer la synchro maintenant"
 
 #: admin/views/settings/tab-sync.php:59
 msgid "Fetches the RSS feed immediately (same code path as scheduled sync)."
-msgstr "Récupère le flux RSS immédiatement (même chemin de code que la synchro planifiée)."
+msgstr ""
+"Récupère le flux RSS immédiatement (même chemin de code que la synchro "
+"planifiée)."
 
 #: admin/views/settings/tab-sync.php:70
 msgid "Full history: data export (CSV)"
@@ -613,7 +691,12 @@ msgid ""
 "Insider subscription export when available. Import the check-ins CSV here — "
 "rows are matched by check-in ID and existing posts are updated. No file is "
 "sent with “Save changes”; upload runs only when you click Import."
-msgstr "Demande tes données personnelles à Untappd (procédure RGPD) ou utilise un export d’abonnement Insider quand disponible. Importe ici le CSV des check-ins — les lignes sont matchées par ID de check-in et les posts existants sont mis à jour. Aucun fichier n’est envoyé avec « Enregistrer les modifications » ; l’envoi ne se fait qu’au clic sur Importer."
+msgstr ""
+"Demande tes données personnelles à Untappd (procédure RGPD) ou utilise un "
+"export d’abonnement Insider quand disponible. Importe ici le CSV des check-"
+"ins — les lignes sont matchées par ID de check-in et les posts existants "
+"sont mis à jour. Aucun fichier n’est envoyé avec « Enregistrer les "
+"modifications » ; l’envoi ne se fait qu’au clic sur Importer."
 
 #: admin/views/settings/tab-sync.php:76
 msgid "Import check-ins CSV"
@@ -626,7 +709,12 @@ msgid ""
 "beer_ibu, photo_url (names may vary). Use filters "
 "jardin_toasts_gdpr_csv_map_row / jardin_toasts_gdpr_csv_max_rows or "
 "jardin_toasts_gdpr_csv_row if your export differs."
-msgstr "Colonnes attendues : checkin_id, checkin_url, beer_name, brewery_name, rating_score, created_at, comment, venue_name, serving_type, beer_abv, beer_ibu, photo_url (les noms peuvent varier). Utilise les filtres jardin_toasts_gdpr_csv_map_row / jardin_toasts_gdpr_csv_max_rows ou jardin_toasts_gdpr_csv_row si ton export diffère."
+msgstr ""
+"Colonnes attendues : checkin_id, checkin_url, beer_name, brewery_name, "
+"rating_score, created_at, comment, venue_name, serving_type, beer_abv, "
+"beer_ibu, photo_url (les noms peuvent varier). Utilise les filtres "
+"jardin_toasts_gdpr_csv_map_row / jardin_toasts_gdpr_csv_max_rows ou "
+"jardin_toasts_gdpr_csv_row si ton export diffère."
 
 #: admin/views/settings/tab-untappd.php:18
 msgid "Account"
@@ -637,7 +725,10 @@ msgid ""
 "Use the same RSS URL and username you see on Untappd (Account → RSS). Values "
 "are stored in the WordPress options table — only trusted administrators "
 "should access this screen."
-msgstr "Utilise la même URL RSS et le même nom d’utilisateur que sur Untappd (Compte → RSS). Les valeurs sont stockées dans la table options de WordPress — seuls les administrateurs de confiance devraient accéder à cet écran."
+msgstr ""
+"Utilise la même URL RSS et le même nom d’utilisateur que sur Untappd (Compte "
+"→ RSS). Les valeurs sont stockées dans la table options de WordPress — seuls "
+"les administrateurs de confiance devraient accéder à cet écran."
 
 #: admin/views/settings/tab-untappd.php:24
 msgid "Untappd RSS feed URL"
@@ -647,7 +738,10 @@ msgstr "URL du flux RSS Untappd"
 msgid ""
 "Public RSS (about 25 recent check-ins). Used by automatic sync and “Run sync "
 "now” on the Import & sync tab."
-msgstr "RSS public (environ 25 check-ins récents). Utilisé par la synchro automatique et « Lancer la synchro maintenant » dans l’onglet Import & synchro."
+msgstr ""
+"RSS public (environ 25 check-ins récents). Utilisé par la synchro "
+"automatique et « Lancer la synchro maintenant » dans l’onglet Import & "
+"synchro."
 
 #: admin/views/settings/tab-untappd.php:31
 msgid "Untappd username"
@@ -658,7 +752,10 @@ msgid ""
 "Profile slug only (e.g. jaz_on), not the full URL. Should match the user "
 "segment in your RSS URL (untappd.com/rss/user/…). Optional reference for "
 "your records; full history is imported via CSV export."
-msgstr "Uniquement le slug de profil (par ex. jaz_on), pas l’URL complète. Doit correspondre au segment utilisateur de ton URL RSS (untappd.com/rss/user/…). Référence optionnelle ; l’historique complet s’importe via CSV."
+msgstr ""
+"Uniquement le slug de profil (par ex. jaz_on), pas l’URL complète. Doit "
+"correspondre au segment utilisateur de ton URL RSS (untappd.com/rss/user/…). "
+"Référence optionnelle ; l’historique complet s’importe via CSV."
 
 #. translators: %s: username
 #: admin/views/settings/tab-untappd.php:41
@@ -671,7 +768,9 @@ msgstr "Tester la connexion"
 
 #: admin/views/settings/tab-untappd.php:52
 msgid "Save your feed URL first, then verify WordPress can read the RSS feed."
-msgstr "Enregistre d’abord ton URL de flux, puis vérifie que WordPress peut lire le flux RSS."
+msgstr ""
+"Enregistre d’abord ton URL de flux, puis vérifie que WordPress peut lire le "
+"flux RSS."
 
 #: admin/views/settings/tab-untappd.php:56
 msgid "Test RSS feed"
@@ -737,7 +836,9 @@ msgstr "Sélectionne un check-in ou affiche-le sur une page single check-in."
 msgid ""
 "Beer-card meta appears here on a single check-in (with rating, brewery, "
 "style, ABV, IBU)."
-msgstr "Les méta de la carte bière s’affichent ici sur un single check-in (note, brasserie, style, ABV, IBU)."
+msgstr ""
+"Les méta de la carte bière s’affichent ici sur un single check-in (note, "
+"brasserie, style, ABV, IBU)."
 
 #: blocks/checkin-meta/render.php:56
 msgid "brewery"
@@ -781,15 +882,19 @@ msgstr "Aucun check-in bière dans ce bloc pour l’instant."
 msgid ""
 "They appear here after Untappd sync creates beer_checkin posts (WP Admin → "
 "Jardin Toasts)."
-msgstr "Ils apparaissent ici après que la synchro Untappd a créé des posts beer_checkin (Admin WP → Jardin Toasts)."
+msgstr ""
+"Ils apparaissent ici après que la synchro Untappd a créé des posts "
+"beer_checkin (Admin WP → Jardin Toasts)."
 
-#: blocks/recent-reviews/render.php:28 blocks/recent-reviews/render.php:79
+#: blocks/recent-reviews/render.php:28 blocks/recent-reviews/render.php:80
 msgid "No reviews yet."
 msgstr "Aucune review pour l’instant."
 
-#: blocks/recent-reviews/render.php:28 blocks/recent-reviews/render.php:79
+#: blocks/recent-reviews/render.php:28 blocks/recent-reviews/render.php:80
 msgid "A review is a check-in with editorial commentary in the post body."
-msgstr "Une review, c’est un check-in avec un commentaire éditorial dans le corps du post."
+msgstr ""
+"Une review, c’est un check-in avec un commentaire éditorial dans le corps du "
+"post."
 
 #: blocks/recent-reviews/render.php:59
 msgid "review"
@@ -824,7 +929,9 @@ msgstr "Impossible de lire la ligne d’en-tête du CSV."
 msgid ""
 "Stopped after %d rows (safety limit). Re-import remaining lines in a second "
 "file if needed."
-msgstr "Arrêté après %d lignes (limite de sécurité). Réimporte les lignes restantes dans un second fichier si besoin."
+msgstr ""
+"Arrêté après %d lignes (limite de sécurité). Réimporte les lignes restantes "
+"dans un second fichier si besoin."
 
 #. translators: 1: row number, 2: error message
 #: includes/class-gdpr-csv-importer.php:95
@@ -1042,7 +1149,10 @@ msgid ""
 "<strong>Jardin Toasts</strong>: la constante <code>JT_RSS_FEED_URL</code> "
 "est dépréciée. Renommez-la en <code>JARDIN_TOASTS_RSS_FEED_URL</code> dans "
 "<code>wp-config.php</code>."
-msgstr "<strong>Jardin Toasts</strong>: la constante <code>JT_RSS_FEED_URL</code> est dépréciée. Renommez-la en <code>JARDIN_TOASTS_RSS_FEED_URL</code> dans <code>wp-config.php</code>."
+msgstr ""
+"<strong>Jardin Toasts</strong>: la constante <code>JT_RSS_FEED_URL</code> "
+"est dépréciée. Renommez-la en <code>JARDIN_TOASTS_RSS_FEED_URL</code> dans "
+"<code>wp-config.php</code>."
 
 #: jardin-toasts.php:86
 msgid "Jardin Toasts could not load its PHP dependencies."
@@ -1053,7 +1163,10 @@ msgid ""
 "Jardin Toasts is missing the vendor/ folder (Composer packages). If you "
 "install from Git, use a branch or release that includes vendor, or run "
 "composer install --no-dev in the plugin directory."
-msgstr "Le dossier vendor/ (paquets Composer) est absent de Jardin Toasts. Si tu installes depuis Git, utilise une branche ou une release qui inclut vendor, ou lance composer install --no-dev dans le dossier du plugin."
+msgstr ""
+"Le dossier vendor/ (paquets Composer) est absent de Jardin Toasts. Si tu "
+"installes depuis Git, utilise une branche ou une release qui inclut vendor, "
+"ou lance composer install --no-dev dans le dossier du plugin."
 
 #: jardin-toasts.php:121
 msgid ""
@@ -1061,17 +1174,21 @@ msgid ""
 "you installed from Git, run <code>composer install --no-dev</code> in the "
 "plugin directory (or use a release that includes <code>vendor/</code>), then "
 "activate again."
-msgstr "Jardin Toasts ne peut pas s’activer car ses dépendances PHP ne se sont pas chargées. Si l’installation vient de Git, lance <code>composer install --no-dev</code> dans le dossier du plugin (ou utilise une release qui inclut <code>vendor/</code>), puis ré-active."
+msgstr ""
+"Jardin Toasts ne peut pas s’activer car ses dépendances PHP ne se sont pas "
+"chargées. Si l’installation vient de Git, lance <code>composer install --no-"
+"dev</code> dans le dossier du plugin (ou utilise une release qui inclut "
+"<code>vendor/</code>), puis ré-active."
 
 #: jardin-toasts.php:123
 msgid "Plugin activation error"
 msgstr "Erreur d’activation du plugin"
 
-#: jardin-toasts.php:227
+#: jardin-toasts.php:240
 msgid "GitHub"
 msgstr "GitHub"
 
-#: jardin-toasts.php:232
+#: jardin-toasts.php:245
 msgid "Donate"
 msgstr "Soutenir"
 
@@ -1118,7 +1235,9 @@ msgctxt "block description"
 msgid ""
 "Aggregated stats: unique beers, breweries, favourite style/brewery, average "
 "rating, sync source."
-msgstr "Stats agrégées : bières uniques, brasseries, style/brasserie favori, note moyenne, source de synchro."
+msgstr ""
+"Stats agrégées : bières uniques, brasseries, style/brasserie favori, note "
+"moyenne, source de synchro."
 
 #: blocks/checkin-card/block.json
 msgctxt "block title"
@@ -1128,7 +1247,8 @@ msgstr "Carte check-in"
 #: blocks/checkin-card/block.json
 msgctxt "block description"
 msgid "Single beer check-in card (uses theme/plugin card markup)."
-msgstr "Carte d’un seul check-in bière (utilise le markup de carte du thème/plugin)."
+msgstr ""
+"Carte d’un seul check-in bière (utilise le markup de carte du thème/plugin)."
 
 #: blocks/checkin-meta/block.json
 msgctxt "block title"
@@ -1140,7 +1260,9 @@ msgctxt "block description"
 msgid ""
 "Single check-in beer-card meta (brewery, style, ABV, IBU, rating stars) and "
 "outbound Untappd link."
-msgstr "Méta de la carte bière du single check-in (brasserie, style, ABV, IBU, étoiles) et lien sortant Untappd."
+msgstr ""
+"Méta de la carte bière du single check-in (brasserie, style, ABV, IBU, "
+"étoiles) et lien sortant Untappd."
 
 #: blocks/menu-display/block.json
 msgctxt "block title"
@@ -1152,7 +1274,9 @@ msgctxt "block description"
 msgid ""
 "Lists check-ins tagged with a venue term (placeholder until menu taxonomy "
 "ships)."
-msgstr "Liste les check-ins étiquetés avec un terme de lieu (placeholder en attendant la taxonomie menu)."
+msgstr ""
+"Liste les check-ins étiquetés avec un terme de lieu (placeholder en "
+"attendant la taxonomie menu)."
 
 #: blocks/recent-checkins/block.json
 msgctxt "block title"
@@ -1174,7 +1298,9 @@ msgctxt "block description"
 msgid ""
 "Cards for editorial reviews — check-ins with non-empty post content "
 "(promoted from auto tasting)."
-msgstr "Cartes pour les reviews éditoriales — check-ins dont le contenu n’est pas vide (promus depuis une dégustation auto)."
+msgstr ""
+"Cartes pour les reviews éditoriales — check-ins dont le contenu n’est pas "
+"vide (promus depuis une dégustation auto)."
 
 #: blocks/styles-breakdown/block.json
 msgctxt "block title"
@@ -1184,4 +1310,6 @@ msgstr "Répartition des styles de bière"
 #: blocks/styles-breakdown/block.json
 msgctxt "block description"
 msgid "Top beer styles bar chart, computed from the beer_style taxonomy."
-msgstr "Graphique en barres des styles de bière, calculé depuis la taxonomie beer_style."
+msgstr ""
+"Graphique en barres des styles de bière, calculé depuis la taxonomie "
+"beer_style."

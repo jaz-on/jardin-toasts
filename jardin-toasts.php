@@ -144,6 +144,12 @@ register_deactivation_hook( __FILE__, 'jardin_toasts_plugin_deactivate' );
 /**
  * Load plugin text domain.
  *
+ * Hooked on `init` (priority 0) so the locale resolved by Polylang on
+ * multilingual sites is the one used to load the `.mo`. `plugins_loaded`
+ * is too early when Polylang detects locale via cookie / URL between
+ * `plugins_loaded` and `init`. The `change_locale` callback reloads the
+ * textdomain if `switch_to_locale()` is called mid-request.
+ *
  * @return void
  */
 function jardin_toasts_load_textdomain() {
@@ -153,7 +159,14 @@ function jardin_toasts_load_textdomain() {
 		dirname( plugin_basename( __FILE__ ) ) . '/languages'
 	);
 }
-add_action( 'plugins_loaded', 'jardin_toasts_load_textdomain' );
+add_action( 'init', 'jardin_toasts_load_textdomain', 0 );
+add_action(
+	'change_locale',
+	static function () {
+		unload_textdomain( 'jardin-toasts' );
+		jardin_toasts_load_textdomain();
+	}
+);
 
 /**
  * Bootstrap plugin.
